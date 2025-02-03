@@ -36,8 +36,46 @@
                         </group>
 
                         <notebook>
-                            <page string="Details">
-                                <field name="description" />
+                            <page string="Owned Team Car">
+                                <group>
+                                    <group>
+                                        <label for="x_model_name" string="Range of vehicle"/>
+                                        <label for="x_quantity" string="Number"/>
+                                        <div class="x_model_name">
+                                            <field name="x_model_name" />
+                                        </div>
+                                        <div class="x_quantity">
+                                            <field name="x_quantity" />
+                                        </div>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Member Team">
+                                <group>
+                                    <group>
+                                        <label for="x_member_id" string="Member's Name"/>
+                                        <div class="x_member_id">
+                                            <field name="x_member_id"/>
+                                        </div>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Owned Team Car">
+                                <field name="x_owned_team_car_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="model_name"/>
+                                        <field name="quantity"/>
+                                        <field name="brand_car"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Members">
+                                <field name="x_member_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="member_id"/>
+                                    </tree>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>
