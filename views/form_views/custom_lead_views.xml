@@ -1,17 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Form View with Priority -->
         <record id="view_form_custom_lead" model="ir.ui.view">
             <field name="name">crm.lead.form</field>
             <field name="model">crm.lead</field>
-            <field name="priority">10</field>  <!-- Higher priority takes precedence -->
+            <field name="priority">10</field>
             <field name="arch" type="xml">
                 <form>
                     <sheet>
                         <group>
-                            <field name="name" />
+                            <!-- Main Information -->
+                            <group col="2">
+                                <field name="name" />
+                                <!-- <field name="x_partner_rank_id"/> -->
+                                <field name="x_customer_type" />
+                            </group>
+
+                            <!-- Partner Information -->
+                            <group col="2">
+                                <field name="x_phone" />
+                                <field name="x_email_from" />
+                                <field name="x_vat" />
+                                <field name="x_indentity_number" />
+                                <field name="x_industry_id" />
+                            </group>
                         </group>
+
+                        <!-- Existing Notebook for Details -->
                         <notebook>
                             <page string="Details">
                                 <field name="description" />
