@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hino_onnet_hino_onnet,hino_onnet.hino_onnet,model_hino_onnet_hino_onnet,base.group_user,1,1,1,1
+access_hino_onnet_my_model,hino_onnet.my.model,model_my_model,,1,1,1,1

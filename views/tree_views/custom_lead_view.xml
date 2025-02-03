@@ -1,0 +1,23 @@
+<odoo>
+
+    <record id="customlead_view_tree" model="ir.ui.view">
+        <field name="name">customlead_view_tree</field>
+        <field name="model">crm.lead</field>
+        <field name="arch" type="xml">
+            <tree string="customlead_tree">
+                <field name="contact_name"/>
+                <field name="phone"/>
+                <field name="city"/>
+                <field name="zip"/>
+            </tree>
+        </field>
+    </record>
+    <!-- Action for the new menu -->
+    <record id="custom_crm_action" model="ir.actions.act_window">
+        <field name="name">Custom Leads</field>
+        <field name="res_model">crm.lead</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="customlead_view_tree"/>
+    </record>
+
+</odoo>
