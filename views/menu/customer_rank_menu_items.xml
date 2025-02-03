@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    <menuitem id="hino_customer_rank"
+              name="Hino's Customer Rank"
+              parent="contacts.res_partner_menu_config"
+              action="hino_customer_rank_action"
+              sequence="1"/>
+    </data>
+</odoo>

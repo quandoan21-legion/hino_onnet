@@ -1,3 +1,5 @@
+import re
+
 from odoo import models, fields, api
 
 class CustomLead(models.Model):
@@ -6,17 +8,17 @@ class CustomLead(models.Model):
     custom_field = fields.Char(string='Custom Field')
     # x_partner_rank_id = fields.Many2one('res.partner.rank', string='Rank')
     x_customer_type = fields.Selection(
-        [('nhap', 'Nháp'), ('don_vi_thu_3', 'Đơn vị thứ 3'), ('nha_dong_thung', 'Nhà đóng thùng')], 
+        [('nhap', 'Nháp'), ('don_vi_thu_3', 'Đơn vị thứ 3'), ('nha_dong_thung', 'Nhà đóng thùng')],
         string='Bên thứ 3/Nhà đóng thùng ', default='nhap'
-    )    
+    )
     x_phone = fields.Char(string='Số điện thoại')
     x_email_from = fields.Char(string='Email')
-    x_vat = fields.Char(string='Số ĐKKD (Mã số thuế)') 
+    x_vat = fields.Char(string='Số ĐKKD (Mã số thuế)')
     x_indentity_number = fields.Char(string='CCCD/CMT')
     x_industry_id = fields.Many2one('res.partner.industry', string='Lĩnh vực kinh doanh')
     # x_request_sale_3rd_barrels_id = fields.Many2one('res.request.sale.3rd.barrels', string='Đề nghị bán lấn vùng/Bên thứ 3/Nhà đóng thùng', readonly=True)
     x_purchase_type = fields.Selection(
-        [('mua_sam_truc_tiep', 'Mua sắm trực tiếp'), ('dau_thau', 'Đấu thầu'), ('khac', 'Khác')], 
+        [('mua_sam_truc_tiep', 'Mua sắm trực tiếp'), ('dau_thau', 'Đấu thầu'), ('khac', 'Khác')],
         string='Loại hình mua hàng'
     )
     x_service_contract = fields.Boolean(string='Hợp đồng dịch vụ')
