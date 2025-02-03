@@ -28,15 +28,15 @@ class CustomLead(models.Model):
     x_sale_person_id = fields.Many2one('res.users', string='Nhân viên kinh doanh')
     x_approaching_channel_id = fields.Many2one('hr.employee', string='Kênh tiếp cận')
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        if self.partner_id:
-            self.x_indentity_number = self.partner_id.identity_number
-            self.x_vat = self.partner_id.vat_number
-
-    @api.constrains('x_indentity_number')
-    def _check_identity_number(self):
-        for record in self:
-            if record.x_indentity_number:
-                if not re.match(r'^\d{9,13}$', record.x_indentity_number):
-                    raise models.ValidationError("Số CCCD/CMT phải chứa từ 9 đến 13 chữ số.")
+    # @api.onchange('partner_id')
+    # def _onchange_partner_id(self):
+    #     if self.partner_id:
+    #         self.x_indentity_number = self.partner_id.identity_number
+    #         self.x_vat = self.partner_id.vat_number
+    #
+    # @api.constrains('x_indentity_number')
+    # def _check_identity_number(self):
+    #     for record in self:
+    #         if record.x_indentity_number:
+    #             if not re.match(r'^\d{9,13}$', record.x_indentity_number):
+    #                 raise models.ValidationError("Số CCCD/CMT phải chứa từ 9 đến 13 chữ số.")

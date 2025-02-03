@@ -18,11 +18,8 @@ Long description of module's purpose
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-<<<<<<< Updated upstream
-    'depends': ['base', 'crm','hr'],
-=======
-    'depends': ['base', 'crm', 'contacts'],
->>>>>>> Stashed changes
+    'depends': ['base', 'crm', 'hr', 'contacts'],
+
 
     # always loaded
     'data': [
