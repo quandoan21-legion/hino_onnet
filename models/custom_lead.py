@@ -7,6 +7,12 @@ class CustomLead(models.Model):
     _inherit = 'crm.lead'
 
     custom_field = fields.Char(string='Custom Field')
+
+# Notebook lines
+    x_member_line_ids = fields.One2many('member.line', 'lead_id', string='Member Lines')
+    x_owned_team_car_line_ids = fields.One2many('owned.team.car.line', 'lead_id', string='Owned Team Car Lines')
+
+
     # x_partner_rank_id = fields.Many2one('res.partner.rank', string='Rank')
 
     x_partner_id = fields.Many2one('res.partner', string='Customer')
