@@ -1,5 +1,6 @@
+<!-- tree_view.xml -->
 <odoo>
-
+    <!-- Tree View -->
     <record id="customlead_view_tree" model="ir.ui.view">
         <field name="name">customlead_view_tree</field>
         <field name="model">crm.lead</field>
@@ -12,12 +13,22 @@
             </tree>
         </field>
     </record>
-    <!-- Action for the new menu -->
+
+    <!-- Updated Action to Explicitly Use Both Views -->
     <record id="custom_crm_action" model="ir.actions.act_window">
         <field name="name">Custom Leads</field>
         <field name="res_model">crm.lead</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="customlead_view_tree"/>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {
+                'view_id': ref('customlead_view_tree'),
+                'view_mode': 'tree',
+            }),
+            (0, 0, {
+                'view_id': ref('view_form_custom_lead'),
+                'view_mode': 'form',
+            }),
+        ]"/>
     </record>
-
 </odoo>

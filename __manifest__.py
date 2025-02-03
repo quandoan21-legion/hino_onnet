@@ -23,6 +23,7 @@ Long description of module's purpose
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
+        'views/form_views/custom_lead_views.xml',
         'views/tree_views/custom_lead_view.xml',
         'views/views.xml',
         'views/templates.xml',
