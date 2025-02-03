@@ -9,24 +9,27 @@
                 <form>
                     <sheet>
                         <group>
-                            <!-- Main Information -->
-                            <group col="2">
+                            <group>
                                 <field name="name" />
                                 <!-- <field name="x_partner_rank_id"/> -->
                                 <field name="x_customer_type" />
+                                <field name="x_purchase_type" />
                             </group>
-
-                            <!-- Partner Information -->
-                            <group col="2">
+                            <group>
                                 <field name="x_phone" />
                                 <field name="x_email_from" />
                                 <field name="x_vat" />
                                 <field name="x_indentity_number" />
                                 <field name="x_industry_id" />
+                                <field name="x_service_contract" />
+                                <field name="x_activity_area" />
+                                <field name="x_dealer_id" />
+                                <field name="x_dealer_branch_id" />
+                                <field name="x_sale_person_id" />
+                                <field name="x_approaching_channel_id" />
                             </group>
                         </group>
 
-                        <!-- Existing Notebook for Details -->
                         <notebook>
                             <page string="Details">
                                 <field name="description" />
