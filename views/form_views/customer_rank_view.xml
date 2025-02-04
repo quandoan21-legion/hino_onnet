@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Form View for Customer Rank -->
+        <record id="view_customer_rank_form" model="ir.ui.view">
+            <field name="name">customer.rank.form</field>
+            <field name="model">customer.rank</field>
+            <field name="arch" type="xml">
+                <form string="Customer Rank">
+                    <sheet>
+                        <group>
+                            <!--                            <div class="oe_title oe_full_width">-->
+<!--                            <label for="rank_name"/>-->
+                            <h1>
+                                <field name="rank_name" placeholder="Name"/>
+                            </h1>
+                            <!--                            </div>-->
+                        </group>
+                        <group>
+                            <field name="min_hino_vehicles"/>
+                            <field name="max_hino_vehicles"/>
+                            <field name="min_owned_vehicles"/>
+                            <field name="max_owned_vehicles"/>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
