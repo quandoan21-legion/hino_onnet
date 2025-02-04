@@ -9,10 +9,16 @@
                 <form>
                     <sheet>
                         <group>
+                             <field name="x_customer_status" widget="radio" options="{'horizontal': true}" />
                             <group>
                                 <field name="name" />
                                 <field name="x_partner_id"/>
                                 <field name="x_partner_name"/>
+                <field name="x_state_id"/>
+<field name="x_contact_address_complete"/>
+                <field name="x_website" widget="url"/>
+
+
 <!--                                <field name="x_customer_id"/>-->
 <!--                    <field name="x_customer_real_id" attrs="{'readonly': True}"/>-->
 <!--                    <field name="x_customer_name" attrs="{'readonly': True}"/>-->
@@ -24,7 +30,7 @@
                                 <field name="x_phone" />
                                 <field name="x_email_from" />
                                 <field name="x_vat" />
-                                <field name="x_indentity_number" />
+                                <field name="x_indentity_number"  />
                                 <field name="x_industry_id" />
                                 <field name="x_service_contract" />
                                 <field name="x_activity_area" />
