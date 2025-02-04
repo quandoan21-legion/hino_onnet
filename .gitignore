@@ -1,15 +1,51 @@
-# Ignore Python cache
+# sphinx build directories
+_build/
+
+# dotfiles
+.*
+!.gitignore
+!.github
+!.mailmap
+# compiled python files
+*.py[co]
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+# setup.py egg_info
+*.egg-info
+# emacs backup files
+*~
+# hg stuff
+*.orig
+status
+# odoo filestore
+odoo/filestore
+# maintenance migration scripts
+odoo/addons/base/maintenance
+# window installation config file
+/odoo.conf
 
-# Ignore Odoo log files
-*.log
+# generated for windows installer?
+install/win32/*.bat
+install/win32/meta.py
 
-# Ignore database files
-*.db
-*.sqlite
+# needed only when building for win32
+setup/win32/static/less/
+setup/win32/static/wkhtmltopdf/
+setup/win32/static/postgresql*.exe
 
-# Ignore compiled Python files
-*.egg-info/
+# js tooling
+node_modules
+jsconfig.json
+tsconfig.json
+package-lock.json
+package.json
+.husky
+
+# various virtualenv
+/bin/
+/build/
+/dist/
+/include/
+/lib/
+/man/
+/share/
+/src/
