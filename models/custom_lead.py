@@ -43,6 +43,11 @@ class CustomLead(models.Model):
         string='Loại xe khách hàng quan tâm'
     )
     
+    @api.depends('x_partner_id')
+    def _compute_customer_name(self):
+        for record in self:
+            record.x_partner_name = record.x_partner_id.name if record.x_partner_id else ''
+    
     # @api.onchange('partner_id')
     # def _onchange_partner_id(self):
     #     if self.partner_id:
