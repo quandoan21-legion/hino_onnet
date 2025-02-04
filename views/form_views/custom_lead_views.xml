@@ -11,6 +11,11 @@
                         <group>
                             <group>
                                 <field name="name" />
+                                <field name="x_partner_id"/>
+                                <field name="x_partner_name"/>
+<!--                                <field name="x_customer_id"/>-->
+<!--                    <field name="x_customer_real_id" attrs="{'readonly': True}"/>-->
+<!--                    <field name="x_customer_name" attrs="{'readonly': True}"/>-->
                                 <!-- <field name="x_partner_rank_id"/> -->
                                 <field name="x_customer_type" />
                                 <field name="x_purchase_type" />
