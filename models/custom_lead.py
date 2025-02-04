@@ -1,10 +1,19 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, re
+
 
 class CustomLead(models.Model):
     _inherit = 'crm.lead'
 
     custom_field = fields.Char(string='Custom Field')
     # x_partner_rank_id = fields.Many2one('res.partner.rank', string='Rank')
+
+    x_customer_id = fields.Many2one('res.partner', string='Customer')
+    x_customer_name = fields.Char(string='Customer Name', compute='_compute_customer_name', store=True)
+
+    # x_customer_id = fields.Many2one('res.partner', string='Customer')
+    # x_customer_real_id = fields.Char(string='Customer ID', compute='_compute_customer_real_id', store=True, readonly=True)
+    # x_customer_name = fields.Char(string='Customer Name')
+
     x_customer_type = fields.Selection(
         [('nhap', 'Nháp'), ('don_vi_thu_3', 'Đơn vị thứ 3'), ('nha_dong_thung', 'Nhà đóng thùng')], 
         string='Bên thứ 3/Nhà đóng thùng ', default='nhap'
@@ -26,11 +35,22 @@ class CustomLead(models.Model):
     x_sale_person_id = fields.Many2one('res.users', string='Nhân viên kinh doanh')
     x_approaching_channel_id = fields.Many2one('hr.employee', string='Kênh tiếp cận')
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        if self.partner_id:
-            self.x_indentity_number = self.partner_id.identity_number
-            self.x_vat = self.partner_id.vat_number
+    @api.depends('x_customer_id')
+    def _compute_customer_name(self):
+        for record in self:
+            record.x_customer_name = record.x_customer_id.name if record.x_customer_id else ''
+
+    # @api.depends('x_customer_id')
+    # def _compute_customer_real_id(self):
+    #     for record in self:
+    #         record.x_customer_real_id = str(record.x_customer_id.id) if record.x_customer_id else ''
+    #         record.x_customer_name = record.x_customer_id.name if record.x_customer_id else ''
+
+    # @api.onchange('partner_id')
+    # def _onchange_partner_id(self):
+    #     if self.partner_id:
+    #         self.x_indentity_number = self.partner_id.identity_number
+    #         self.x_vat = self.partner_id.vat_number
 
     @api.constrains('x_indentity_number')
     def _check_identity_number(self):
