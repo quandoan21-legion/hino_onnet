@@ -1,8 +1,8 @@
-from odoo import models, fields, api
 
 import re
 
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class CustomLead(models.Model):
     _inherit = 'crm.lead'
@@ -12,6 +12,17 @@ class CustomLead(models.Model):
 
     # x_partner_rank_id = fields.Many2one('res.partner.rank', string='Rank')
 
+    x_partner_id = fields.Many2one('res.partner', string='Customer')
+    x_partner_name = fields.Char(string='Customer Name', compute='_compute_customer_name', store=True)
+    x_customer_status = fields.Selection(
+        [
+            ('personal', 'Cá nhân'),
+            ('company', 'Công ty'),
+            ('internal_hmv', 'Nội bộ HMV')
+        ],
+        string="Customer Status",
+        default='personal'
+    )
     x_partner_id = fields.Many2one('res.partner', string='Customer', tracking=True)
     x_partner_name = fields.Char(string='Customer Name', compute='_compute_customer_name', store=True, tracking=True)
 
@@ -41,9 +52,16 @@ class CustomLead(models.Model):
     x_activity_area = fields.Char(string='Phạm vi hoạt động', tracking=True)
     # x_dealer_id = fields.Many2one('res.partner', string='Đại lý', readonly=True)
     x_dealer_branch_id = fields.Many2one('res.company', string='Chi nhánh đại lý', default=lambda self: self.env.company, help='Chi nhánh đại lý tạo Tiềm năng', tracking=True)
-    x_sale_person = fields.Many2one('hr.employee', string='Nhân viên kinh doanh', domain=[('job_id.name', '=', 'Nhân viên kinh doanh')], help='Nhân viên kinh doanh phụ trách tiềm năng', tracking=True)
+    x_sale_person_id = fields.Many2one('hr.employee', string='Nhân viên kinh doanh', domain=[('job_id.name', '=', 'Nhân viên kinh doanh')], help='Nhân viên kinh doanh phụ trách tiềm năng', tracking=True)
     x_approaching_channel_id = fields.Many2one('hr.employee', string='Kênh tiếp cận', tracking=True)
-
+    x_state_id = fields.Many2one(
+        'res.country.state', string="State/Province"
+    )
+    x_website = fields.Char(string="Website")
+    x_contact_address_complete = fields.Char(
+        string="Địa chỉ cụ thể",
+        help="Địa chỉ chi tiết của khách hàng."
+    )
 
     @api.depends('x_partner_id')
     def _compute_customer_name(self):
@@ -73,6 +91,13 @@ class CustomLead(models.Model):
     #     if self.partner_id:
     #         self.x_indentity_number = self.partner_id.identity_number
     #         self.x_vat = self.partner_id.vat_number:
+    @api.constrains('x_customer_status', 'x_indentity_number', 'x_vat')
+    def _check_customer_status_requirements(self):
+        for record in self:
+            if record.x_customer_status == 'personal' and not record.x_indentity_number:
+                raise ValidationError("Với 'Cá nhân', trường 'Số CCCD/CMND' là bắt buộc.")
+            if record.x_customer_status == 'company' and not record.x_vat:
+                raise ValidationError("Với 'Công ty', trường 'Số ĐKKD (Mã số thuế)' là bắt buộc.")
 
 
     @api.constrains('x_identity_number')
