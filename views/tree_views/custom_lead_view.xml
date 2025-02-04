@@ -12,13 +12,8 @@
                 <field name="x_purchase_type" optional="show"/>
                 <field name="x_phone" optional="show" />
                 <field name="x_email_from" optional="show" />
-<<<<<<< HEAD
-                <!-- <field name="x_vat" optional="hide"/>
-                <field name="x_indentity_number" optional="hide"/> -->
-=======
                 <field name="x_vat" optional="hide"/>
                 <field name="x_identity_number" optional="hide"/>
->>>>>>> cad0c0409e032205243f695fb9d5408245721fb6
                 <field name="x_industry_id" optional="hide"/>
                 <field name="x_service_contract" optional="hide"/>
                 <field name="x_activity_area" optional="show"/>

@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hino_onnet_customer_rank,hino_onnet.customer.rank,model_customer_rank,base.group_user,1,1,1,1
 access_hino_onnet_vehicle_interest_line,hino_onnet.crm.lead.vehicle.interest_line,model_crm_lead_vehicle_interest_line,,1,1,1,1
+access_hino_onnet_owned_team_car_line,hino_onnet.owned.team.car.line,model_owned_team_car_line,base.group_user,1,1,1,1
+access_hino_onnet_member_line,hino_onnet.member.line,model_member_line,base.group_user,1,1,1,1
