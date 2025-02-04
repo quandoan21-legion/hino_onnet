@@ -13,8 +13,8 @@ class CustomLead(models.Model):
     )
     x_phone = fields.Char(string='Số điện thoại')
     x_email_from = fields.Char(string='Email')
-    x_vat = fields.Char(string='Số ĐKKD (Mã số thuế)')
-    x_indentity_number = fields.Char(string='CCCD/CMT')
+    # x_vat = fields.Char(string='Số ĐKKD (Mã số thuế)')
+    # x_indentity_number = fields.Char(string='CCCD/CMT')
     x_industry_id = fields.Many2one('res.partner.industry', string='Lĩnh vực kinh doanh')
     # x_request_sale_3rd_barrels_id = fields.Many2one('res.request.sale.3rd.barrels', string='Đề nghị bán lấn vùng/Bên thứ 3/Nhà đóng thùng', readonly=True)
     x_purchase_type = fields.Selection(
