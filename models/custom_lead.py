@@ -1,6 +1,8 @@
 import re
 from odoo import models, fields, api
+
 from odoo.exceptions import ValidationError
+
 
 class CustomLead(models.Model):
     _inherit = 'crm.lead'
@@ -40,9 +42,9 @@ class CustomLead(models.Model):
     )
     x_service_contract = fields.Boolean(string='Hợp đồng dịch vụ')
     x_activity_area = fields.Char(string='Phạm vi hoạt động')
-    x_dealer_id = fields.Many2one('res.partner', string='Đại lý')
-    x_dealer_branch_id = fields.Many2one('res.partner', string='Chi nhánh đại lý')
-    x_sale_person_id = fields.Many2one('res.users', string='Nhân viên kinh doanh')
+    # x_dealer_id = fields.Many2one('res.partner', string='Đại lý', readonly=True)
+    x_dealer_branch_id = fields.Many2one('res.company', string='Chi nhánh đại lý', default=lambda self: self.env.company, help='Chi nhánh đại lý tạo Tiềm năng' )
+    x_sale_person = fields.Many2one('hr.employee', string='Nhân viên kinh doanh', domain=[('job_id.name', '=', 'Nhân viên kinh doanh')], help='Nhân viên kinh doanh phụ trách tiềm năng')
     x_approaching_channel_id = fields.Many2one('hr.employee', string='Kênh tiếp cận')
     x_state_id = fields.Many2one(
         'res.country.state', string="State/Province"
@@ -75,3 +77,7 @@ class CustomLead(models.Model):
                 if not re.match(r'^\d{9,13}$', record.x_indentity_number):
                     raise models.ValidationError("Số CCCD/CMT phải chứa từ 9 đến 13 chữ số.")
 
+    @api.onchange('state')
+    def _onchange_state(self):
+        if self.state != 'draft':
+            self.salesperson_id = False
