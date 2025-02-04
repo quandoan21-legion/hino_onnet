@@ -25,7 +25,9 @@ class CustomLead(models.Model):
     )
     x_partner_id = fields.Many2one('res.partner', string='Customer', tracking=True)
     x_partner_name = fields.Char(string='Customer Name', compute='_compute_customer_name', store=True, tracking=True)
-
+    x_website = fields.Char(string="Website")
+    x_contact_address_complete = fields.Char(string="Địa chỉ cụ thể",help="Địa chỉ chi tiết của khách hàng.")
+ 
     # x_customer_id = fields.Many2one('res.partner', string='Customer')
     # x_customer_real_id = fields.Char(string='Customer ID', compute='_compute_customer_real_id', store=True, readonly=True)
     # x_customer_name = fields.Char(string='Customer Name')
@@ -57,12 +59,13 @@ class CustomLead(models.Model):
     x_state_id = fields.Many2one(
         'res.country.state', string="State/Province"
     )
-    x_website = fields.Char(string="Website")
-    x_contact_address_complete = fields.Char(
-        string="Địa chỉ cụ thể",
-        help="Địa chỉ chi tiết của khách hàng."
-    )
 
+    x_vehicle_interest_ids = fields.One2many(
+        'crm.lead.vehicle.interest.line',
+        'lead_id',
+        string='Loại xe khách hàng quan tâm'
+    )
+    
     @api.depends('x_partner_id')
     def _compute_customer_name(self):
         for record in self:
