@@ -65,9 +65,9 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Loại xe khách hàng quan tâm">
+                            <page string="Vehicle customer interested">
                                 <field name="x_vehicle_interest_ids" mode="tree,form">
-                                    <tree string="Danh sách xe quan tâm">
+                                    <tree string="List of interested vehicle">
                                         <!-- <field name="x_partner_name"/> -->
                                         <field name="x_customer"/>
                                         <field name="x_address"/>
@@ -81,7 +81,7 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Liên hệ">
+                            <page string="Contact">
                                 <group>
                                     <group>
                                         <field name="x_contact_person_ids" mode="tree,form">

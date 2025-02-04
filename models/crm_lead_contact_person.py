@@ -2,19 +2,19 @@ from odoo import models, fields, api
 
 class CrmLeadContactPerson(models.Model):
     _name = 'crm.lead.contact.person'
-    _description = 'Liên hệ'
+    _description = 'Contact'
 
     lead_id = fields.Many2one('crm.lead', string='Lead')
 
-    x_name = fields.Char(compute="_compute_contact_info", inverse="_inverse_contact_info", string="Tên liên hệ",
-                         help="Tên liên hệ khác của khách hàng")
+    x_name = fields.Char(compute="_compute_contact_info", inverse="_inverse_contact_info", string="Contact",
+                         help="Other customer contact name!")
     x_email = fields.Char(compute="_compute_contact_info", inverse="_inverse_contact_info", string="Email",
-                          help="Địa chỉ email của khách hàng")
-    x_function = fields.Char(compute="_compute_contact_info", inverse="_inverse_contact_info", string="Chức vụ",
-                             help="Tên chức vụ của khách hàng")
+                          help="Customer email address")
+    x_function = fields.Char(compute="_compute_contact_info", inverse="_inverse_contact_info", string="Position",
+                             help="Customer's position")
     x_phone_number = fields.Char(compute="_compute_contact_info", inverse="_inverse_contact_info",
-                                 string="Số điện thoại",
-                                 help="Số điện thoại của khách hàng")
+                                 string="Phone number",
+                                 help="Customer's phone number")
 
     def _compute_contact_info(self):
         for record in self:

@@ -92,7 +92,7 @@ class CustomLead(models.Model):
         string='Loại xe khách hàng quan tâm'
     )
 
-    x_contact_person_ids = fields.One2many('crm.lead.contact.person', 'lead_id', string='Liên hệ')
+    x_contact_person_ids = fields.One2many('crm.lead.contact.person', 'lead_id', string='Contact')
 
     @api.depends('x_partner_id')
     def _compute_customer_name(self):
