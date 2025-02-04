@@ -1,3 +1,4 @@
+from odoo import models, fields, api
 
 import re
 
@@ -5,8 +6,10 @@ from odoo import models, fields, api
 
 class CustomLead(models.Model):
     _inherit = 'crm.lead'
+    # Notebook lines
+    x_member_line_ids = fields.One2many('member.line', 'lead_id', string='Member Lines')
+    x_owned_team_car_line_ids = fields.One2many('owned.team.car.line', 'lead_id', string='Owned Team Car Lines')
 
-    custom_field = fields.Char(string='Custom Field')
     # x_partner_rank_id = fields.Many2one('res.partner.rank', string='Rank')
 
     x_partner_id = fields.Many2one('res.partner', string='Customer')
@@ -54,7 +57,7 @@ class CustomLead(models.Model):
     # def _onchange_partner_id(self):
     #     if self.partner_id:
     #         self.x_indentity_number = self.partner_id.identity_number
-    #         self.x_vat = self.partner_id.vat_number
+    #         self.x_vat = self.partner_id.vat_number:
 
 
     @api.constrains('x_indentity_number')

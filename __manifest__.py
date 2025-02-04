@@ -26,6 +26,7 @@ Long description of module's purpose
         'security/ir.model.access.csv',
         'views/form_views/custom_lead_views.xml',
         'views/form_views/customer_rank_view.xml',
+        'views/form_views/custom_lead_views.xml',
         'views/tree_views/custom_lead_view.xml',
         'views/tree_views/hino_customer_rank.xml',
         'views/views.xml',
