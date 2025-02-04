@@ -8,13 +8,13 @@ class EmployeeDemo(models.Model):
         job_obj = self.env['hr.job']
         employee_obj = self.env['hr.employee']
 
-        position_name = "Nhân viên kinh doanh"
+        position_name = "Sales staff"
         job = job_obj.search([('name', '=', position_name)], limit=1)
         
         if not job:
             job = job_obj.create({'name': position_name})
 
-        employee_names = ["Nhân viên 1", "Nhân viên 2", "Nhân viên 3", "Nhân viên 4", "Nhân viên 5"]
+        employee_names = ["Employee 1", "Employee 2", "Employee 3", "Employee 4", "Employee 5"]
 
         for name in employee_names:
             if not employee_obj.search([('name', '=', name)]):

@@ -9,6 +9,7 @@
                 <form>
                     <sheet>
                         <group>
+                            <field name="x_customer_status" widget="radio" options="{'horizontal': true}" />
                             <group>
                                 <field name="name" />
                                 <field name="x_partner_id"/>
@@ -40,7 +41,7 @@
                                 <field name="x_approaching_channel_id" />
                             </group>
                         </group>
-                        <group invisible="x_purchase_type != 'dau_thau'" >
+                        <group invisible="x_purchase_type != 'bidding'" >
                             <group>
                                 <field name="x_bidding_package" />
                                 <field name="x_project" />
