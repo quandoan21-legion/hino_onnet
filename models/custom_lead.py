@@ -46,12 +46,16 @@ class CustomLead(models.Model):
         [('mua_sam_truc_tiep', 'Mua sắm trực tiếp'), ('dau_thau', 'Đấu thầu'), ('khac', 'Khác')],
         string='Loại hình mua hàng', tracking=True
     )
-    x_service_contract = fields.Boolean(string='Hợp đồng dịch vụ')
-    x_activity_area = fields.Char(string='Phạm vi hoạt động')
-    x_dealer_id = fields.Many2one('res.partner', string='Đại lý')
-    x_dealer_branch_id = fields.Many2one('res.partner', string='Chi nhánh đại lý')
-    x_sale_person_id = fields.Many2one('res.users', string='Nhân viên kinh doanh')
-    x_approaching_channel_id = fields.Many2one('hr.employee', string='Kênh tiếp cận')
+    x_bidding_package = fields.Char(string='Gói thầu', tracking=True)
+    x_project = fields.Char(string='Dự án', tracking=True)
+    x_estimated_time_of_bid_opening = fields.Date(string='Thời gian dự kiến mở thầu', tracking=True)
+    x_area = fields.Char(string='Khu vực', tracking=True)
+    x_service_contract = fields.Boolean(string='Hợp đồng dịch vụ', tracking=True)
+    x_activity_area = fields.Char(string='Phạm vi hoạt động', tracking=True)
+    x_dealer_id = fields.Many2one('res.partner', string='Đại lý', readonly=True)
+    x_dealer_branch_id = fields.Many2one('res.company', string='Chi nhánh đại lý', default=lambda self: self.env.company, help='Chi nhánh đại lý tạo Tiềm năng', tracking=True)
+    x_sale_person_id = fields.Many2one('hr.employee', string='Nhân viên kinh doanh', domain=[('job_id.name', '=', 'Nhân viên kinh doanh')], help='Nhân viên kinh doanh phụ trách tiềm năng', tracking=True)
+    x_approaching_channel_id = fields.Many2one('hr.employee', string='Kênh tiếp cận', tracking=True)
     x_state_id = fields.Many2one(
         'res.country.state', string="State/Province"
     )
