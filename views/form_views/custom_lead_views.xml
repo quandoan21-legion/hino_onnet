@@ -34,7 +34,14 @@
                                 <field name="x_approaching_channel_id" />
                             </group>
                         </group>
-
+                        <group invisible="x_purchase_type != 'dau_thau'" >
+                            <group>
+                                <field name="x_bidding_package" />
+                                <field name="x_project" />
+                                <field name="x_estimated_time_of_bid_opening" />
+                                <field name="x_area" />
+                            </group>
+                        </group>
                         <notebook>
                             <page string="Owned Team Car">
                                 <field name="x_owned_team_car_line_ids">

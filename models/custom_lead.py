@@ -33,6 +33,10 @@ class CustomLead(models.Model):
         [('mua_sam_truc_tiep', 'Mua sắm trực tiếp'), ('dau_thau', 'Đấu thầu'), ('khac', 'Khác')],
         string='Loại hình mua hàng', tracking=True
     )
+    x_bidding_package = fields.Char(string='Gói thầu', tracking=True)
+    x_project = fields.Char(string='Dự án', tracking=True)
+    x_estimated_time_of_bid_opening = fields.Date(string='Thời gian dự kiến mở thầu', tracking=True)
+    x_area = fields.Char(string='Khu vực', tracking=True)
     x_service_contract = fields.Boolean(string='Hợp đồng dịch vụ', tracking=True)
     x_activity_area = fields.Char(string='Phạm vi hoạt động', tracking=True)
     # x_dealer_id = fields.Many2one('res.partner', string='Đại lý', readonly=True)
