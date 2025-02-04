@@ -18,7 +18,7 @@ Long description of module's purpose
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'crm', 'hr', 'contacts'],
+    'depends': ['base', 'crm', 'hr', 'contacts','mail'],
 
 
     # always loaded
@@ -26,6 +26,7 @@ Long description of module's purpose
         'security/ir.model.access.csv',
         'views/form_views/custom_lead_views.xml',
         'views/form_views/customer_rank_view.xml',
+        'views/form_views/custom_lead_views.xml',
         'views/tree_views/custom_lead_view.xml',
         'views/tree_views/hino_customer_rank.xml',
         'views/views.xml',

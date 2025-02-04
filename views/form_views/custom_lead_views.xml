@@ -9,7 +9,6 @@
                 <form>
                     <sheet>
                         <group>
-                             <field name="x_customer_status" widget="radio" options="{'horizontal': true}" />
                             <group>
                                 <field name="name" />
                                 <field name="x_partner_id"/>
@@ -30,23 +29,42 @@
                                 <field name="x_phone" />
                                 <field name="x_email_from" />
                                 <field name="x_vat" />
-                                <field name="x_indentity_number"  />
+
+                                <field name="x_identity_number" />
                                 <field name="x_industry_id" />
                                 <field name="x_service_contract" />
                                 <field name="x_activity_area" />
-                                <field name="x_dealer_id" />
+<!--                                <field name="x_dealer_id" />-->
                                 <field name="x_dealer_branch_id" />
-                                <field name="x_sale_person_id" />
+                                <field name="x_sale_person" />
                                 <field name="x_approaching_channel_id" />
                             </group>
                         </group>
 
                         <notebook>
-                            <page string="Details">
-                                <field name="description" />
+                            <page string="Owned Team Car">
+                                <field name="x_owned_team_car_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="model_name"/>
+                                        <field name="quantity"/>
+                                        <field name="brand_car"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Members">
+                                <field name="x_member_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="member_id"/>
+                                    </tree>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"
+                            groups="base.group_user" />
+                        <field name="message_ids" widget="mail_thread" />
+                    </div>
                 </form>
             </field>
         </record>

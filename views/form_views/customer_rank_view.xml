@@ -21,7 +21,6 @@
                             <field name="max_hino_vehicles"/>
                             <field name="min_owned_vehicles"/>
                             <field name="max_owned_vehicles"/>
-
                         </group>
                     </sheet>
                 </form>
