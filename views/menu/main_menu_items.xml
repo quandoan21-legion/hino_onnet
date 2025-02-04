@@ -2,13 +2,13 @@
 <odoo>
     <!-- New menu under CRM -->
     <menuitem id="custom_crm_menu"
-              name="Custom Leads"
+              name="Lead"
               parent="crm.crm_menu_root"
               sequence="10"/>
 
     <!-- Attach the action to the menu -->
     <menuitem id="custom_crm_submenu"
-              name="View Leads"
+              name="Leads"
               parent="custom_crm_menu"
               action="custom_crm_action"
               sequence="1"/>

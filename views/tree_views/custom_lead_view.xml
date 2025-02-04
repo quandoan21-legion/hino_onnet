@@ -1,23 +1,45 @@
+<!-- tree_view.xml -->
 <odoo>
-
+    <!-- Tree View -->
     <record id="customlead_view_tree" model="ir.ui.view">
         <field name="name">customlead_view_tree</field>
         <field name="model">crm.lead</field>
         <field name="arch" type="xml">
             <tree string="customlead_tree">
-                <field name="contact_name"/>
-                <field name="phone"/>
-                <field name="city"/>
-                <field name="zip"/>
+                <field name="name" />
+                <field name="x_customer_type" optional="hide"/>
+                <field name="x_purchase_type" optional="show"/>
+                <field name="x_phone" optional="show" />
+                <field name="x_email_from" optional="show" />
+                <!-- <field name="x_vat" optional="hide"/>
+                <field name="x_identity_number" optional="hide"/> -->
+                <field name="x_industry_id" optional="hide"/>
+                <field name="x_service_contract" optional="hide"/>
+                <field name="x_activity_area" optional="show"/>
+                <!-- <field name="x_dealer_id" optional="hide"/> -->
+                <field name="x_dealer_branch_id" optional="hide"/>
+                <field name="x_sale_person" optional="hide"/>
+                <field name="x_approaching_channel_id" optional="hide"/>
             </tree>
         </field>
     </record>
-    <!-- Action for the new menu -->
+
+    <!-- Updated Action to Explicitly Use Both Views -->
     <record id="custom_crm_action" model="ir.actions.act_window">
         <field name="name">Custom Leads</field>
         <field name="res_model">crm.lead</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="customlead_view_tree"/>
+        <field name="view_ids"
+            eval="[
+            (5, 0, 0),
+            (0, 0, {
+                'view_id': ref('customlead_view_tree'),
+                'view_mode': 'tree',
+            }),
+            (0, 0, {
+                'view_id': ref('view_form_custom_lead'),
+                'view_mode': 'form',
+            }),
+        ]" />
     </record>
-
 </odoo>

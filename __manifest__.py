@@ -9,7 +9,7 @@
     """,
 
     'author': "Team 1",
-    'website': "https://www.ahttech.com",
+    'website': "https://www.arrowhitech.com",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
@@ -18,20 +18,27 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'crm'],
+    'depends': ['base', 'crm', 'hr', 'contacts'],
+
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
+        'views/form_views/custom_lead_views.xml',
+        'views/form_views/customer_rank_view.xml',
         'views/tree_views/custom_lead_view.xml',
-        'views/views.xml',
-        'views/templates.xml',
-        'views/menu/main_menu_items.xml'
+        'views/tree_views/hino_customer_rank.xml',
+        # 'views/views.xml',
+        # 'views/templates.xml',
+        'views/menu/customer_rank_menu_items.xml',
+        'views/menu/main_menu_items.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',
     ],
+    'test': True,
     'installable': True,
     'application': True,
 }
+

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View for Customer Rank -->
+    <record id="hino_customer_rank_tree_view" model="ir.ui.view">
+        <field name="name">hino.customer.rank.tree</field>
+        <field name="model">customer.rank</field>
+        <field name="arch" type="xml">
+            <tree string="Hino's Customer Rank">
+                <field name="rank_name"/>
+                <field name="min_hino_vehicles"/>
+                <field name="max_hino_vehicles"/>
+                <field name="min_owned_vehicles"/>
+                <field name="max_owned_vehicles"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action to open the tree view -->
+    <record id="hino_customer_rank_action" model="ir.actions.act_window">
+        <field name="name">Hino's Customer Rank</field>
+        <field name="res_model">customer.rank</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="hino_customer_rank_tree_view"/>
+        <field name="target">current</field>
+    </record>
+</odoo>
