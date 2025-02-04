@@ -50,7 +50,7 @@ class CustomLead(models.Model):
     x_area = fields.Char(string='Khu vực', tracking=True)
     x_service_contract = fields.Boolean(string='Hợp đồng dịch vụ', tracking=True)
     x_activity_area = fields.Char(string='Phạm vi hoạt động', tracking=True)
-    # x_dealer_id = fields.Many2one('res.partner', string='Đại lý', readonly=True)
+    x_dealer_id = fields.Many2one('res.partner', string='Đại lý', readonly=True)
     x_dealer_branch_id = fields.Many2one('res.company', string='Chi nhánh đại lý', default=lambda self: self.env.company, help='Chi nhánh đại lý tạo Tiềm năng', tracking=True)
     x_sale_person_id = fields.Many2one('hr.employee', string='Nhân viên kinh doanh', domain=[('job_id.name', '=', 'Nhân viên kinh doanh')], help='Nhân viên kinh doanh phụ trách tiềm năng', tracking=True)
     x_approaching_channel_id = fields.Many2one('hr.employee', string='Kênh tiếp cận', tracking=True)
