@@ -57,7 +57,7 @@ class CustomLead(models.Model):
     # def _onchange_partner_id(self):
     #     if self.partner_id:
     #         self.x_indentity_number = self.partner_id.identity_number
-    #         self.x_vat = self.partner_id.vat_number
+    #         self.x_vat = self.partner_id.vat_number:
 
 
     @api.constrains('x_indentity_number')
