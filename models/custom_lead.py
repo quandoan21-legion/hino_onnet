@@ -10,8 +10,8 @@ class CustomLead(models.Model):
     custom_field = fields.Char(string='Custom Field')
     # x_partner_rank_id = fields.Many2one('res.partner.rank', string='Rank')
 
-    x_customer_id = fields.Many2one('res.partner', string='Customer')
-    x_customer_name = fields.Char(string='Customer Name', compute='_compute_customer_name', store=True)
+    x_partner_id = fields.Many2one('res.partner', string='Customer')
+    x_partner_name = fields.Char(string='Customer Name', compute='_compute_customer_name', store=True)
 
     # x_customer_id = fields.Many2one('res.partner', string='Customer')
     # x_customer_real_id = fields.Char(string='Customer ID', compute='_compute_customer_real_id', store=True, readonly=True)
@@ -39,10 +39,10 @@ class CustomLead(models.Model):
     x_approaching_channel_id = fields.Many2one('hr.employee', string='Kênh tiếp cận')
 
 
-    @api.depends('x_customer_id')
+    @api.depends('x_partner_id')
     def _compute_customer_name(self):
         for record in self:
-            record.x_customer_name = record.x_customer_id.name if record.x_customer_id else ''
+            record.x_partner_name = record.x_partner_id.name if record.x_partner_id else ''
 
     # @api.depends('x_customer_id')
     # def _compute_customer_real_id(self):
