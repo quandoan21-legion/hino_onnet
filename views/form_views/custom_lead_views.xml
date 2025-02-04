@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+<<<<<<< HEAD
+=======
+        <!-- Form View with Priority -->
+>>>>>>> 243ec33... add brand field and view table
         <record id="view_form_custom_lead" model="ir.ui.view">
             <field name="name">crm.lead.form</field>
             <field name="model">crm.lead</field>
@@ -28,6 +32,7 @@
                                 <field name="x_industry_id" />
                                 <field name="x_service_contract" />
                                 <field name="x_activity_area" />
+<<<<<<< HEAD
                                 <!-- <field name="x_dealer_id" /> -->
                                 <field name="x_dealer_branch_id" />
                                 <field name="x_sale_person" />
@@ -61,6 +66,20 @@
                                 </group>
                             </page>
 
+=======
+                                <field name="x_dealer_id" />
+                                <field name="x_dealer_branch_id" />
+                                <field name="x_sale_person_id" />
+                                <field name="x_approaching_channel_id" />
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Details">
+                                <field name="description" />
+                            </page>
+
+>>>>>>> 243ec33... add brand field and view table
                             <page string="Owned Team Car">
                                 <field name="x_owned_team_car_line_ids">
                                     <tree editable="bottom">
