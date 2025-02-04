@@ -36,6 +36,9 @@
                             <page string="Owned Team Car">
                                 <field name="x_owned_team_car_line_ids">
                                     <tree editable="bottom">
+                                        <control>
+                                            <create name="add_content_control" string="Add Content"/>
+                                        </control>
                                         <field name="model_name"/>
                                         <field name="quantity"/>
                                         <field name="brand_car"/>
@@ -45,6 +48,9 @@
                             <page string="Members">
                                 <field name="x_member_line_ids">
                                     <tree editable="bottom">
+                                        <control>
+                                            <create name="add_content_control" string="Add Content"/>
+                                        </control>
                                         <field name="member_id"/>
                                     </tree>
                                 </field>
