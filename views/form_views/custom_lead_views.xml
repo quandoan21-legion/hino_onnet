@@ -49,9 +49,9 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Loại xe khách hàng quan tâm">
+                            <page string="Vehicle Customer Interest">
                                 <field name="x_vehicle_interest_ids" mode="tree,form">
-                                    <tree string="Danh sách xe quan tâm">
+                                    <tree>
                                         <!-- <field name="x_partner_name"/> -->
                                         <field name="x_customer"/>
                                         <field name="x_address"/>
