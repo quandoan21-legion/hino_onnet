@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-<<<<<<< HEAD
-=======
         <!-- Form View with Priority -->
->>>>>>> 243ec33... add brand field and view table
         <record id="view_form_custom_lead" model="ir.ui.view">
             <field name="name">crm.lead.form</field>
             <field name="model">crm.lead</field>
