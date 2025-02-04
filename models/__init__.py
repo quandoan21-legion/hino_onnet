@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 from . import custom_lead
-
+from . import tab_custom_lead
 from . import models, my_custom_model, customer_rank

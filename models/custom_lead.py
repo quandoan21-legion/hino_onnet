@@ -28,6 +28,12 @@ class CustomLead(models.Model):
     x_sale_person_id = fields.Many2one('res.users', string='Nhân viên kinh doanh')
     x_approaching_channel_id = fields.Many2one('hr.employee', string='Kênh tiếp cận')
 
+    x_vehicle_interest_ids = fields.One2many(
+        'crm.lead.vehicle.interest.line',
+        'lead_id',
+        string='Loại xe khách hàng quan tâm'
+    )
+    
     # @api.onchange('partner_id')
     # def _onchange_partner_id(self):
     #     if self.partner_id:
