@@ -16,9 +16,9 @@ class CustomLead(models.Model):
     x_partner_name = fields.Char(string='Customer Name', compute='_compute_customer_name', store=True)
     x_customer_status = fields.Selection(
         [
-            ('personal', 'Cá nhân'),
-            ('company', 'Công ty'),
-            ('internal_hmv', 'Nội bộ HMV')
+            ('personal', 'Personal'),
+            ('company', 'Company'),
+            ('internal_hmv', 'Internal_HMV')
         ],
         string="Customer Status",
         default='personal'
@@ -33,31 +33,36 @@ class CustomLead(models.Model):
     # x_customer_name = fields.Char(string='Customer Name')
 
     x_customer_type = fields.Selection(
-        [('nhap', 'Nháp'), ('don_vi_thu_3', 'Đơn vị thứ 3'), ('nha_dong_thung', 'Nhà đóng thùng')],
-        string='Bên thứ 3/Nhà đóng thùng ', default='nhap', tracking=True
+        [('draft', 'Draft'), ('third_party', 'Third Party'), ('body_maker', 'Body Maker')],
+        string='Third part/Body maker', default='draft', tracking=True
     )
-    x_phone = fields.Char(string='Số điện thoại', tracking=True)
+    x_phone = fields.Char(string='Phone number', tracking=True)
     x_email_from = fields.Char(string='Email', tracking=True)
-    x_vat = fields.Char(string='Số ĐKKD (Mã số thuế)', tracking=True)
-    x_identity_number = fields.Char(string='CCCD/CMT', tracking=True)
-    x_industry_id = fields.Many2one('res.partner.industry', string='Lĩnh vực kinh doanh', tracking=True)
+    x_vat = fields.Char(string='Business registration number (Tax code)', tracking=True)
+    x_identity_number = fields.Char(string='Citizen identification card', tracking=True)
+    x_industry_id = fields.Many2one('res.partner.industry', string='Business Field', tracking=True)
     # x_request_sale_3rd_barrels_id = fields.Many2one('res.request.sale.3rd.barrels', string='Đề nghị bán lấn vùng/Bên thứ 3/Nhà đóng thùng', readonly=True)
     x_purchase_type = fields.Selection(
-        [('mua_sam_truc_tiep', 'Mua sắm trực tiếp'), ('dau_thau', 'Đấu thầu'), ('khac', 'Khác')],
-        string='Loại hình mua hàng', tracking=True
+        [('online_shopping', 'Online Shopping'), ('bidding', 'Bidding'), ('other', 'Other')],
+        string='Purchase type', tracking=True
     )
-    x_bidding_package = fields.Char(string='Gói thầu', tracking=True)
-    x_project = fields.Char(string='Dự án', tracking=True)
-    x_estimated_time_of_bid_opening = fields.Date(string='Thời gian dự kiến mở thầu', tracking=True)
-    x_area = fields.Char(string='Khu vực', tracking=True)
-    x_service_contract = fields.Boolean(string='Hợp đồng dịch vụ', tracking=True)
-    x_activity_area = fields.Char(string='Phạm vi hoạt động', tracking=True)
-    x_dealer_id = fields.Many2one('res.partner', string='Đại lý', readonly=True)
-    x_dealer_branch_id = fields.Many2one('res.company', string='Chi nhánh đại lý', default=lambda self: self.env.company, help='Chi nhánh đại lý tạo Tiềm năng', tracking=True)
-    x_sale_person_id = fields.Many2one('hr.employee', string='Nhân viên kinh doanh', domain=[('job_id.name', '=', 'Nhân viên kinh doanh')], help='Nhân viên kinh doanh phụ trách tiềm năng', tracking=True)
-    x_approaching_channel_id = fields.Many2one('hr.employee', string='Kênh tiếp cận', tracking=True)
+    x_bidding_package = fields.Char(string='Bidding Package', tracking=True)
+    x_project = fields.Char(string='Project', tracking=True)
+    x_estimated_time_of_bid_opening = fields.Date(string='Estimated time of bid opening', tracking=True)
+    x_area = fields.Char(string='Area', tracking=True)
+    x_service_contract = fields.Boolean(string='Service Contact', tracking=True)
+    x_activity_area = fields.Char(string='Activity Area', tracking=True)
+    x_dealer_id = fields.Many2one('res.partner', string='Dealer', readonly=True)
+    x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch', default=lambda self: self.env.company, tracking=True)
+    x_sale_person_id = fields.Many2one('hr.employee', string='Saleperson', domain=[('job_id.name', '=', 'Sales staff')], tracking=True)
+    x_approaching_channel_id = fields.Many2one('hr.employee', string='Approaching channels', tracking=True)
     x_state_id = fields.Many2one(
         'res.country.state', string="State/Province"
+    )
+
+    x_website = fields.Char(string="Website")
+    x_contact_address_complete = fields.Char(
+        string="Contact Address",
     )
 
     x_vehicle_interest_ids = fields.One2many(
