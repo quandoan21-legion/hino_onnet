@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+import re
 
 class VehicleInterest(models.Model):
     _name = 'crm.lead.vehicle.interest.line'
@@ -18,39 +19,47 @@ class VehicleInterest(models.Model):
     x_note = fields.Text(string='Ghi chú')
     
     @api.onchange('x_order_detail_3rd', 'x_partner_name')
-    def _onchange_x_order_detail_3rd(self):
-        if self.x_order_detail_3rd:
-            self.x_partner_name = self.x_order_detail_3rd.partner_id
-    
-    def _onchange_x_order_detail_3rd_data(self):
+    def _onchange_fields(self):
         if self.x_order_detail_3rd:
             self.x_partner_name = self.x_order_detail_3rd.partner_id
             self.x_customer = self.x_order_detail_3rd.partner_id.name
             self.x_address = self.x_order_detail_3rd.partner_id.street
-            self.x_province_id = self.x_order_detail_3rd.partner_id.state_id 
-    
-    def _onchange_x_order_detail_3rd_vehicle(self):
-        if self.x_order_detail_3rd:
+            self.x_province_id = self.x_order_detail_3rd.partner_id.state_id
             self.x_model_type_id = self.x_order_detail_3rd.model_type_id
             self.x_body_type_id = self.x_order_detail_3rd.body_type_id
-      
-            
-    def _onchange_x_partner_name(self):
-        if self.x_partner_name:
+
+        elif self.x_partner_name:
             self.x_customer = self.x_partner_name.name
+            self.x_address = self.x_partner_name.street or ''
+            self.x_province_id = self.x_partner_name.state_id
             
-    def _onchange_x_partner_id_address(self):
-        if self.x_partner_name:
-            self.x_address = self.x_partner_name.street or '' 
-    
-    def _onchange_x_partner_id_province(self):
-        if self.x_partner_name:
-            self.x_partner_name = self.x_partner_name.state_id.id   
-    
+
+    @api.constrains('x_customer', 'x_address', 'x_expected_implementation_time', 'x_expected_time_sign_contract')
+    def _check_fields(self):
+        for record in self:
+            if not record.x_customer:
+                raise ValidationError("Khách hàng không được để trống.")
+            if not re.match("^[a-zA-Z\s]+$", record.x_customer):
+                raise ValidationError("Tên khách hàng không được chứa số và ký tự đặc biệt.")
+        
+            if not record.x_address or record.x_address.isdigit():
+                raise ValidationError("Địa chỉ không được chỉ chứa số.")
+            if not any(char.isdigit() for char in record.x_address) and not any(char.isalpha() for char in record.x_address):
+                raise ValidationError("Địa chỉ phải bao gồm cả chữ và số.")
+            
+            # if record.x_quantity <= 0:
+            #     raise ValidationError("Số lượng phải lớn hơn 0 và là số hợp lệ.")
+
+            if record.x_expected_implementation_time and record.x_expected_time_sign_contract:
+                if record.x_expected_implementation_time < record.x_expected_time_sign_contract:
+                    raise ValidationError("Ngày giao dự kiến không thể trước ngày ký hợp đồng dự kiến.")  
+                  
     @api.constrains('x_quantity')
     def _check_quantity(self):
-        """Kiểm tra số lượng không âm."""
         for record in self:
-            if record.x_quantity <= 0:
-                raise ValidationError("Số lượng phải lớn hơn 0.")             
-            
+            try:
+                quantity = float(record.x_quantity)
+                if quantity <= 0:
+                    raise ValidationError("Số lượng phải lớn hơn 0 và là số hợp lệ.")
+            except (ValueError, TypeError):
+                raise ValidationError("Số lượng phải là số hợp lệ.")        
