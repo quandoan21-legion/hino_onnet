@@ -1,16 +1,26 @@
 
 import re
+from datetime import datetime
 
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
+
 class CustomLead(models.Model):
     _inherit = 'crm.lead'
+
+    name = fields.Char(string='Lead Name', required=True, readonly=True, default="e.g PC00000xx")
     # Notebook lines
     x_member_line_ids = fields.One2many('member.line', 'lead_id', string='Member Lines')
     x_owned_team_car_line_ids = fields.One2many('owned.team.car.line', 'lead_id', string='Owned Team Car Lines')
+
     x_customer_follow_up_ids = fields.One2many('crm.follow.up', 'lead_id', string='Customer Follow-Up')
     # x_partner_rank_id = fields.Many2one('res.partner.rank', string='Rank')
+
+
+    x_partner_rank_id = fields.Many2one('customer.rank', string='Rank')
+    x_customer_rank = fields.Char(string='Customer Rank', related='x_partner_rank_id.rank_name', store=True)
+
 
     x_customer_status = fields.Selection(
         [
@@ -72,6 +82,40 @@ class CustomLead(models.Model):
         ('failed','Failed'),
         ('cancelled', 'Cancelled'),
     ], string='Status', default='draft', tracking=True)
+
+    @api.model
+    def create(self, values):
+        # Get the fiscal year suffix (last 2 digits of current fiscal year)
+        fiscal_year = self.env['account.fiscal.year'].search([], limit=1, order='date_from desc')
+
+        if not fiscal_year:
+            fiscal_year_suffix = str(datetime.now().year)[2:]
+            print("Fiscal year not found, using current year suffix: " + fiscal_year_suffix)
+        else:
+            fiscal_year_suffix = str(fiscal_year.name)[2:]
+
+        # Get the last record of crm.lead and extract the last 4 digits of the 'name' field
+        last_lead = self.env['crm.lead'].search([], order='id desc', limit=1)
+        if last_lead and last_lead.name:
+            # Extract the last 4 digits from the 'name' field
+            last_number = last_lead.name[-4:]
+            try:
+                new_number = str(int(last_number) + 1).zfill(4)  # Increment by 1 and pad with zeros
+            except ValueError:
+                new_number = '0001'  # Default value if last 4 digits cannot be converted
+        else:
+            # If no previous lead exists, start with '0001'
+            new_number = '0001'
+
+        # Combine the fiscal year suffix and the new sequence number to form the name
+        pc_number = "PC" + fiscal_year_suffix + new_number
+
+        # Set the name in the values dictionary
+        values['name'] = pc_number
+
+        # Call the parent class's create method to actually create the record
+        return super(CustomLead, self).create(values)
+
 
     @api.depends('x_partner_id')
     def _compute_customer_name(self):
