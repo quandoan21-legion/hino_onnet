@@ -20,6 +20,7 @@
                 <field name="x_dealer_branch_id" optional="hide"/>
                 <field name="x_sale_person_id" optional="hide"/>
                 <field name="x_approaching_channel_id" optional="hide"/>
+                <field name="x_status" optional="show"/>
             </tree>
         </field>
     </record>

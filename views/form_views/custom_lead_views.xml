@@ -7,11 +7,23 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <form>
+                <header>
+                    <button name="action_mark_failed" string="Reject Order" type="object"
+                            invisible="x_status != 'draft'" class="oe_highlight"/>
+                    <button name="action_create_customer" string="Create Customer" type="object"
+                            invisible="x_status != 'draft'" class="oe_highlight" />
+                    <button name="action_proposal" string="Propose in Encroaching area/Third party/Body maker" type="object"
+                            invisible="x_status != 'draft'"/>
+                    <field name="x_status" widget="statusbar"
+                            statusbar_visible="draft,contract signed,in progress,completed,failed,cancelled" />
+                </header>
                     <sheet>
-                        <group>
+                        <div class="oe_title">
                             <field name="x_customer_status" widget="radio" options="{'horizontal': true}"/>
+                            <h1><field name="name" placeholder="e.g. Product Pricing" class="oe_inline"/></h1>
+                        </div>
+                        <group>
                             <group>
-                                <field name="name"/>
                                 <field name="x_partner_id"/>
                                 <field name="x_partner_name"/>
                                 <field name="x_state_id"/>
