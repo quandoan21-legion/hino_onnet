@@ -17,5 +17,5 @@
               name="Hino's Approach Channel"
               parent="crm.crm_menu_config"
               action="approach_channel_act_window"
-              sequence="2"/>
+              sequence="50"/>
 </odoo>
