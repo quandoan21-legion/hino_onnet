@@ -19,5 +19,5 @@ class CRMFollowUp(models.Model):
 @api.constrains('x_day_contact')
 def _check_day_contact(self):
     for record in self:
-        if record.x_day_contact < fields.Date.today():
-            raise ValidationError("The day contact cannot be set in the past")
+        if record.x_day_contact > fields.Date.today():
+            raise ValidationError("The day contact cannot be set in the future")
