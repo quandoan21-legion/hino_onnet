@@ -12,8 +12,6 @@ class CustomLead(models.Model):
 
     # x_partner_rank_id = fields.Many2one('res.partner.rank', string='Rank')
 
-    x_partner_id = fields.Many2one('res.partner', string='Customer')
-    x_partner_name = fields.Char(string='Customer Name', compute='_compute_customer_name', store=True)
     x_customer_status = fields.Selection(
         [
             ('personal', 'Personal'),
@@ -26,7 +24,7 @@ class CustomLead(models.Model):
     x_partner_id = fields.Many2one('res.partner', string='Customer', tracking=True)
     x_partner_name = fields.Char(string='Customer Name', compute='_compute_customer_name', store=True, tracking=True)
     x_website = fields.Char(string="Website")
-    x_contact_address_complete = fields.Char(string="Địa chỉ cụ thể",help="Địa chỉ chi tiết của khách hàng.")
+    x_contact_address_complete = fields.Char(string="Contact Address",help="Customer's detailed address.")
  
     # x_customer_id = fields.Many2one('res.partner', string='Customer')
     # x_customer_real_id = fields.Char(string='Customer ID', compute='_compute_customer_real_id', store=True, readonly=True)
@@ -60,15 +58,10 @@ class CustomLead(models.Model):
         'res.country.state', string="State/Province"
     )
 
-    x_website = fields.Char(string="Website")
-    x_contact_address_complete = fields.Char(
-        string="Contact Address",
-    )
-
     x_vehicle_interest_ids = fields.One2many(
         'crm.lead.vehicle.interest.line',
         'lead_id',
-        string='Loại xe khách hàng quan tâm'
+        string='Customer interested vehicle'
     )
     
     @api.depends('x_partner_id')
@@ -93,19 +86,25 @@ class CustomLead(models.Model):
     #         record.x_customer_real_id = str(record.x_customer_id.id) if record.x_customer_id else ''
     #         record.x_customer_name = record.x_customer_id.name if record.x_customer_id else ''
 
+    x_contact_person_ids = fields.One2many('crm.lead.contact.person', 'lead_id', string='Contact')
+
+    @api.depends('x_partner_id')
+    def _compute_customer_name(self):
+        for record in self:
+            record.x_partner_name = record.x_partner_id.name if record.x_partner_id else ''
 
     # @api.onchange('partner_id')
     # def _onchange_partner_id(self):
     #     if self.partner_id:
-    #         self.x_indentity_number = self.partner_id.identity_number
+    #         self.x_identity_number = self.partner_id.identity_number
     #         self.x_vat = self.partner_id.vat_number:
-    @api.constrains('x_customer_status', 'x_indentity_number', 'x_vat')
+    @api.constrains('x_customer_status', 'x_identity_number', 'x_vat')
     def _check_customer_status_requirements(self):
         for record in self:
-            if record.x_customer_status == 'personal' and not record.x_indentity_number:
-                raise ValidationError("Với 'Cá nhân', trường 'Số CCCD/CMND' là bắt buộc.")
+            if record.x_customer_status == 'personal' and not record.x_identity_number:
+                raise ValidationError("For 'Individual', the field 'ID Number/Citizen Identification Number' is required.")
             if record.x_customer_status == 'company' and not record.x_vat:
-                raise ValidationError("Với 'Công ty', trường 'Số ĐKKD (Mã số thuế)' là bắt buộc.")
+                raise ValidationError("For 'Company', the field 'Business Registration Number (Tax Code)' is required.")
 
 
     @api.constrains('x_identity_number')
@@ -113,7 +112,7 @@ class CustomLead(models.Model):
         for record in self:
             if record.x_identity_number:
                 if not re.match(r'^\d{9,13}$', record.x_identity_number):
-                    raise models.ValidationError("Số CCCD/CMT phải chứa từ 9 đến 13 chữ số.")
+                    raise models.ValidationError("The Identity number must contain from 9 to 13 digits.")
 
     @api.onchange('state')
     def _onchange_state(self):
