@@ -34,7 +34,7 @@ class CustomLead(models.Model):
         [('draft', 'Draft'), ('third_party', 'Third Party'), ('body_maker', 'Body Maker')],
         string='Third part/Body maker', default='draft', tracking=True
     )
-    x_phone = fields.Char(string='Phone number', tracking=True)
+    x_phone = fields.Integer(string='Phone number', tracking=True)
     x_email_from = fields.Char(string='Email', tracking=True)
     x_vat = fields.Char(string='Business registration number (Tax code)', tracking=True)
     x_identity_number = fields.Char(string='Citizen identification card', tracking=True)
@@ -52,7 +52,7 @@ class CustomLead(models.Model):
     x_activity_area = fields.Char(string='Activity Area', tracking=True)
     x_dealer_id = fields.Many2one('res.partner', string='Dealer', readonly=True)
     x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch', default=lambda self: self.env.company, tracking=True)
-    x_sale_person_id = fields.Many2one('hr.employee', string='Salesperson', domain=[('job_id.name', '=', 'Sales staff')], tracking=True)
+    x_sale_person_id = fields.Many2one('hr.employee', string='Sales Person', domain=[('job_id.name', '=', 'Sales staff')], tracking=True)
     x_approaching_channel_id = fields.Many2one('hr.employee', string='Approaching channels', tracking=True)
     x_state_id = fields.Many2one(
         'res.country.state', string="State/Province"
