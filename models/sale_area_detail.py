@@ -6,7 +6,7 @@ class SaleAreaDetail(models.Model):
     x_sale_area_id = fields.Many2one('sale.area', string='Sales Area')
     x_number = fields.Integer(string='STT', default=lambda self: self._get_next_sequence(), readonly=True)   
     x_code = fields.Many2one('res.country.state', string='Code Province', required=False)
-    x_name = fields.Char(string="Tên tỉnh thành", readonly=True)
+    x_name = fields.Many2one('res.country.state',string="Tên tỉnh thành", readonly=True)
 
     
     @api.model
