@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View for Customer Rank -->
+    <record id="sale_area_tree_view" model="ir.ui.view">
+        <field name="name">sale.area.tree</field>
+        <field name="model">sale.area</field>
+        <field name="arch" type="xml">
+            <tree string="Sale Area Configure">
+                <field name="x_field_sale_name"/>
+                <field name="x_field_sale_code"/>
+                <field name="x_is_free_sales_area"/>
+                <field name="x_release_time"/>
+                <field name="x_attach_file"/>
+            </tree>
+        </field>
+    </record>
+    <!-- Action to open the tree view -->
+    <record id="sale_area_action" model="ir.actions.act_window">
+        <field name="name">Configure the sales area</field>
+        <field name="res_model">sale.area</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

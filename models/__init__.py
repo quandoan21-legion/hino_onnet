@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from . import custom_lead
-from . import tab_custom_lead
+from . import tab_custom_lead, sale_area, sale_area_detail
 from . import customer_rank
 from . import custom_partner
 from . import crm_lead_contact_person

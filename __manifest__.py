@@ -18,7 +18,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'crm', 'hr', 'contacts','mail'],
+    'depends': ['base', 'crm', 'hr', 'contacts','mail', 'sale'],
 
 
     # always loaded
@@ -27,9 +27,12 @@
         'views/form_views/custom_lead_views.xml',
         'views/form_views/customer_rank_view.xml',
         'views/form_views/custom_lead_views.xml',
+        'views/form_views/sale_order_view.xml',
+        'views/tree_views/sale_area_views.xml',
         'views/tree_views/custom_lead_view.xml',
         'views/tree_views/hino_customer_rank.xml',
         'views/tree_views/approach_channel_view.xml',
+        'views/menu/sale_order_menu_items.xml',
         'views/menu/customer_rank_menu_items.xml',
         'views/menu/main_menu_items.xml',
     ],
