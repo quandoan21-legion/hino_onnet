@@ -20,7 +20,7 @@
                     <sheet>
                         <div class="oe_title">
                             <field name="x_customer_status" widget="radio" options="{'horizontal': true}"/>
-                            <h1><field name="name" placeholder="e.g. Product Pricing" class="oe_inline"/></h1>
+                            <h1><field name="name" class="oe_inline"/></h1>
                         </div>
                         <group>
                             <group>

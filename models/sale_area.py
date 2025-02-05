@@ -9,7 +9,7 @@ class SaleArea(models.Model):
     x_release_time = fields.Datetime(string='Release Time', required=True)
     x_attach_file = fields.Binary(string='Attach File', required=True)
     
-    x_sales_area_detali_ids = fields.One2many('sales.area.detail', 'x_sale_area_id', string='Sales Area Detail')
+    x_sales_area_detali_ids = fields.One2many('sales.area.detail.line', 'x_sale_area_id', string='Sales Area Detail')
 
     @api.model
     def create(self, vals):

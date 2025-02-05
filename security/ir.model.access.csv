@@ -4,7 +4,7 @@ access_hino_onnet_vehicle_interest_line,hino_onnet.crm.lead.vehicle.interest_lin
 access_hino_onnet_owned_team_car_line,hino_onnet.owned.team.car.line,model_owned_team_car_line,base.group_user,1,1,1,1
 access_hino_onnet_member_line,hino_onnet.member.line,model_member_line,base.group_user,1,1,1,1
 access_sale_area_user,sale.area.user,model_sale_area,base.group_user,1,1,1,1
-access_sale_area_detail_user,sales.area.detail.user,model_sales_area_detail,base.group_user,1,1,1,1
+access_sale_area_detail_line_user,sales.area.detail.line.user,model_sales_area_detail_line,base.group_user,1,1,1,1
 access_hino_onnet_vehicle_interest_line,hino_onnet.crm.lead.vehicle.interest_line,model_crm_lead_vehicle_interest_line,base.group_user,1,1,1,1
 access_hino_onnet_lead_contact_person,hino_onnet.crm.lead.contact.person,model_crm_lead_contact_person,,1,1,1,1
 access_approach_channel,hino_onnet.approach.channel,model_approach_channel,base.group_user,1,1,1,1

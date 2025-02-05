@@ -1,7 +1,7 @@
 from odoo import models, fields, api
 
 class SaleAreaDetail(models.Model):
-    _name = 'sales.area.detail'
+    _name = 'sales.area.detail.line'
     
     x_sale_area_id = fields.Many2one('sale.area', string='Sales Area')
     x_number = fields.Integer(string='STT', default=lambda self: self._get_next_sequence(), readonly=True)   
