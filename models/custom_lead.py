@@ -51,7 +51,7 @@ class CustomLead(models.Model):
     x_service_contract = fields.Boolean(string='Service Contact', tracking=True)
     x_activity_area = fields.Char(string='Activity Area', tracking=True)
     x_dealer_id = fields.Many2one('res.partner', string='Dealer', readonly=True)
-    x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch', default=lambda self: self.env.company, tracking=True)
+    x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch', default=lambda self: self.env.company, tracking=True, readonly=True)
     x_sale_person_id = fields.Many2one('hr.employee', string='Sales Person', domain=[('job_id.name', '=', 'Sales staff')], tracking=True)
     x_approaching_channel_id = fields.Many2one('hr.employee', string='Approaching channels', tracking=True)
     x_state_id = fields.Many2one(

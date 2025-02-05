@@ -1,0 +1,49 @@
+<!-- tree_view.xml -->
+<odoo>
+    <!-- Tree View -->
+    <record id="view_tree_custom_customer" model="ir.ui.view">
+        <field name="name">custom_customer_tree_view</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <tree string="custom_customer_tree">
+                <field name="x_company_type" />
+                <!-- <field name="x_dealer_id" />
+                <field name="x_dealer_branch_id" />
+                <field name="x_customer_type" />
+                <field name="x_name" />
+                <field name="x_customer_code" />
+                <field name="x_contact_address" />
+                <field name="x_district" />
+                <field name="x_state_id" />
+                <field name="x_field_sale_id" />
+                <field name="x_currently_rank_id" />
+                <field name="x_business_registration_id" />
+                <field name="x_identity_number" />
+                <field name="x_website" />
+                <field name="x_phone" />
+                <field name="x_mobile" />
+                <field name="x_industry_id" />
+                <field name="x_activity_area" /> -->
+            </tree>
+        </field>
+    </record>
+
+    <!-- Updated Action to Explicitly Use Both Views -->
+    <record id="custom_customer_action" model="ir.actions.act_window">
+        <field name="name">Custom Customer</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids"
+            eval="[
+            (5, 0, 0),
+            (0, 0, {
+                'view_id': ref('view_tree_custom_customer'),
+                'view_mode': 'tree',
+            }),
+            (0, 0, {
+                'view_id': ref('view_form_custom_customer'),
+                'view_mode': 'form',
+            }),
+        ]" />
+    </record>
+</odoo>
