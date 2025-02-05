@@ -5,3 +5,4 @@ class ResPartner(models.Model):
 
     vat_number = fields.Char(string='VAT Number', help='Value Added Tax Number')
     identity_number = fields.Char(string='Identity Number', help='National or Personal Identity Number')
+    
