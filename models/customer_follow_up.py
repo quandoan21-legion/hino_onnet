@@ -8,13 +8,9 @@ class CRMFollowUp(models.Model):
     lead_id = fields.Many2one('crm.lead', string='Lead')
     x_readonly_fields = fields.Boolean(related='lead_id.x_readonly_fields')
     x_day_contact = fields.Date(string="Day", help="Customer follow-up day.")
-    x_exchange_content = fields.Text(string="Exchange Content", help="Content of each customer meeting.")
-    x_result = fields.Text(string="Result", help="Results after discussion with customers.")
-    x_recommendations = fields.Text(string="Recommendations", help="Suggested comments after discussion.")
     x_sale_person_follow_up = fields.Many2one('hr.employee', string="Salesperson Follow-Up",
                                               domain=[('job_id.name', '=', 'Sales staff')],
                                               help="Salesperson Follow-Up")
-
     x_sale_person_follow_up_id = fields.Many2one('hr.employee', string="Salesperson Follow-Up ID")
 
 @api.constrains('x_day_contact')
