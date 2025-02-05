@@ -64,6 +64,15 @@ class CustomLead(models.Model):
         string='Customer interested vehicle'
     )
     
+    x_status = fields.Selection([
+        ('draft', 'Draft'),
+        ('contract signed', 'Contract Signed'),
+        ('in progress','In Progress'),
+        ('completed','Completed'),
+        ('failed','Failed'),
+        ('cancelled', 'Cancelled'),
+    ], string='Status', default='draft', tracking=True)
+
     @api.depends('x_partner_id')
     def _compute_customer_name(self):
         for record in self:
@@ -87,11 +96,6 @@ class CustomLead(models.Model):
     #         record.x_customer_name = record.x_customer_id.name if record.x_customer_id else ''
 
     x_contact_person_ids = fields.One2many('crm.lead.contact.person', 'lead_id', string='Contact')
-
-    @api.depends('x_partner_id')
-    def _compute_customer_name(self):
-        for record in self:
-            record.x_partner_name = record.x_partner_id.name if record.x_partner_id else ''
 
     # @api.onchange('partner_id')
     # def _onchange_partner_id(self):
@@ -118,3 +122,18 @@ class CustomLead(models.Model):
     def _onchange_state(self):
         if self.state != 'draft':
             self.salesperson_id = False
+
+    def action_mark_failed(self):
+        self.write({'x_status': 'failed'})
+        
+    def action_create_customer(self):
+        self.write({'x_status': 'in progress'})
+
+    def action_proposal(self):
+        self.write({'x_status': 'in progress'})
+
+    def action_cancel_lead(self):
+        reason = self.env.context.get('cancel_reason')
+        if not reason:
+            raise ValidationError("A reason for cancellation is required.")
+        self.write({'x_status': 'cancelled'})
