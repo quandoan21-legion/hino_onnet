@@ -9,9 +9,9 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name="x_customer_status" widget="radio" options="{'horizontal': true}" />
+                            <field name="x_customer_status" widget="radio" options="{'horizontal': true}"/>
                             <group>
-                                <field name="name" />
+                                <field name="name"/>
                                 <field name="x_partner_id"/>
                                 <field name="x_partner_name"/>
                                 <field name="x_state_id"/>
@@ -27,26 +27,26 @@
                                 <field name="x_purchase_type"/>
                             </group>
                             <group>
-                                <field name="x_phone" />
-                                <field name="x_email_from" />
-                                <field name="x_vat" />
+                                <field name="x_phone"/>
+                                <field name="x_email_from"/>
+                                <field name="x_vat"/>
 
-                                <field name="x_identity_number" />
-                                <field name="x_industry_id" />
-                                <field name="x_service_contract" />
-                                <field name="x_activity_area" />
+                                <field name="x_identity_number"/>
+                                <field name="x_industry_id"/>
+                                <field name="x_service_contract"/>
+                                <field name="x_activity_area"/>
                                 <!--                                <field name="x_dealer_id" />-->
-                                <field name="x_dealer_branch_id" />
-                                <field name="x_sale_person_id" />
-                                <field name="x_approaching_channel_id" />
+                                <field name="x_dealer_branch_id"/>
+                                <field name="x_sale_person_id"/>
+                                <field name="x_approaching_channel_id"/>
                             </group>
                         </group>
-                        <group invisible="x_purchase_type != 'bidding'" >
+                        <group invisible="x_purchase_type != 'bidding'">
                             <group>
-                                <field name="x_bidding_package" />
-                                <field name="x_project" />
-                                <field name="x_estimated_time_of_bid_opening" />
-                                <field name="x_area" />
+                                <field name="x_bidding_package"/>
+                                <field name="x_project"/>
+                                <field name="x_estimated_time_of_bid_opening"/>
+                                <field name="x_area"/>
                             </group>
                         </group>
                         <notebook>
@@ -82,41 +82,21 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Vehicle customer interested">
-                                <field name="x_vehicle_interest_ids" mode="tree,form">
-                                    <tree string="List of interested vehicle">
-                                        <!-- <field name="x_partner_name"/> -->
-                                        <field name="x_customer"/>
-                                        <field name="x_address"/>
-                                        <!-- <field name="x_province_id"/> -->
-                                        <!-- <field name="x_model_type_id"/> -->
-                                        <!-- <field name="x_body_type_id"/> -->
-                                        <field name="x_quantity"/>
-                                        <field name="x_expected_implementation_time"/>
-                                        <field name="x_expected_time_sign_contract"/>
-                                        <field name="x_note"/>
+                            <page string="Contact">
+                                <field name="x_contact_person_ids" mode="tree,form">
+                                    <tree>
+                                        <field name="x_name"/>
+                                        <field name="x_email"/>
+                                        <field name="x_function"/>
+                                        <field name="x_phone_number"/>
                                     </tree>
                                 </field>
-                            </page>
-                            <page string="Contact">
-                                <group>
-                                    <group>
-                                        <field name="x_contact_person_ids" mode="tree,form">
-                                            <tree>
-                                                <field name="x_name"/>
-                                                <field name="x_email"/>
-                                                <field name="x_function"/>
-                                                <field name="x_phone_number"/>
-                                            </tree>
-                                        </field>
-                                    </group>
-                                </group>
                             </page>
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user" />
-                        <field name="message_ids" widget="mail_thread" />
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
             </field>
