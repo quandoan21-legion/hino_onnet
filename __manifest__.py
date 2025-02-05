@@ -30,6 +30,7 @@
         'views/tree_views/custom_lead_view.xml',
         'views/tree_views/hino_customer_rank.xml',
         'views/menu/customer_rank_menu_items.xml',
+        'views/tree_views/approach_channel_view.xml',
         'views/menu/main_menu_items.xml',
     ],
     # only loaded in demonstration mode

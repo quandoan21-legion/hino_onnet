@@ -12,4 +12,10 @@
               parent="custom_crm_menu"
               action="custom_crm_action"
               sequence="1"/>
+
+    <menuitem id="hino_approach_channel"
+              name="Hino's Approach Channel"
+              parent="crm.crm_menu_config"
+              action="approach_channel_act_window"
+              sequence="2"/>
 </odoo>
