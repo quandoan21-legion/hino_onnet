@@ -1,6 +1,6 @@
 from odoo import models, fields, api
 
-class CustomLeadLine(models.Model):
+class CustomBankLine(models.Model):
     _name = 'bank.line'
 
     x_partner_id = fields.Many2one('res.partner', string='Partner')

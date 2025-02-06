@@ -44,6 +44,7 @@ class ResPartner(models.Model):
     x_cumulative_points = fields.Integer(string='Cumulative Points')
     x_register_sale_3rd_id = fields.Char(string='Register Sale 3rd') # liên quan đến phần 2.2.3 dùng many2one relation
     x_bank_line_ids = fields.One2many('bank.line', 'x_partner_id', string='Bank Lines')
+    x_contact_line_ids = fields.One2many('contact.line', 'x_partner_id', string='Contact Lines')
 
     def _compute_potential_count(self):
         for record in self:
@@ -85,4 +86,18 @@ class ResPartner(models.Model):
             'res_model': 'fleet.vehicle',
             'domain': [('x_partner_id', '=', self.id)],
             'context': {'default_x_partner_id': self.id},
+        }
+
+    def action_create_contact(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Create Contact',
+            'res_model': 'contact.line',
+            'view_mode': 'form',
+            'view_id': False,
+            'target': 'new',
+            'context': {
+                'default_x_partner_id': self.id,
+                'default_x_name': self.x_name or "New Contact",
+            },
         }

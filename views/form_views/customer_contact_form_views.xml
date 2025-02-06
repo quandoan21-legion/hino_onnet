@@ -71,14 +71,74 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Contact information/Driver">
-                                <!-- <field name="x_bank_line_ids">
-                                    <tree editable="bottom">
-                                        <field name="x_bank_id" />
-                                        <field name="x_branch" />
-                                        <field name="x_acc_number" />
-                                    </tree>
-                                </field> -->
+                            <page string="Contacts &amp; Addresses" name="contact_addresses"
+                                autofocus="autofocus">
+                                <button name="action_create_contact" type="object"
+                                    string="Add Contact" class="oe_highlight" icon="fa-plus" />
+                                <field name="x_contact_line_ids" mode="kanban"
+                                    context="{'default_x_partner_id': id}">
+                                    <kanban>
+                                        <field name="id" />
+                                        <field name="x_name" />
+                                        <field name="x_type" />
+                                        <field name="x_email" />
+                                        <field name="x_phone" />
+                                        <field name="x_mobile" />
+                                        <field name="x_contact_address" />
+                                        <field name="x_district" />
+                                        <field name="x_state_id" />
+                                        <field name="x_function" />
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div class="oe_kanban_global_click">
+                                                    <div class="oe_kanban_details">
+                                                        <strong>
+                                                            <field name="x_name" />
+                                                        </strong>
+                                                        <div t-if="record.x_function.raw_value">
+                                                            <field name="x_function" />
+                                                        </div>
+                                                        <div t-if="record.x_email.raw_value">
+                                                            <field name="x_email" widget="email" />
+                                                        </div>
+                                                        <div>
+                                                            <field name="x_district" />
+                                                            <t t-if="record.x_state_id">, </t>
+                                                            <field name="x_state_id" />
+                                                        </div>
+                                                        <div t-if="record.x_phone.raw_value">Phone: <t
+                                                                t-esc="record.x_phone.value" /></div>
+                                                        <div t-if="record.x_mobile.raw_value">
+                                                            Mobile: <t t-esc="record.x_mobile.value" /></div>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                    <form string="Contact / Address">
+                                        <sheet>
+                                            <group>
+                                                <group>
+                                                    <field name="x_type" required="1" widget="radio"
+                                                        options="{'horizontal': true}" />
+                                                    <field name="x_name" string="Contact Name"
+                                                        required="1" />
+                                                    <field name="x_function"
+                                                        placeholder="e.g. Sales Director" />
+                                                    <field name="x_contact_address"
+                                                        string="Position" />
+                                                    <field name="x_district" string="Department" />
+                                                    <field name="x_state_id" string="State/Province" />
+                                                </group>
+                                                <group>
+                                                    <field name="x_email" widget="email" />
+                                                    <field name="x_phone" widget="phone" />
+                                                    <field name="x_mobile" widget="phone" />
+                                                </group>
+                                            </group>
+                                        </sheet>
+                                    </form>
+                                </field>
                             </page>
                             <page string="Member Unit">
                                 <!-- <field name="x_bank_line_ids">
@@ -127,5 +187,6 @@
                 </form>
             </field>
         </record>
+
     </data>
 </odoo>
