@@ -106,6 +106,17 @@
                                     </tree>
                                 </field>
                             </page>
+                            <page string="Customer Follow-Up History">
+                                <field name="x_customer_follow_up_ids" mode="tree,form">
+                                    <tree>
+                                        <field name="x_day_contact"/>
+                                        <field name="x_exchange_content"/>
+                                        <field name="x_result"/>
+                                        <field name="x_recommendations"/>
+                                        <field name="x_sale_person_follow_up"/>
+                                    </tree>
+                                </field>
+                            </page>
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
