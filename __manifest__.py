@@ -31,11 +31,14 @@ Long description of module's purpose
         'views/tree_views/hino_customer_rank.xml',
         'views/menu/customer_rank_menu_items.xml',
         'views/menu/main_menu_items.xml',
+        'views/form_views/custom_rank_upgrade_view.xml',
+        'views/tree_views/hino_customer_upgrade_rank.xml'
     ],
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',
     ],
+    'test': True,
     'test': True,
 }
 

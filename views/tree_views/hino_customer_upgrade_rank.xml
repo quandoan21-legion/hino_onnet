@@ -1,0 +1,24 @@
+<odoo>
+        <record id="view_customer_rank_upgrade_tree" model="ir.ui.view">
+        <field name="name">customer.rank.upgrade.tree</field>
+        <field name="model">customer.rank.upgrade</field>
+        <field name="arch" type="xml">
+            <tree string="Danh sách nâng hạng khách hàng">
+                <field name="x_request_form_code"/>
+                <field name="x_partner_id"/>
+                <field name="x_currently_rank_id"/>
+                <field name="x_rank_upgrade_id"/>
+                <field name="x_quantity_of_hino"/>
+                <field name="x_total_quantity"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_customer_rank_upgrade" model="ir.actions.act_window">
+        <field name="name">Nâng hạng khách hàng</field>
+        <field name="res_model">customer.rank.upgrade</field>
+        <field name="view_mode">tree,form</field>
+         <field name="view_id" ref="view_customer_rank_upgrade_tree"/>
+        <field name="target">current</field>
+    </record>
+</odoo>

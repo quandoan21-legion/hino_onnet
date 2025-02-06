@@ -18,7 +18,7 @@
                 <field name="x_service_contract" optional="hide"/>
                 <field name="x_activity_area" optional="show"/>
                 <!-- <field name="x_dealer_id" optional="hide"/> -->
-                <field name="x_dealer_branch_id" optional="hide"/>
+<!--                <field name="x_dealer_branch_id" optional="hide"/>-->
                 <field name="x_sale_person_id" optional="hide"/>
                 <field name="x_approaching_channel_id" optional="hide"/>
             </tree>
