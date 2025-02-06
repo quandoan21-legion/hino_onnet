@@ -1,5 +1,5 @@
 from odoo import models, fields, api
-
+from odoo.exceptions import ValidationError
 class SaleAreaDetail(models.Model):
     _name = 'sales.area.detail'
     
@@ -39,3 +39,20 @@ class SaleAreaDetail(models.Model):
             last_number = self.search([('x_sale_area_id', '=', sale_area)], order='x_number desc', limit=1)
             res['x_number'] = last_number.x_number + 1 if last_number else 1
         return res
+    
+    @api.constrains('x_sale_area_id', 'x_number')
+    def _check_unique_number(self):
+        for record in self:
+            duplicate = self.search([
+                ('x_sale_area_id', '=', record.x_sale_area_id.id),
+                ('x_number', '=', record.x_number),
+                ('id', '!=', record.id)
+            ])
+            if duplicate:
+                raise ValidationError("STT must be unique within the same Sales Area!")
+
+    @api.constrains('x_code', 'x_name')
+    def _check_code_name(self):
+        for record in self:
+            if record.x_code and not record.x_name:
+                raise ValidationError("Name Province cannot be empty if Code Province is selected!")
