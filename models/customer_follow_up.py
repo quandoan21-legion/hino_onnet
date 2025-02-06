@@ -14,6 +14,7 @@ class CRMFollowUp(models.Model):
     x_sale_person_follow_up = fields.Many2one('hr.employee', string="Salesperson Follow-Up",
                                               domain=[('job_id.name', '=', 'Sales staff')],
                                               help="Salesperson Follow-Up")
+    
     x_sale_person_follow_up_id = fields.Many2one('hr.employee', string="Salesperson Follow-Up ID")
 
 @api.constrains('x_day_contact')
