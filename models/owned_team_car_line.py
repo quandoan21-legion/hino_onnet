@@ -10,4 +10,4 @@ class CustomLeadLine(models.Model):
     quantity = fields.Integer(string='Number')
     brand_car = fields.Char(string='Car Firm Name')
 
-    customer_rank_upgrade_id = fields.Many2one('customer.rank.upgrade', string='Khách hàng nâng hạng')
+    customer_rank_upgrade_id = fields.Many2one('customer.rank.upgrade', string='Potential customer')

@@ -2,46 +2,44 @@ from odoo import models, fields, api
 
 class CustomerRankUpgrade(models.Model):
     _name = 'customer.rank.upgrade'
-    _description = 'Nâng hạng khách hàng'
+    _description = 'Customer Rank Upgrade'
     _rec_name = 'x_request_form_code'
 
     x_request_form_code = fields.Char(
-        string='Mã phiếu',
+        string='Request Form Code',
         readonly=True,
         copy=False,
-
     )
     x_partner_id = fields.Many2one(
         'res.partner',
-        string='Khách hàng',
+        string='Customer',
         required=True
     )
     x_currently_rank_id = fields.Many2one(
         'customer.rank',
-        string='Hạng khách hàng hiện tại',
+        string='Current Customer Rank',
         readonly=True
     )
     x_rank_upgrade_id = fields.Many2one(
         'customer.rank',
-        string='Hạng nâng cấp'
+        string='Rank Upgrade'
     )
     x_quantity_of_hino = fields.Integer(
-        string='Số xe Hino',
+        string='Number of Hino Vehicles',
         compute='_compute_quantity_of_hino',
         store=True
     )
     x_total_quantity = fields.Integer(
-        string='Tổng số xe',
+        string='Total Number of Vehicles',
         compute='_compute_total_quantity',
         store=True
     )
     approve_history_ids = fields.One2many(
-        'approve.history', 'customer_rank_upgrade_id', string="Lịch sử phê duyệt"
+        'approve.history', 'customer_rank_upgrade_id', string="Approval History"
     )
     x_owned_team_car_ids = fields.One2many(
-        'owned.team.car.line', 'customer_rank_upgrade_id', string="Danh sách xe sở hữu"  # Corrected
+        'owned.team.car.line', 'customer_rank_upgrade_id', string="Owned Vehicle List"
     )
-
 
     @api.model
     def create(self, vals):
