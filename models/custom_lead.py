@@ -14,7 +14,6 @@ class CustomLead(models.Model):
     x_member_line_ids = fields.One2many('member.line', 'lead_id', string='Member Lines')
     x_owned_team_car_line_ids = fields.One2many('owned.team.car.line', 'lead_id', string='Owned Team Car Lines')
 
-    x_partner_rank_id = fields.Many2one('customer.rank', string='Rank')
     x_customer_follow_up_ids = fields.One2many('crm.follow.up', 'lead_id', string='Customer Follow-Up')
     # x_partner_rank_id = fields.Many2one('res.partner.rank', string='Rank')
 
@@ -62,17 +61,22 @@ class CustomLead(models.Model):
     x_service_contract = fields.Boolean(string='Service Contact', tracking=True)
     x_activity_area = fields.Char(string='Activity Area', tracking=True)
     x_dealer_id = fields.Many2one('res.partner', string='Dealer', readonly=True)
-    # x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch', default=lambda self: self.env.company, tracking=True)
+    x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch', default=lambda self: self.env.company, tracking=True)
     x_sale_person_id = fields.Many2one('hr.employee', string='Sales Person', domain=[('job_id.name', '=', 'Sales staff')], tracking=True)
     x_approaching_channel_id = fields.Many2one('hr.employee', string='Approaching channels', tracking=True)
     x_state_id = fields.Many2one(
         'res.country.state', string="State/Province"
     )
 
+    x_website = fields.Char(string="Website")
+    x_contact_address_complete = fields.Char(
+        string="Contact Address",
+    )
+
     x_vehicle_interest_ids = fields.One2many(
         'crm.lead.vehicle.interest.line',
         'lead_id',
-        string='Customer interested vehicle'
+        string='Loại xe khách hàng quan tâm'
     )
     
     x_status = fields.Selection([
