@@ -19,7 +19,6 @@
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'crm', 'hr', 'contacts','mail', 'account', 'sale', 'account_accountant'],
-    'depends': ['base', 'crm', 'hr', 'contacts','mail', 'account', 'sale'],
 
 
     # always loaded

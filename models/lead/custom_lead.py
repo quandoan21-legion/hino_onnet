@@ -69,7 +69,7 @@ class CustomLead(models.Model):
         'lead_id',
         string='Customer interested vehicle'
     )
-    
+
     x_status = fields.Selection([
         ('draft', 'Draft'),
         ('contract signed', 'Contract Signed'),
