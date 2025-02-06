@@ -6,7 +6,14 @@ class CustomerRank(models.Model):
     _name = 'customer.rank'
     _description = 'Customer Rank'
 
-    rank_name = fields.Char(string='User Input Rank Name', required=True)
+    rank_name = fields.Char(string='Rank Name', required=True)
+
+    # Override display_name to show rank_name instead of the default name
+    def name_get(self):
+        result = []
+        for record in self:
+            result.append((record.id, record.rank_name))
+        return result
     min_hino_vehicles = fields.Integer(string='Minimum Hino Vehicles', required=True)
     max_hino_vehicles = fields.Integer(string='Maximum Hino Vehicles', required=True)
     min_owned_vehicles = fields.Integer(string='Minimum Owned Vehicles', required=True)
