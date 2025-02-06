@@ -66,9 +66,7 @@
                         <notebook>
                             <page string="Vehicle Customer Interest">
                                 <field name="x_vehicle_interest_ids" mode="tree,form">
-                                    <field name="x_readonly_fields"/>
-                                    <tree t-if="record.x_readonly_fields.raw_value" create="false" delete="false"
-                                          edit="false">
+                                    <tree>
                                         <field name="x_customer"/>
                                         <field name="x_address"/>
                                         <field name="x_quantity"/>
@@ -76,55 +74,45 @@
                                         <field name="x_expected_time_sign_contract"/>
                                         <field name="x_note"/>
                                     </tree>
-                                    <tree t-if="not record.x_readonly_fields.raw_value" create="true" delete="true"
-                                          edit="true">
-                                        <field name="x_customer"/>
-                                        <field name="x_address"/>
-                                        <field name="x_quantity"/>
-                                        <field name="x_expected_implementation_time"/>
-                                        <field name="x_expected_time_sign_contract"/>
-                                        <field name="x_note"/>
-                                    </tree>
-
                                 </field>
                             </page>
-                            <!--                            <page string="Owned Team Car">-->
-                            <!--                                <field name="x_owned_team_car_line_ids">-->
-                            <!--                                    <tree editable="bottom">-->
-                            <!--                                        <field name="model_name"/>-->
-                            <!--                                        <field name="quantity"/>-->
-                            <!--                                        <field name="brand_car"/>-->
-                            <!--                                    </tree>-->
-                            <!--                                </field>-->
-                            <!--                            </page>-->
-                            <!--                            <page string="Members">-->
-                            <!--                                <field name="x_member_line_ids">-->
-                            <!--                                    <tree editable="bottom">-->
-                            <!--                                        <field name="member_id"/>-->
-                            <!--                                    </tree>-->
-                            <!--                                </field>-->
-                            <!--                            </page>-->
-                            <!--                            <page string="Contact">-->
-                            <!--                                <field name="x_contact_person_ids" mode="tree,form">-->
-                            <!--                                    <tree>-->
-                            <!--                                        <field name="x_name"/>-->
-                            <!--                                        <field name="x_email"/>-->
-                            <!--                                        <field name="x_function"/>-->
-                            <!--                                        <field name="x_phone_number"/>-->
-                            <!--                                    </tree>-->
-                            <!--                                </field>-->
-                            <!--                            </page>-->
-                            <!--                            <page string="Customer Follow-Up History">-->
-                            <!--                                <field name="x_customer_follow_up_ids" mode="tree,form">-->
-                            <!--                                    <tree>-->
-                            <!--                                        <field name="x_day_contact"/>-->
-                            <!--                                        <field name="x_exchange_content"/>-->
-                            <!--                                        <field name="x_result"/>-->
-                            <!--                                        <field name="x_recommendations"/>-->
-                            <!--                                        <field name="x_sale_person_follow_up"/>-->
-                            <!--                                    </tree>-->
-                            <!--                                </field>-->
-                            <!--                            </page>-->
+                            <page string="Owned Team Car">
+                                <field name="x_owned_team_car_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="model_name"/>
+                                        <field name="quantity"/>
+                                        <field name="brand_car"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Members">
+                                <field name="x_member_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="member_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Contact">
+                                <field name="x_contact_person_ids" mode="tree,form">
+                                    <tree>
+                                        <field name="x_name"/>
+                                        <field name="x_email"/>
+                                        <field name="x_function"/>
+                                        <field name="x_phone_number"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Customer Follow-Up History">
+                                <field name="x_customer_follow_up_ids" mode="tree,form">
+                                    <tree>
+                                        <field name="x_day_contact"/>
+                                        <field name="x_exchange_content"/>
+                                        <field name="x_result"/>
+                                        <field name="x_recommendations"/>
+                                        <field name="x_sale_person_follow_up"/>
+                                    </tree>
+                                </field>
+                            </page>
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
