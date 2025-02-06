@@ -29,7 +29,7 @@
                                     </tree>
                                     <form>
                                         <group>
-                                            <field name="x_sale_area_id"/>
+                                            <field name="x_number"/>
                                             <field name="x_code"/>
                                             <field name="x_name"/>
                                         </group>
