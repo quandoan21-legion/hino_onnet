@@ -14,13 +14,13 @@ class SaleArea(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('x_is_free_sales_area') and self.search_count([('x_is_free_sales_area', '=', True)]) > 0:
-            raise exceptions.ValidationError("Đã tồn tại một khu vực bán hàng miễn phí. Vui lòng cập nhật bản ghi hiện tại.")
+            raise exceptions.ValidationError("A free sales area already exists. Please update the existing record.")
         vals.setdefault('x_field_sale_code', self._generate_sale_code())
         return super().create(vals)
 
     def write(self, vals):
         if vals.get('x_is_free_sales_area') and self.search_count([('x_is_free_sales_area', '=', True)]) > 0:
-            raise exceptions.ValidationError("Đã tồn tại một khu vực bán hàng miễn phí. Vui lòng cập nhật bản ghi hiện tại.")
+            raise exceptions.ValidationError("A free sales area already exists. Please update the existing record.")
         return super().write(vals)
     
     def _generate_sale_code(self):
@@ -36,10 +36,10 @@ class SaleArea(models.Model):
     @api.constrains('x_is_free_sales_area')
     def _check_free_sales_area(self):
         if self.x_is_free_sales_area and self.search_count([('x_is_free_sales_area', '=', True), ('id', '!=', self.id)]) > 0:
-            raise exceptions.ValidationError(f"{self.x_field_sale_code} - Đã tồn tại một khu vực bán hàng miễn phí. Vui lòng cập nhật bản ghi hiện tại.")
+            raise exceptions.ValidationError(f"{self.x_field_sale_code} - A free sales area already exists. Please update the existing record.")
 
     @api.constrains('x_attach_file_name')
     def _check_file_format(self):
         if self.x_attach_file_name and not self.x_attach_file_name.lower().endswith('.pdf'):
-            raise exceptions.ValidationError("Chỉ chấp nhận tệp PDF.")
+            raise exceptions.ValidationError("Only PDF files are allowed.")
     
