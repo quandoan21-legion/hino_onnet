@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data>
-        <menuitem id="hino_sale_area_menu" name="Configure sales area" parent="sale.menu_sale_config" action="sale_area_action" sequence="1"/>
-    </data>
-</odoo>
