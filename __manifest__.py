@@ -18,14 +18,17 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'crm', 'hr', 'contacts','mail', 'account'],
-
+    'depends': ['base', 'crm', 'hr', 'contacts', 'mail', 'account'],
 
     # always loaded
     'data': [
         'data/registration_code_sequence.xml',
-        'security/ir.model.access.csv',
         'data/lead_sequence.xml',
+
+        'security/ir.model.access.csv',
+
+        'wizards/third_party_registration_rejection_wizard_view.xml',
+
         'views/form_views/custom_lead_views.xml',
         'views/form_views/customer_rank_view.xml',
         'views/form_views/custom_lead_views.xml',
@@ -44,4 +47,3 @@
     'installable': True,
     'application': True,
 }
-

@@ -68,9 +68,9 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="x_registration_code"/>
-                <field name="x_name"/>
+                <field name="x_customer_code"/>
                 <field name="x_customer_name"/>
-                <field name="x_phone"/>
+                <field name="x_registration_type"/>
                 <field name="x_state"/>
             </tree>
         </field>

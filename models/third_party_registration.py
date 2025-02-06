@@ -1,8 +1,18 @@
 from odoo import models, fields, api
+from odoo.exceptions import UserError, ValidationError
+import logging
+
+# Initialize logger
+_logger = logging.getLogger(__name__)
+
+# Import translation function
+from odoo.tools.translate import _
+
 
 class ThirdPartyRegistration(models.Model):
     _name = 'third.party.registration'
     _description = 'Third Party/Packaging House Registration'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'x_name'
 
     x_name = fields.Char(string='Unit Name', required=True)
@@ -30,6 +40,28 @@ class ThirdPartyRegistration(models.Model):
         ('cancelled', 'Cancelled'),
     ], default='draft', string='State')
 
+    # Add field constraints
+    @api.constrains('x_phone')
+    def _check_phone(self):
+        for record in self:
+            if record.x_phone:
+                # Check for duplicates
+                duplicate = self.env['res.partner'].search([
+                    ('phone', '=', record.x_phone),
+                    ('id', '!=', record.x_customer_name.id)
+                ], limit=1)
+                if duplicate:
+                    raise ValidationError(_('Phone number already exists for another customer!'))
+
+    # Add file validation
+    @api.constrains('x_attach_files')
+    def _check_attachment_type(self):
+        for record in self:
+            if record.x_attach_files:
+                # Implement PDF validation logic
+                if not record.x_attach_files.mimetype == 'application/pdf':
+                    raise ValidationError(_('Only PDF files are allowed!'))
+
     @api.model
     def create(self, vals):
         if not vals.get('x_registration_code'):
@@ -37,32 +69,60 @@ class ThirdPartyRegistration(models.Model):
         return super(ThirdPartyRegistration, self).create(vals)
 
     def action_submit(self):
+        self.ensure_one()
         self.write({'x_state': 'waiting_approval'})
+        # Create approval log
+        self.env['third.party.registration.approval'].create({
+            'registration_id': self.id,
+            'x_approval_person': self.env.user.id,
+            'x_previous_state': 'draft',
+            'x_new_state': 'waiting_approval',
+        })
 
     def action_confirm(self):
         self.write({'x_state': 'approved'})
 
     def action_refuse(self):
-        self.write({'x_state': 'rejected'})
+        self.ensure_one()
+        return {
+            'name': _('Reject Registration'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'third.party.registration.reject.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_registration_id': self.id,
+            }
+        }
 
     def action_cancel(self):
         self.write({'x_state': 'cancelled'})
 
     def action_create_customer(self):
-        """ Create a new customer based on the registration details. """
-        new_customer = self.env['res.partner'].create({
-            'name': self.x_name,
-            'phone': self.x_phone,
-            'industry_id': self.x_business_field.id,
-            'category_id': [(6, 0, [self.x_registration_type.id])],
-        })
-        self.x_customer_name = new_customer.id
-        self.x_customer_code = new_customer.id  # Assuming customer code is the same as partner ID
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Customer',
-            'res_model': 'res.partner',
-            'res_id': new_customer.id,
-            'view_mode': 'form',
-            'target': 'current',
-        }
+        try:
+            category_ids = []
+            if self.x_registration_type:
+                category_ids = [(4, self.x_registration_type.id)]
+
+            new_customer = self.env['res.partner'].create({
+                'name': self.x_name,
+                'phone': self.x_phone,
+                'industry_id': self.x_business_field.id if self.x_business_field else False,
+                'category_id': category_ids,
+            })
+            self.x_customer_name = new_customer.id
+            self.x_customer_code = new_customer.id
+
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Customer',
+                'res_model': 'res.partner',
+                'res_id': new_customer.id,
+                'view_mode': 'form',
+                'target': 'current',
+            }
+        except Exception as e:
+            # Log the error for debugging
+            _logger.error('Error creating customer: %s', str(e))
+            # Raise user-friendly error
+            raise UserError(_('Could not create customer. Please check if all required fields are filled correctly.'))
