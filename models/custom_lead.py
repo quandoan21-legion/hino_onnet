@@ -68,15 +68,10 @@ class CustomLead(models.Model):
         'res.country.state', string="State/Province"
     )
 
-    x_website = fields.Char(string="Website")
-    x_contact_address_complete = fields.Char(
-        string="Contact Address",
-    )
-
     x_vehicle_interest_ids = fields.One2many(
         'crm.lead.vehicle.interest.line',
         'lead_id',
-        string='Loại xe khách hàng quan tâm'
+        string='Customer interested vehicle'
     )
     
     x_status = fields.Selection([
@@ -174,7 +169,7 @@ class CustomLead(models.Model):
 
     def action_mark_failed(self):
         self.write({'x_status': 'failed'})
-
+        
     def action_create_customer(self):
         self.write({'x_status': 'in progress'})
 
