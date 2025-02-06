@@ -13,29 +13,50 @@
                             visible="x_state == 'waiting_approval'"/>
                     <button name="action_cancel" string="Cancel" type="object" class="oe_highlight"
                             visible="x_state == 'draft'"/>
+                    <button name="action_create_customer" string="Create Customer" type="object"
+                            class="btn-primary"/>
+                    <field name="x_state" widget="statusbar"
+                           statusbar_visible="draft,waiting_approval,approved,rejected,cancelled"/>
                 </header>
-                <field name="x_state" widget="statusbar"
-                               statusbar_visible="draft,waiting_approval,approved,rejected,cancelled"/>
                 <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="x_name" placeholder="e.g. Register for 3rd unit/Packaging house"
+                                   class="oe_inline"/>
+                        </h1>
+                    </div>
                     <group>
-                        <field name="x_name"/>
-                        <field name="x_registration_code"/>
-                        <field name="x_customer_name" widget="many2one" options="{'no_open': True}"/>
-                        <field name="x_customer_code" readonly="1"/>
-                        <field name="x_representative" widget="many2one" options="{'no_open': True}"/>
+                        <group>
+                            <field name="x_registration_code"/>
+                            <field name="x_customer_name" widget="many2one" options="{'no_open': True}"/>
+                            <field name="x_customer_code" readonly="1"/>
+                            <field name="x_representative" widget="many2one" options="{'no_open': True}"/>
+                            <field name="x_phone"/>
+                            <field name="x_business_field"/>
+                            <field name="x_registration_type"/>
+                            <field name="x_attach_files" widget="binary"/>
+                        </group>
+                        <group>
+                            <field name="x_ability_distribute_standards"/>
+                            <field name="x_barrels_3rd_processes"/>
+                            <field name="x_unit_3rd_commercial"/>
+                            <field name="x_note"/>
+                        </group>
                     </group>
-                    <group>
-                        <field name="x_phone"/>
-                        <field name="x_business_field"/>
-                        <field name="x_registration_type"/>
-                        <field name="x_attach_files" widget="binary"/>
-                    </group>
-                    <group>
-                        <field name="x_ability_distribute_standards"/>
-                        <field name="x_barrels_3rd_processes"/>
-                        <field name="x_unit_3rd_commercial"/>
-                        <field name="x_note"/>
-                    </group>
+                    <notebook>
+                        <page string="Approval Information">
+                            <field name="x_approval_ids" mode="tree,form">
+                                <tree>
+                                    <field name="x_approval_person"/>
+                                    <field name="x_department"/>
+                                    <field name="x_position"/>
+                                    <field name="x_previous_state"/>
+                                    <field name="x_new_state"/>
+                                    <field name="x_approval_date"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -56,11 +77,10 @@
     </record>
 
     <record id="action_third_party_registration_tree" model="ir.actions.act_window">
-        <field name="name">List of Third Party Registrations</field>
+        <field name="name">Third Party Registers</field>
         <field name="res_model">third.party.registration</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{}</field>
-        <!--        <field name="search_view_id" ref="search_third_party_registration"/>-->
     </record>
 
 </odoo>

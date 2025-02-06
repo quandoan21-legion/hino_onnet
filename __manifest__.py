@@ -23,7 +23,7 @@
 
     # always loaded
     'data': [
-        'data/sequence.xml',
+        'data/registration_code_sequence.xml',
         'security/ir.model.access.csv',
         'data/lead_sequence.xml',
         'views/form_views/custom_lead_views.xml',
