@@ -13,7 +13,7 @@
                             options="{&quot;preview_image&quot;: &quot;avatar_128&quot;}" />
                         <group>
                             <group>
-                                <field name="x_company_type" widget="radio"
+                                <field name="company_type" widget="radio"
                                     options="{'horizontal': true}" />
                                 <field name="x_dealer_id" />
                                 <field name="x_dealer_branch_id" />

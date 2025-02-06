@@ -25,6 +25,7 @@
     'data': [
         'security/ir.model.access.csv',
         'data/lead_sequence.xml',
+        'data/partner_sequence.xml',
         'views/form_views/customer_contact_form_views.xml',
         'views/form_views/custom_lead_views.xml',
         'views/form_views/customer_rank_view.xml',

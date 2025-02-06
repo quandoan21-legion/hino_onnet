@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <tree string="custom_customer_tree">
                 <field name="name" optional="show"/>
-                <field name="x_company_type" optional="show"/>
+                <field name="company_type" optional="show"/>
                 <field name="x_dealer_id" optional="show"/>
                 <field name="x_dealer_branch_id" optional="show"/>
                 <field name="x_customer_type" optional="show"/>
