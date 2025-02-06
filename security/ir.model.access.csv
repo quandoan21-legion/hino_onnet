@@ -6,5 +6,6 @@ access_hino_onnet_member_line,hino_onnet.member.line,model_member_line,base.grou
 access_hino_onnet_vehicle_interest_line,hino_onnet.crm.lead.vehicle.interest_line,model_crm_lead_vehicle_interest_line,,1,1,1,1
 access_hino_onnet_lead_contact_person,hino_onnet.crm.lead.contact.person,model_crm_lead_contact_person,,1,1,1,1
 access_approach_channel,hino_onnet.approach.channel,model_approach_channel,base.group_user,1,1,1,1
+access_hino_onnet_customer_follow_up, hino_onnet.crm.follow.up,model_crm_follow_up,,1,1,1,1
 access_third_party_registration,hino_onnet.third.party.registration,model_third_party_registration,base.group_user,1,1,1,1
 access_third_party_registration_approval,hino_onnet.third.party.registration.approval,model_third_party_registration_approval,base.group_user,1,1,1,1
