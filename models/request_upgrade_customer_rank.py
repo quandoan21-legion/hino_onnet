@@ -38,6 +38,10 @@ class CustomerRankUpgrade(models.Model):
     approve_history_ids = fields.One2many(
         'approve.history', 'customer_rank_upgrade_id', string="Lịch sử phê duyệt"
     )
+    x_owned_team_car_ids = fields.One2many(
+        'owned.team.car.line', 'customer_rank_upgrade_id', string="Danh sách xe sở hữu"  # Corrected
+    )
+
 
     @api.model
     def create(self, vals):
