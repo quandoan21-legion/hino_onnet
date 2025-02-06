@@ -3,9 +3,9 @@
         <field name="name">customer.rank.upgrade.form</field>
         <field name="model">customer.rank.upgrade</field>
         <field name="arch" type="xml">
-            <form string="Nâng hạng khách hàng">
+            <form string="Customer Rank Upgrade">
                 <sheet>
-                    <!-- Thông tin chung -->
+                    <!-- General Information -->
                     <group>
                         <field name="x_request_form_code" readonly="1"/>
                         <field name="x_partner_id" required="1"/>
@@ -21,8 +21,8 @@
 
                     <!-- Tabs -->
                     <notebook>
-                        <page string="Danh sách xe sở hữu">
-                            <field name="x_owned_team_car_ids">
+                        <page string="Hino Vehicles">
+                            <field name="x_owned_team_car_ids" domain="[('model_name.name', '=', 'Hino')]">
                                 <tree editable="bottom">
                                     <field name="brand_car"/>
                                     <field name="model_name"/>
@@ -31,7 +31,17 @@
                             </field>
                         </page>
 
-                        <page string="Phê duyệt">
+                        <page string="Other Vehicles">
+                            <field name="x_owned_team_car_ids" domain="[('model_name.name', '!=', 'Hino')]">
+                                <tree editable="bottom">
+                                    <field name="brand_car"/>
+                                    <field name="model_name"/>
+                                    <field name="quantity"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <page string="Approval">
                             <field name="approve_history_ids">
                                 <tree editable="bottom">
                                     <field name="employee_id"/>
