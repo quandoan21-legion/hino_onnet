@@ -83,9 +83,9 @@
                             <page string="Owned Team Car">
                                 <field name="x_owned_team_car_line_ids">
                                     <tree editable="bottom">
-                                        <field name="model_name"/>
-                                        <field name="quantity"/>
-                                        <field name="brand_car"/>
+                                        <field name="x_model_name"/>
+                                        <field name="x_quantity"/>
+                                        <field name="x_brand_name"/>
                                     </tree>
                                 </field>
                             </page>

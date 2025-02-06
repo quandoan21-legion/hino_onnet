@@ -3,9 +3,9 @@ from odoo import models, fields
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    x_potential_count = fields.Integer(compute="_compute_potential_count", string="Potential")
-    x_contract_count = fields.Integer(compute="_compute_contract_count", string="Contracts")
-    x_vehicle_management_count = fields.Integer(compute="_compute_vehicle_management_count", string="Vehicle Management")
+    x_potential_count = fields.Integer(string="Potential") # x_potential_count = fields.Integer(compute="_compute_potential_count", string="Potential") - Logic
+    x_contract_count = fields.Integer(string="Contracts") # x_contract_count = fields.Integer(compute="_compute_contract_count", string="Contracts") - Logic
+    x_vehicle_management_count = fields.Integer(string="Vehicle Management") # x_vehicle_management_count = fields.Integer(compute="_compute_vehicle_management_count", string="Vehicle Management") - Logic
     x_company_type = fields.Selection(
         [
             ('personal', 'Personal'),
@@ -21,18 +21,14 @@ class ResPartner(models.Model):
         [('draft', 'Draft'), ('third_party', 'Third Party'), ('body_maker', 'Body Maker')],
         string='Customer Type', default='draft', tracking=True
     )
-    x_name = fields.Char(string='Customer Name', store=True, tracking=True)
+    x_function = fields.Char(string='Function')
     x_customer_code = fields.Char(string='Customer Code', tracking=True)
-    x_contact_address = fields.Char(string="Contact Address",help="Customer's detailed address.")
     x_district = fields.Char(string='District')
     x_state_id = fields.Many2one('res.country.state', string="State/Province")
     x_field_sale_id = fields.Char(string='Field Sale') # liên quan đến khu vực bán hàng 2.2.2 dùng many2one relation {Khu vực bán hàng}
     x_currently_rank_id = fields.Many2one('customer.rank', string='Currently Rank')
     x_business_registration_id = fields.Char(string='Business Registration ID', help='Business Registration ID')
     x_identity_number = fields.Char(string='Identity Number', help='National or Personal Identity Number')
-    x_website = fields.Char(string="Website")
-    x_phone = fields.Char(string='Phone number', tracking=True)
-    x_mobile = fields.Char(string='Mobile number', tracking=True)
     x_industry_id = fields.Many2one('res.partner.industry', string='Business Field', tracking=True)
     x_activity_area = fields.Char(string='Activity Area', tracking=True)
     x_service_contract = fields.Boolean(string='Service Contact', tracking=True)
@@ -45,18 +41,20 @@ class ResPartner(models.Model):
     x_register_sale_3rd_id = fields.Char(string='Register Sale 3rd') # liên quan đến phần 2.2.3 dùng many2one relation
     x_bank_line_ids = fields.One2many('bank.line', 'x_partner_id', string='Bank Lines')
     x_contact_line_ids = fields.One2many('contact.line', 'x_partner_id', string='Contact Lines')
+    x_owned_car_line_ids = fields.One2many('owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines')
+    x_vehicle_images = fields.Binary(string="Vehicle Image", attachment=True)
 
-    def _compute_potential_count(self):
-        for record in self:
-            record.x_potential_count = self.env['crm.lead'].search_count([('x_partner_id', '=', record.id)]) 
+    # def _compute_potential_count(self):
+    #     for record in self:
+    #         record.x_potential_count = self.env['crm.lead'].search_count([('x_partner_id', '=', record.id)]) 
 
-    def _compute_contract_count(self):
-        for record in self:
-            record.x_contract_count = self.env['sale.order'].search_count([('x_cusomer_id', '=', record.id)])
+    # def _compute_contract_count(self):
+    #     for record in self:
+    #         record.x_contract_count = self.env['sale.order'].search_count([('x_cusomer_id', '=', record.id)])
 
-    def _compute_vehicle_management_count(self):
-        for record in self:
-            record.x_vehicle_management_count = self.env['fleet.vehicle'].search_count([('partner_id', '=', record.id)])
+    # def _compute_vehicle_management_count(self):
+    #     for record in self:
+    #         record.x_vehicle_management_count = self.env['fleet.vehicle'].search_count([('partner_id', '=', record.id)])
 
     def action_view_potential(self):
         return {
@@ -98,6 +96,6 @@ class ResPartner(models.Model):
             'target': 'new',
             'context': {
                 'default_x_partner_id': self.id,
-                'default_x_name': self.x_name or "New Contact",
+                'default_name': self.x_name or "New Contact",
             },
         }

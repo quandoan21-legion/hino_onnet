@@ -23,16 +23,3 @@ class CustomContactLine(models.Model):
     x_district = fields.Char(string='Department')
     x_state_id = fields.Many2one('res.country.state', string='State/Province')
     x_function = fields.Char(string='Function')
-
-    def action_create_contact(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Create Contact',
-            'res_model': 'contact.line',
-            'view_mode': 'form',
-            'view_id': False,
-            'target': 'new',
-            'context': {
-                'default_x_partner_id': self.id,
-            },
-        }

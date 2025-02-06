@@ -18,16 +18,16 @@
                                 <field name="x_dealer_id" />
                                 <field name="x_dealer_branch_id" />
                                 <field name="x_customer_type" />
-                                <field name="x_name" />
+                                <field name="name" />
                                 <field name="x_customer_code" />
-                                <field name="x_phone" />
-                                <field name="x_mobile" />
-                                <field name="x_contact_address" />
+                                <field name="phone" />
+                                <field name="mobile" />
+                                <field name="contact_address" />
                                 <field name="x_district" />
                                 <field name="x_state_id" />
                                 <field name="x_business_registration_id" />
                                 <field name="x_identity_number" />
-                                <field name="x_website" />
+                                <field name="website" />
                             </group>
                             <group>
                                 <field name="x_industry_id" />
@@ -73,8 +73,6 @@
                             </page>
                             <page string="Contacts &amp; Addresses" name="contact_addresses"
                                 autofocus="autofocus">
-                                <button name="action_create_contact" type="object"
-                                    string="Add Contact" class="oe_highlight" icon="fa-plus" />
                                 <field name="x_contact_line_ids" mode="kanban"
                                     context="{'default_x_partner_id': id}">
                                     <kanban>
@@ -141,40 +139,39 @@
                                 </field>
                             </page>
                             <page string="Member Unit">
-                                <!-- <field name="x_bank_line_ids">
+                                <field name="x_contact_line_ids">
                                     <tree editable="bottom">
-                                        <field name="x_bank_id" />
-                                        <field name="x_branch" />
-                                        <field name="x_acc_number" />
+                                        <field name="x_contact_address" />
+                                        <field name="x_district" />
+                                        <field name="x_state_id" />
                                     </tree>
-                                </field> -->
+                                </field>
                             </page>
                             <page string="Owned vehicle fleet Image">
-                                <!-- <field name="x_bank_line_ids">
-                                    <tree editable="bottom">
-                                        <field name="x_bank_id" />
-                                        <field name="x_branch" />
-                                        <field name="x_acc_number" />
-                                    </tree>
-                                </field> -->
+                                <group>
+                                    <field name="x_vehicle_images" widget="many2many_binary"
+                                        string="Upload Images" options="{'multiple': True}" />
+                                </group>
                             </page>
                             <page string="Owned vehicle fleet">
-                                <!-- <field name="x_bank_line_ids">
+                                <field name="x_owned_car_line_ids">
                                     <tree editable="bottom">
-                                        <field name="x_bank_id" />
-                                        <field name="x_branch" />
-                                        <field name="x_acc_number" />
+                                        <field name="x_brand_name" />
+                                        <field name="x_is_hino_vehicle" optional="hide" />
+                                        <field name="x_model_name" />
+                                        <field name="x_quantity" />
                                     </tree>
-                                </field> -->
+                                </field>
                             </page>
                             <page string="Owned Hino vehicle fleet">
-                                <!-- <field name="x_bank_line_ids">
+                                <field name="x_owned_car_line_ids">
                                     <tree editable="bottom">
-                                        <field name="x_bank_id" />
-                                        <field name="x_branch" />
-                                        <field name="x_acc_number" />
+                                        <field name="x_brand_name" />
+                                        <field name="x_is_hino_vehicle" optional="hide" />
+                                        <field name="x_model_name" />
+                                        <field name="x_quantity" />
                                     </tree>
-                                </field> -->
+                                </field>
                             </page>
                         </notebook>
                     </sheet>
@@ -188,5 +185,12 @@
             </field>
         </record>
 
+        <!-- <record id="field_res_partner_x_vehicle_images" model="ir.model.fields">
+            <field name="name">x_vehicle_images</field>
+            <field name="model_id" ref="model_res_partner" />
+            <field name="ttype">many2many</field>
+            <field name="relation">ir.attachment</field>
+            <field name="field_description">Vehicle Images</field>
+        </record> -->
     </data>
 </odoo>
