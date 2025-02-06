@@ -3,6 +3,9 @@ from odoo import models, fields
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    x_potential_count = fields.Integer(compute="_compute_potential_count", string="Potential")
+    x_contract_count = fields.Integer(compute="_compute_contract_count", string="Contracts")
+    x_vehicle_management_count = fields.Integer(compute="_compute_vehicle_management_count", string="Vehicle Management")
     x_company_type = fields.Selection(
         [
             ('personal', 'Personal'),
@@ -40,3 +43,46 @@ class ResPartner(models.Model):
     x_repair_order_to_id = fields.Integer(string='Repair Order To') # liên quan đến nhóm 2 dùng repair.order field
     x_cumulative_points = fields.Integer(string='Cumulative Points')
     x_register_sale_3rd_id = fields.Char(string='Register Sale 3rd') # liên quan đến phần 2.2.3 dùng many2one relation
+    x_bank_line_ids = fields.One2many('bank.line', 'x_partner_id', string='Bank Lines')
+
+    def _compute_potential_count(self):
+        for record in self:
+            record.x_potential_count = self.env['crm.lead'].search_count([('x_partner_id', '=', record.id)]) 
+
+    def _compute_contract_count(self):
+        for record in self:
+            record.x_contract_count = self.env['sale.order'].search_count([('x_cusomer_id', '=', record.id)])
+
+    def _compute_vehicle_management_count(self):
+        for record in self:
+            record.x_vehicle_management_count = self.env['fleet.vehicle'].search_count([('partner_id', '=', record.id)])
+
+    def action_view_potential(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Potential',
+            'view_mode': 'tree,form',
+            'res_model': 'crm.lead',
+            'domain': [('x_partner_id', '=', self.id)],
+            'context': {'default_x_partner_id': self.id},
+        }
+
+    def action_view_contracts(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Contracts',
+            'view_mode': 'tree,form',
+            'res_model': 'sale.order',
+            'domain': [('x_partner_id', '=', self.id)],
+            'context': {'default_x_partner_id': self.id},
+        }
+
+    def action_view_vehicle_management(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Vehicle Management',
+            'view_mode': 'tree,form',
+            'res_model': 'fleet.vehicle',
+            'domain': [('x_partner_id', '=', self.id)],
+            'context': {'default_x_partner_id': self.id},
+        }

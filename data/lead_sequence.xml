@@ -1,0 +1,16 @@
+<odoo>
+    <data noupdate="1">
+        <!-- Define the sequence for the PC numbering -->
+        <record id="seq_custom_lead" model="ir.sequence">
+            <field name="name">PC Number</field>
+            <field name="code">crm.lead.pc_number</field>
+            <field name="padding">4</field>  <!-- 4-digit padding for the sequence number -->
+            <field name="number_increment">1</field> <!-- Increment the number by 1 -->
+            <field name="implementation">standard</field>
+
+            <!-- Define prefix and suffix for the sequence -->
+            <field name="prefix">PC</field> <!-- Prefix for the PC number -->
+            <field name="suffix"/> <!-- No suffix required in your case -->
+        </record>
+    </data>
+</odoo>

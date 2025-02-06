@@ -6,24 +6,24 @@
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <tree string="custom_customer_tree">
-                <field name="x_company_type" />
-                <!-- <field name="x_dealer_id" />
-                <field name="x_dealer_branch_id" />
-                <field name="x_customer_type" />
-                <field name="x_name" />
-                <field name="x_customer_code" />
-                <field name="x_contact_address" />
-                <field name="x_district" />
-                <field name="x_state_id" />
-                <field name="x_field_sale_id" />
-                <field name="x_currently_rank_id" />
-                <field name="x_business_registration_id" />
-                <field name="x_identity_number" />
-                <field name="x_website" />
-                <field name="x_phone" />
-                <field name="x_mobile" />
-                <field name="x_industry_id" />
-                <field name="x_activity_area" /> -->
+                <field name="x_company_type" optional="show"/>
+                <field name="x_dealer_id" optional="show"/>
+                <field name="x_dealer_branch_id" optional="show"/>
+                <field name="x_customer_type" optional="show"/>
+                <field name="x_name" optional="show"/>
+                <field name="x_customer_code" optional="hide"/>
+                <field name="x_contact_address" optional="show"/>
+                <field name="x_district" optional="hide"/>
+                <field name="x_state_id" optional="hide"/>
+                <field name="x_field_sale_id" optional="hide"/>
+                <field name="x_currently_rank_id" optional="hide"/>
+                <field name="x_business_registration_id" optional="show"/>
+                <field name="x_identity_number" optional="show"/>
+                <field name="x_website" optional="hide"/>
+                <field name="x_phone" optional="show"/>
+                <field name="x_mobile" optional="hide"/>
+                <field name="x_industry_id" optional="hide"/>
+                <field name="x_activity_area" optional="hide"/>
             </tree>
         </field>
     </record>
