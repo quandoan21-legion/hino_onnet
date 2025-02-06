@@ -50,6 +50,7 @@ class CustomLead(models.Model):
         [('online_shopping', 'Online Shopping'), ('bidding', 'Bidding'), ('other', 'Other')],
         string='Purchase type', tracking=True
     )
+    x_customer_follow_up_ids = fields.One2many('crm.follow.up', 'lead_id', string='Customer Follow-Up')
     x_bidding_package = fields.Char(string='Bidding Package', tracking=True)
     x_project = fields.Char(string='Project', tracking=True)
     x_estimated_time_of_bid_opening = fields.Date(string='Estimated time of bid opening', tracking=True)
@@ -59,7 +60,7 @@ class CustomLead(models.Model):
     x_dealer_id = fields.Many2one('res.partner', string='Dealer', readonly=True)
     x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch', default=lambda self: self.env.company, tracking=True)
     x_sale_person_id = fields.Many2one('hr.employee', string='Sales Person', domain=[('job_id.name', '=', 'Sales staff')], tracking=True)
-    x_approaching_channel_id = fields.Many2one('hr.employee', string='Approaching channels', tracking=True)
+    x_approaching_channel_id = fields.Many2one('approach.channel', string='Approaching channels', tracking=True)
     x_state_id = fields.Many2one(
         'res.country.state', string="State/Province"
     )
