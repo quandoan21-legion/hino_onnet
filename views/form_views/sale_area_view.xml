@@ -21,12 +21,20 @@
                         </group>
                         <notebook>
                             <page string="Province">
-                                 <field name="x_sales_area_detali_ids" mode="tree,form">
+                                <field name="x_sales_area_detali_ids" mode="tree,form">
                                     <tree>
                                         <field name="x_number"/>
                                         <field name="x_code"/>
                                         <field name="x_name"/>
                                     </tree>
+                                    <form>
+                                        <group>
+                                            <field name="x_number" readonly="1" />
+                                            <field name="x_sale_area_id"/>
+                                            <field name="x_code"/>
+                                            <field name="x_name"/>
+                                        </group>
+                                    </form>
                                 </field>
                             </page>
                         </notebook>

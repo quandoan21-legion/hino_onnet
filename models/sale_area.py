@@ -4,7 +4,7 @@ class SaleArea(models.Model):
     _name = 'sale.area'
     
     x_field_sale_name = fields.Char(string='Sale Name', required=True)
-    x_field_sale_code = fields.Char(string='Area Code', required=True, copy=False, default=lambda self: self._generate_sale_code())
+    x_field_sale_code = fields.Char(string='Area Code', required=True, readonly=True, copy=False, default=lambda self: self._generate_sale_code())
     x_is_free_sales_area = fields.Boolean(string='Free Sales Area', required=False)
     x_release_time = fields.Datetime(string='Release Time', required=True)
     x_attach_file = fields.Binary(string='Attach File', required=True)
@@ -24,7 +24,14 @@ class SaleArea(models.Model):
         return super().write(vals)
     
     def _generate_sale_code(self):
-        return f'KV{self.env["ir.sequence"].next_by_code("sale.area") or "001"}'
+        last_sale_area = self.search([], order='x_field_sale_code desc', limit=1)
+        if last_sale_area:
+            last_number = int(last_sale_area.x_field_sale_code[2:])
+            new_number = last_number + 1
+        else:
+            new_number = 1
+        
+        return f'KV{str(new_number).zfill(3)}'
     
     @api.constrains('x_is_free_sales_area')
     def _check_free_sales_area(self):
