@@ -13,9 +13,11 @@ class CustomLeadMethods(models.Model):
             if record.x_partner_id:
                 record.x_partner_name = record.x_partner_id.name
                 record.x_contact_address_complete = record.x_partner_id.contact_address_complete
+                record.x_website = record.x_partner_id.website
             else:
                 record.x_partner_name = ''
                 record.x_contact_address_complete = ''
+                record.x_website = ''
 
     @api.onchange('x_partner_id')
     def _onchange_x_partner_id(self):

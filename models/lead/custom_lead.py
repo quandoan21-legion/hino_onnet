@@ -30,7 +30,7 @@ class CustomLead(models.Model):
     )
     x_partner_id = fields.Many2one('res.partner', string='Customer', tracking=True)
     x_partner_name = fields.Char(string='Customer Name', compute='_compute_partner_details', store=True, tracking=True)
-    x_website = fields.Char(string="Website", store=True, tracking=True)
+    x_website = fields.Char(string="Website", store=True, tracking=True, compute='_compute_partner_details')
     x_contact_address_complete = fields.Char(string="Contact Address",help="Customer's detailed address.", compute="_compute_partner_details")
 
     # x_customer_id = fields.Many2one('res.partner', string='Customer')
