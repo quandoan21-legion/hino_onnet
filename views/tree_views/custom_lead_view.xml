@@ -1,5 +1,4 @@
 <!-- tree_view.xml -->
-<!-- tree_view.xml -->
 <odoo>
     <!-- Tree View -->
     <record id="customlead_view_tree" model="ir.ui.view">
@@ -21,6 +20,7 @@
 <!--                <field name="x_dealer_branch_id" optional="hide"/>-->
                 <field name="x_sale_person_id" optional="hide"/>
                 <field name="x_approaching_channel_id" optional="hide"/>
+                <field name="x_status" optional="show"/>
             </tree>
         </field>
     </record>
@@ -30,7 +30,8 @@
         <field name="name">Custom Leads</field>
         <field name="res_model">crm.lead</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_ids" eval="[
+        <field name="view_ids"
+            eval="[
             (5, 0, 0),
             (0, 0, {
                 'view_id': ref('customlead_view_tree'),
@@ -40,6 +41,6 @@
                 'view_id': ref('view_form_custom_lead'),
                 'view_mode': 'form',
             }),
-        ]"/>
+        ]" />
     </record>
 </odoo>

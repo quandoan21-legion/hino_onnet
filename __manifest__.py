@@ -5,11 +5,11 @@
     'summary': "Short (1 phrase/line) summary of the module's purpose",
 
     'description': """
-Long description of module's purpose
+        Hino project
     """,
 
-    'author': "My Company",
-    'website': "https://www.yourcompany.com",
+    'author': "Team 1",
+    'website': "https://www.arrowhitech.com",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
@@ -18,17 +18,19 @@ Long description of module's purpose
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'crm', 'hr', 'contacts','mail'],
+    'depends': ['base', 'crm', 'hr', 'contacts','mail', 'account'],
 
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
+        'data/lead_sequence.xml',
         'views/form_views/custom_lead_views.xml',
         'views/form_views/customer_rank_view.xml',
         'views/form_views/custom_lead_views.xml',
         'views/tree_views/custom_lead_view.xml',
         'views/tree_views/hino_customer_rank.xml',
+        'views/tree_views/approach_channel_view.xml',
         'views/menu/customer_rank_menu_items.xml',
         'views/menu/main_menu_items.xml',
         'views/form_views/custom_rank_upgrade_view.xml',
@@ -39,6 +41,7 @@ Long description of module's purpose
         'demo/demo.xml',
     ],
     'test': True,
-    'test': True,
+    'installable': True,
+    'application': True,
 }
 

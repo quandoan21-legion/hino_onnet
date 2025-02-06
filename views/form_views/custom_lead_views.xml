@@ -7,46 +7,60 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <form>
+                <header>
+                    <button name="action_mark_failed" string="Reject Order" type="object"
+                            invisible="x_status != 'draft'" class="oe_highlight"/>
+                    <button name="action_create_customer" string="Create Customer" type="object"
+                            invisible="x_status != 'draft'" class="oe_highlight" />
+                    <button name="action_proposal" string="Propose in Encroaching area/Third party/Body maker" type="object"
+                            invisible="x_status != 'draft'"/>
+                    <field name="x_status" widget="statusbar"
+                            statusbar_visible="draft,contract signed,in progress,completed,failed,cancelled" />
+                </header>
                     <sheet>
+                        <div class="oe_title">
+                            <field name="x_customer_status" widget="radio" options="{'horizontal': true}"/>
+                            <h1><field name="name" class="oe_inline"/></h1>
+                        </div>
                         <group>
-                            <field name="x_customer_status" widget="radio" options="{'horizontal': true}" />
                             <group>
-                                <field name="name" />
                                 <field name="x_partner_id"/>
                                 <field name="x_partner_name"/>
                                 <field name="x_state_id"/>
                                 <field name="x_contact_address_complete"/>
                                 <field name="x_website" widget="url"/>
+                                <field name="x_partner_rank_id"/>
+                                <field name="x_customer_rank"/>
 
 
                                 <!--                                <field name="x_customer_id"/>-->
                                 <!--                    <field name="x_customer_real_id" attrs="{'readonly': True}"/>-->
                                 <!--                    <field name="x_customer_name" attrs="{'readonly': True}"/>-->
-                                 <field name="x_partner_rank_id"/>
-                                <field name="x_customer_type" />
-                                <field name="x_purchase_type" />
+                                <!-- <field name="x_partner_rank_id"/> -->
+                                <field name="x_customer_type"/>
+                                <field name="x_purchase_type"/>
                             </group>
                             <group>
-                                <field name="x_phone" />
-                                <field name="x_email_from" />
-                                <field name="x_vat" />
+                                <field name="x_phone"/>
+                                <field name="x_email_from"/>
+                                <field name="x_vat"/>
 
-                                <field name="x_identity_number" />
-                                <field name="x_industry_id" />
-                                <field name="x_service_contract" />
-                                <field name="x_activity_area" />
+                                <field name="x_identity_number"/>
+                                <field name="x_industry_id"/>
+                                <field name="x_service_contract"/>
+                                <field name="x_activity_area"/>
                                 <!--                                <field name="x_dealer_id" />-->
-<!--                                <field name="x_dealer_branch_id" />-->
-                                <field name="x_sale_person_id" />
-                                <field name="x_approaching_channel_id" />
+                                <field name="x_dealer_branch_id"/>
+                                <field name="x_sale_person_id"/>
+                                <field name="x_approaching_channel_id"/>
                             </group>
                         </group>
-                        <group invisible="x_purchase_type != 'bidding'" >
+                        <group invisible="x_purchase_type != 'bidding'">
                             <group>
-                                <field name="x_bidding_package" />
-                                <field name="x_project" />
-                                <field name="x_estimated_time_of_bid_opening" />
-                                <field name="x_area" />
+                                <field name="x_bidding_package"/>
+                                <field name="x_project"/>
+                                <field name="x_estimated_time_of_bid_opening"/>
+                                <field name="x_area"/>
                             </group>
                         </group>
                         <notebook>
@@ -82,11 +96,32 @@
                                     </tree>
                                 </field>
                             </page>
+                            <page string="Contact">
+                                <field name="x_contact_person_ids" mode="tree,form">
+                                    <tree>
+                                        <field name="x_name"/>
+                                        <field name="x_email"/>
+                                        <field name="x_function"/>
+                                        <field name="x_phone_number"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Customer Follow-Up History">
+                                <field name="x_customer_follow_up_ids" mode="tree,form">
+                                    <tree>
+                                        <field name="x_day_contact"/>
+                                        <field name="x_exchange_content"/>
+                                        <field name="x_result"/>
+                                        <field name="x_recommendations"/>
+                                        <field name="x_sale_person_follow_up"/>
+                                    </tree>
+                                </field>
+                            </page>
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user" />
-                        <field name="message_ids" widget="mail_thread" />
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
             </field>
