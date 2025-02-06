@@ -5,6 +5,14 @@ class CustomerRankUpgrade(models.Model):
     _description = 'Customer Rank Upgrade'
     _rec_name = 'x_request_form_code'
 
+    status = fields.Selection([
+        ('draft', 'Draft'),
+        ('pending', 'Pending Approval'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+        ('canceled', 'Canceled')
+    ], string='Status', default='draft', required=True)
+
     x_request_form_code = fields.Char(
         string='Request Form Code',
         readonly=True,
@@ -47,27 +55,47 @@ class CustomerRankUpgrade(models.Model):
             vals['x_request_form_code'] = self.env['ir.sequence'].next_by_code('customer.rank.upgrade') or '00001'
         return super(CustomerRankUpgrade, self).create(vals)
 
-    # @api.depends('x_partner_id')
-    # def _compute_quantity_of_hino(self):
-    #     for record in self:
-    #         if record.x_partner_id:
-    #             record.x_quantity_of_hino = sum(
-    #                 self.env['owned.vehicle.info'].search([
-    #                     ('partner_id', '=', record.x_partner_id.id),
-    #                     ('vehicle_type', '=', 'Hino')
-    #                 ]).mapped('quantity')
-    #             )
-    #         else:
-    #             record.x_quantity_of_hino = 0
+    def action_update_data(self):
+        for record in self:
+            record._compute_quantity_of_hino()
+            record._compute_total_quantity()
 
-    # @api.depends('x_partner_id')
-    # def _compute_total_quantity(self):
-    #     for record in self:
-    #         if record.x_partner_id:
-    #             record.x_total_quantity = sum(
-    #                 self.env['owned.vehicle.info'].search([
-    #                     ('partner_id', '=', record.x_partner_id.id)
-    #                 ]).mapped('quantity')
-    #             )
-    #         else:
-    #             record.x_total_quantity = 0
+    def action_submit(self):
+        self.write({'status': 'pending'})
+
+    def action_cancel(self):
+        self.write({'status': 'canceled'})
+
+    def action_approve(self):
+        self.write({'status': 'approved'})
+
+    def action_refuse(self):
+        self.write({'status': 'rejected'})
+
+    def action_reset_to_draft(self):
+        self.write({'status': 'draft'})
+
+    @api.depends('x_partner_id', 'x_owned_team_car_ids')
+    def _compute_quantity_of_hino(self):
+        for record in self:
+            if record.x_partner_id:
+                record.x_quantity_of_hino = sum(
+                    self.env['owned.team.car.line'].search([
+                        ('partner_id', '=', record.x_partner_id.id),
+                        ('model_name.name', '=', 'Hino')
+                    ]).mapped('quantity')
+                )
+            else:
+                record.x_quantity_of_hino = 0
+
+    @api.depends('x_partner_id', 'x_owned_team_car_ids')
+    def _compute_total_quantity(self):
+        for record in self:
+            if record.x_partner_id:
+                record.x_total_quantity = sum(
+                    self.env['owned.team.car.line'].search([
+                        ('partner_id', '=', record.x_partner_id.id)
+                    ]).mapped('quantity')
+                )
+            else:
+                record.x_total_quantity = 0
