@@ -6,7 +6,7 @@ class CRMFollowUp(models.Model):
     _description = "Customer Follow-Up"
 
     lead_id = fields.Many2one('crm.lead', string='Lead')
-
+    x_readonly_fields = fields.Boolean(related='lead_id.x_readonly_fields')
     x_day_contact = fields.Date(string="Day", help="Customer follow-up day.")
     x_exchange_content = fields.Text(string="Exchange Content", help="Content of each customer meeting.")
     x_result = fields.Text(string="Result", help="Results after discussion with customers.")

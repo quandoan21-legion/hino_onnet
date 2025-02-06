@@ -7,6 +7,7 @@ from odoo.exceptions import ValidationError
 class CustomLead(models.Model):
     _inherit = 'crm.lead'
 
+    x_readonly_fields = fields.Boolean(compute="_compute_readonly_fields", store=True)
     name = fields.Char(string='Lead Name', required=True, readonly=True, default="e.g PC00000xx")
     # Notebook lines
     x_member_line_ids = fields.One2many('member.line', 'lead_id', string='Member Lines')
@@ -29,7 +30,7 @@ class CustomLead(models.Model):
     )
     x_partner_id = fields.Many2one('res.partner', string='Customer', tracking=True)
     x_partner_name = fields.Char(string='Customer Name', compute='_compute_partner_details', store=True, tracking=True)
-    x_website = fields.Char(string="Website")
+    x_website = fields.Char(string="Website", store=True, tracking=True)
     x_contact_address_complete = fields.Char(string="Contact Address",help="Customer's detailed address.", compute="_compute_partner_details")
 
     # x_customer_id = fields.Many2one('res.partner', string='Customer')
@@ -44,7 +45,7 @@ class CustomLead(models.Model):
     x_email_from = fields.Char(string='Email', tracking=True)
     x_vat = fields.Char(string='Business registration number (Tax code)', tracking=True)
     x_identity_number = fields.Char(string='Citizen identification card', tracking=True)
-    x_industry_id = fields.Many2one('res.partner.industry', string='Business Field', tracking=True)
+    x_industry_id = fields.Many2one('res.partner.industry', string='Business Field')
     # x_request_sale_3rd_barrels_id = fields.Many2one('res.request.sale.3rd.barrels', string='Đề nghị bán lấn vùng/Bên thứ 3/Nhà đóng thùng', readonly=True)
     x_purchase_type = fields.Selection(
         [('online_shopping', 'Online Shopping'), ('bidding', 'Bidding'), ('other', 'Other')],
@@ -79,3 +80,8 @@ class CustomLead(models.Model):
         ('failed','Failed'),
         ('cancelled', 'Cancelled'),
     ], string='Status', default='draft', tracking=True)
+
+    @api.depends('x_status')
+    def _compute_readonly_fields(self):
+        for record in self:
+            record.x_readonly_fields = record.x_status != 'draft'

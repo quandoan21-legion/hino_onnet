@@ -7,7 +7,6 @@ from odoo.exceptions import ValidationError
 
 class CustomLeadMethods(models.Model):
     _inherit = 'crm.lead'
-
     @api.depends('x_partner_id')
     def _compute_partner_details(self):
         for record in self:

@@ -6,6 +6,7 @@ class VehicleInterest(models.Model):
     _name = 'crm.lead.vehicle.interest.line'
 
     lead_id = fields.Many2one('crm.lead', string='Sales Opportunity')
+    x_readonly_fields = fields.Boolean(related='lead_id.x_readonly_fields', store=True)
     # x_partner_name = fields.Many2one('res.partner', string='Customer Code', required=True)
     x_customer = fields.Char(string='Customer')
     x_address = fields.Text(string='Address', required=True)

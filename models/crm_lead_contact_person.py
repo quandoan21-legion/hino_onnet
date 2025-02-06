@@ -1,4 +1,5 @@
-from odoo import models, fields, api
+from odoo import models, fields
+
 
 class CrmLeadContactPerson(models.Model):
     _name = 'crm.lead.contact.person'
@@ -6,6 +7,7 @@ class CrmLeadContactPerson(models.Model):
 
     lead_id = fields.Many2one('crm.lead', string='Lead')
 
+    x_readonly_fields = fields.Boolean(related='lead_id.x_readonly_fields', store=True)
     x_name = fields.Char(compute="_compute_contact_info", inverse="_inverse_contact_info", string="Contact",
                          help="Other customer contact name!")
     x_email = fields.Char(compute="_compute_contact_info", inverse="_inverse_contact_info", string="Email",
