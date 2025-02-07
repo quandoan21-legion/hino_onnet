@@ -34,7 +34,7 @@
 
                     <notebook>
                         <page string="Hino Vehicles">
-                            <field name="x_owned_team_car_ids" domain="[('model_name.name', '=', 'Hino')]">
+                            <field name="x_owned_team_car_ids" domain="[('model_name.name', 'ilike', 'Hino')]">
                                 <tree editable="bottom">
                                     <field name="brand_car"/>
                                     <field name="model_name"/>
