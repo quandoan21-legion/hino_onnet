@@ -5,12 +5,12 @@ class CustomerRankUpgrade(models.Model):
     _description = 'Customer Rank Upgrade'
     _rec_name = 'x_request_form_code'
 
-    model_ids_hino = fields.Many2many(
-        'product.product',
-        string='Hino Model IDs',
-        compute='_compute_hino_model_ids',
-        store=False
-    )
+    # model_ids_hino = fields.Many2many(
+    #     'product.product',
+    #     string='Hino Model IDs',
+    #     compute='_compute_hino_model_ids',
+    #     store=False
+    # )
     status = fields.Selection([
         ('draft', 'Draft'),
         ('pending', 'Pending Approval'),
@@ -58,19 +58,22 @@ class CustomerRankUpgrade(models.Model):
         'owned.team.car.line', 'customer_rank_upgrade_id', string="Owned Vehicle List"
     )
 
-    # model_ids_hino = fields.Many2many(
-    #     'product.product',
-    #     string='Hino Model IDs',
-    #     compute='_compute_hino_model_ids',
-    #     store=False
-    # )
-    #
-    # @api.depends('x_owned_team_car_ids.model_name')
-    # def _compute_hino_model_ids(self):
-    #     for record in self:
-    #         hino_products = self.env['product.product'].search([('name', 'ilike', 'Hino')])
-    #         record.model_ids_hino = hino_products
-    #
+    model_ids_hino = fields.Many2many('product.product', string='Hino Model IDs', compute='_compute_hino_model_ids',
+                            store=False)
+    model_ids_hino_names = fields.Many2many('product.product', string='Hino Model Names',
+                                            compute='_compute_hino_model_names', store=False)
+
+    @api.depends('x_owned_team_car_ids.model_name')
+    def _compute_hino_model_names(self):
+        for record in self:
+            hino_products = self.env['product.product'].search([('name', 'ilike', 'Hino')])
+            record.model_ids_hino_names = hino_products
+
+    @api.depends('x_owned_team_car_ids.model_name')
+    def _compute_hino_model_ids(self):
+        for record in self:
+            hino_products = self.env['product.product'].search([('name', 'ilike', 'Hino')])
+            record.model_ids_hino = hino_products  # Đảm bảo đây là một tập hợp bản ghi, không phải danh sách ID
 
     @api.constrains('x_quantity_of_hino', 'x_total_quantity', 'x_rank_upgrade_id')
     def _check_vehicle_count(self):

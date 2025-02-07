@@ -5,9 +5,10 @@
         <field name="arch" type="xml">
             <form string="Customer Rank Upgrade">
                 <sheet>
-                    <group>
+                   <group>
+    <field name="model_ids_hino" />
+</group>
 
-                    </group>
                     <header>
                         <!-- Buttons -->
                         <button name="action_update_data" type="object" string="Update Data" class="btn-secondary"/>
@@ -33,25 +34,28 @@
                     </group>
 
                     <notebook>
-                        <page string="Hino Vehicles">
-                            <field name="x_owned_team_car_ids" domain="[('model_name.name', 'ilike', 'Hino')]">
-                                <tree editable="bottom">
-                                    <field name="brand_car"/>
-                                    <field name="model_name"/>
-                                    <field name="quantity"/>
-                                </tree>
-                            </field>
-                        </page>
+                       <page string="Hino Vehicles">
+   <field name="x_owned_team_car_ids" domain="[('model_name.name', 'in', model_ids_hino.mapped('name'))]">
 
-                        <page string="Other Vehicles">
-                            <field name="x_owned_team_car_ids" domain="[('model_name.name', '!=', 'Hino')]">
-                                <tree editable="bottom">
-                                    <field name="brand_car"/>
-                                    <field name="model_name"/>
-                                    <field name="quantity"/>
-                                </tree>
-                            </field>
-                        </page>
+        <tree editable="bottom">
+            <field name="brand_car"/>
+            <field name="model_name"/>
+            <field name="quantity"/>
+        </tree>
+    </field>
+</page>
+
+                      <page string="Other Vehicles">
+    <field name="x_owned_team_car_ids" domain="[('model_name.name', 'not ilike', 'Hino')]">
+        <tree editable="bottom">
+            <field name="brand_car"/>
+            <field name="model_name"/>
+            <field name="quantity"/>
+        </tree>
+    </field>
+</page>
+
+
 
                         <page string="Approval">
                             <field name="approve_history_ids">
