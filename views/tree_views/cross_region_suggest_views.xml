@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View for  -->
+    <record id="cross_region_suggest_view_tree" model="ir.ui.view">
+        <field name="name">cross.region.suggest.tree</field>
+        <field name="model">cross.region.suggest</field>
+        <field name="arch" type="xml">
+            <tree string="Proposal Content for Cross-Region Sales / Third Party / Box Manufacturer">
+                <field name="x_number"/>
+                <field name="x_suggest_code"/>
+                <field name="x_suggest_content" />
+            </tree>
+        </field>
+    </record>
+    <!-- Action to open the tree view -->
+    <record id="cross_region_suggest_action" model="ir.actions.act_window">
+        <field name="name">Cross Region Suggest</field>
+        <field name="res_model">cross.region.suggest</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+    </record>
+
+</odoo>

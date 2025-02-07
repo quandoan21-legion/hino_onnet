@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="hino_suggestion_content" name="(Cross-region/Third Party/Packer)/Suggestion Content" 
+        parent="sale.menu_sale_config" action="cross_region_suggest_action" sequence="1"/>
+    </data>
+</odoo>
