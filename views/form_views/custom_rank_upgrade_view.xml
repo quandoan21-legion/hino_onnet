@@ -6,7 +6,7 @@
             <form string="Customer Rank Upgrade">
                 <sheet>
                    <group>
-    <field name="model_ids_hino" />
+<!--    <field name="model_ids_hino" />-->
 </group>
 
                     <header>
@@ -35,22 +35,22 @@
 
                     <notebook>
                        <page string="Hino Vehicles">
-   <field name="x_owned_team_car_ids" domain="[('model_name.name', 'in', model_ids_hino.mapped('name'))]">
+   <field name="x_owned_team_car_ids" >
 
         <tree editable="bottom">
-            <field name="brand_car"/>
-            <field name="model_name"/>
-            <field name="quantity"/>
+            <field name="x_brand_name"/>
+            <field name="x_model_name"/>
+            <field name="x_quantity"/>
         </tree>
     </field>
 </page>
 
                       <page string="Other Vehicles">
-    <field name="x_owned_team_car_ids" domain="[('model_name.name', 'not ilike', 'Hino')]">
+    <field name="x_owned_team_car_ids" >
         <tree editable="bottom">
-            <field name="brand_car"/>
-            <field name="model_name"/>
-            <field name="quantity"/>
+            <field name="x_brand_car"/>
+            <field name="x_model_name"/>
+            <field name="x_quantity"/>
         </tree>
     </field>
 </page>

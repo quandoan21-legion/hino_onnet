@@ -25,7 +25,7 @@ class CustomLeadMethods(models.Model):
             self.x_phone = self.x_partner_id.phone
             self.x_email_from = self.x_partner_id.email
             self.x_vat = self.x_partner_id.vat
-            self.x_identity_number = self.x_partner_id.identity_number
+            self.x_identity_number = self.x_partner_id.x_identity_number
             self.x_industry_id = self.x_partner_id.industry_id
             self.x_service_contract = self.x_partner_id.service_contract if hasattr(self.x_partner_id,
                                                                                     'service_contract') else False
@@ -110,7 +110,7 @@ def _onchange_x_partner_id(self):
         self.x_phone = self.x_partner_id.phone
         self.x_email_from = self.x_partner_id.email
         self.x_vat = self.x_partner_id.vat
-        self.x_identity_number = self.x_partner_id.identity_number
+        self.x_identity_number = self.x_partner_id.x_identity_number
         self.x_industry_id = self.x_partner_id.industry_id
         self.x_service_contract = self.x_partner_id.service_contract if hasattr(self.x_partner_id,
                                                                                 'service_contract') else False
