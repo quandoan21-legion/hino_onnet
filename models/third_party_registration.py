@@ -17,11 +17,13 @@ class ThirdPartyRegistration(models.Model):
     _rec_name = 'x_name'
 
     x_name = fields.Char(string='Unit Name', required=True)
-    x_registration_code = fields.Char(string='Registration Code',  readonly=True)
+    x_registration_code = fields.Char(string='Registration Code', readonly=True)
     x_customer_name = fields.Many2one('res.partner', string='Customer Name', required=True)
     x_customer_code = fields.Many2one('res.partner', string='Customer Code', readonly=True)
     x_representative = fields.Many2one('res.partner', string='Representative', required=True)
-    x_phone = fields.Many2one('res.partner', string='Phone Number', required=True,  domain="[('phone', '!=', False)]")
+    x_phone = fields.Many2one('res.partner', string='Phone Number', required=True,
+                              domain="[('phone', '!=', False)]",
+                              context={'default_phone': True})  # Thêm context để form tạo mới hiển thị trường phone
     x_business_field = fields.Many2one('res.partner.industry', string='Business Field')
     x_registration_type = fields.Many2one('res.partner.category', string='Registration Type')
     x_attach_files = fields.Binary(string='Attachment', attachment=True)
@@ -42,33 +44,48 @@ class ThirdPartyRegistration(models.Model):
     ], default='draft', string='State')
 
     # Add onchange handler for better UX
+    def _validate_phone_number(self, phone):
+        """
+        Validate số điện thoại Việt Nam:
+        - Bắt đầu bằng 0 hoặc +84
+        - Đầu số: 03, 05, 07, 08, 09 (di động) hoặc 02 (cố định)
+        - Tổng độ dài: 10 số nếu bắt đầu bằng 0, 11-12 số nếu bắt đầu bằng +84
+        """
+        # Loại bỏ khoảng trắng và dấu gạch ngang nếu có
+        phone = re.sub(r'[\s-]', '', phone)
+
+        # Pattern cho số bắt đầu bằng 0
+        pattern_0 = r'^0(2|3|5|7|8|9)[0-9]{8}$'
+
+        # Pattern cho số bắt đầu bằng +84
+        pattern_84 = r'^\+84(2|3|5|7|8|9)[0-9]{8}$'
+
+        if re.match(pattern_0, phone) or re.match(pattern_84, phone):
+            return True
+
+        return False
+
     @api.onchange('x_phone')
     def _onchange_phone(self):
-        if self.x_phone:
-            # Set customer name if phone is selected
-            self.x_customer_name = self.x_phone
-            self.x_customer_code = self.x_phone
+        if self.x_phone and isinstance(self.x_phone, str):
+            phone = self.x_phone.strip()
+            if not self._validate_phone_number(phone):
+                raise ValidationError("""
+                    Number is invalid!
+                """)
 
-    @api.constrains('x_phone')
-    def _check_phone(self):
-        for record in self:
-            if record.x_phone:
-                if not record.x_phone.phone:
-                    raise ValidationError(_('Phone number cannot be empty!'))
+            # Chuẩn hóa số điện thoại về định dạng 0...
+            if phone.startswith('+84'):
+                phone = '0' + phone[3:]
 
-                # Clean the phone number - remove spaces and special characters
-                phone = re.sub(r'[\s.-]', '', record.x_phone.phone)
-
-                # Vietnamese phone number pattern
-                vn_phone_pattern = r'^(84|0)(2|3|4|5|7|8|9)([0-9]{8})$'
-
-                if not re.match(vn_phone_pattern, phone):
-                    raise ValidationError(_(
-                        'Invalid Vietnamese phone number format! '
-                        'Phone number must be in one of these formats:\n'
-                        '- Mobile: 84|0 + [3,5,7,8,9] + 8 digits\n'
-                        '- Landline: 84|0 + [2,4] + 8 digits'
-                    ))
+            # Tìm partner với số điện thoại này or create new
+            partner = self.env['res.partner'].search([('phone', '=', phone)], limit=1)
+            if not partner:
+                partner = self.env['res.partner'].create({
+                    'name': f'New Contact ({phone})',
+                    'phone': phone,
+                })
+            self.x_phone = partner.id
 
     # Add file validation
     @api.constrains('x_attach_files')
@@ -137,6 +154,9 @@ class ThirdPartyRegistration(models.Model):
                 'res_id': new_customer.id,
                 'view_mode': 'form',
                 'target': 'current',
+                'context': {
+                    'default_x_registration_code': self.x_registration_code,  # Điền sẵn mã phiếu đăng ký
+                }
             }
         except Exception as e:
             # Log the error for debugging

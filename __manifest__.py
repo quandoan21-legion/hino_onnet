@@ -33,9 +33,11 @@
         'views/form_views/customer_rank_view.xml',
         'views/form_views/custom_lead_views.xml',
         'views/form_views/third_party_registration_view.xml',
+
         'views/tree_views/custom_lead_view.xml',
         'views/tree_views/hino_customer_rank.xml',
         'views/tree_views/approach_channel_view.xml',
+
         'views/menu/customer_rank_menu_items.xml',
         'views/menu/main_menu_items.xml',
     ],

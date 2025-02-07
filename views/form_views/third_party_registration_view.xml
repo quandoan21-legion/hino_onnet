@@ -14,7 +14,7 @@
                     <button name="action_cancel" string="Cancel" type="object" class="oe_highlight"
                             visible="x_state == 'draft'"/>
                     <button name="action_create_customer" string="Create Customer" type="object"
-                            class="btn-primary"/>
+                            class="btn-primary" visible="x_state == 'approved'"/>
                     <field name="x_state" widget="statusbar"
                            statusbar_visible="draft,waiting_approval,approved,rejected,cancelled"/>
                 </header>
@@ -31,7 +31,9 @@
                             <field name="x_customer_name" widget="many2one" options="{'no_open': True}"/>
                             <field name="x_customer_code" readonly="1"/>
                             <field name="x_representative" widget="many2one" options="{'no_open': True}"/>
-                            <field name="x_phone"/>
+                            <field name="x_phone"
+                                   options="{'create': true, 'create_edit': true}"
+                                   placeholder="Search or create with phone number..."/>
                             <field name="x_business_field"/>
                             <field name="x_registration_type"/>
                             <field name="x_attach_files" widget="binary"/>
