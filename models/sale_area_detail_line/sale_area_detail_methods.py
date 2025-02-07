@@ -1,16 +1,8 @@
-from odoo import models, fields, api
-from odoo.exceptions import ValidationError
-class SaleAreaDetail(models.Model):
-    _name = 'sales.area.detail.line'
-    
-    x_sale_area_id = fields.Many2one('sale.area', string='Sales Area')
-    x_sale_area_detail = fields.Char(related='x_sale_area_id.x_field_sale_name', string='Sales Area Name', readonly=True)
-    x_number = fields.Integer(string='STT', readonly=True, copy=False)   
-    x_code = fields.Many2one('res.country.state', string='Code Province', required=False
-                             , domain="[('country_id.code', '=', 'VN')]"
-                             )
-    x_name = fields.Many2one('res.country.state',string="Name Province", readonly=True)
+from odoo import models, fields, api, exceptions, ValidationError
 
+class SaleAreaDetailMethods(models.Model):
+    _inherit = 'sale.area.detail.line'
+    
     @api.model
     def create(self, vals):
         if vals.get('x_sale_area_id'):
@@ -22,7 +14,7 @@ class SaleAreaDetail(models.Model):
         if vals.get('x_code'):
             vals['x_name'] = vals['x_code']
         
-        return super(SaleAreaDetail, self).create(vals)
+        return super(SaleAreaDetailMethods, self).create(vals)
 
     @api.onchange('x_code')
     def _onchange_code(self):
@@ -39,7 +31,7 @@ class SaleAreaDetail(models.Model):
 
     @api.model
     def default_get(self, fields_list):
-        res = super(SaleAreaDetail, self).default_get(fields_list)
+        res = super(SaleAreaDetailMethods, self).default_get(fields_list)
         if res.get('x_sale_area_id'):
             last_number = self.search(
                 [('x_sale_area_id', '=', res['x_sale_area_id'])], order='x_number desc', limit=1
@@ -63,3 +55,4 @@ class SaleAreaDetail(models.Model):
         for record in self:
             if record.x_code and not record.x_name:
                 raise ValidationError("Name Province cannot be empty if Code Province is selected!")
+
