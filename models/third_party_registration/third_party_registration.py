@@ -16,7 +16,7 @@ class ThirdPartyRegistration(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'x_name'
 
-    x_name = fields.Char(string='Unit Name', required=True)
+    x_name = fields.Char(string='3rd Unit Register/Packaging House', required=True)
     x_registration_code = fields.Char(string='Registration Code', readonly=True)
     x_customer_name = fields.Many2one('res.partner', string='Customer Name', required=True)
     x_customer_code = fields.Many2one('res.partner', string='Customer Code', readonly=True)
@@ -26,11 +26,20 @@ class ThirdPartyRegistration(models.Model):
                               context={'default_phone': True})  # Thêm context để form tạo mới hiển thị trường phone
     x_business_field = fields.Many2one('res.partner.industry', string='Business Field')
     x_registration_type = fields.Many2one('res.partner.category', string='Registration Type')
-    x_attach_files = fields.Binary(string='Attachment', attachment=True)
-    x_ability_distribute_standards = fields.Boolean(string='Able to issue carton paper according to HMV standards')
+    x_attach_files = fields.Many2many(
+        'ir.attachment',
+        'third_party_reg_attachment_rel',
+        'registration_id',
+        'attachment_id',
+        string='Attachments'
+    )
+    x_ability_distribute_standards = fields.Boolean(
+        string='Able to issue carton paper according to HMV standards',
+        default=False  # Explicitly set default
+    )
     x_barrels_3rd_processes = fields.Boolean(string='The third unit processes barrels')
     x_unit_3rd_commercial = fields.Boolean(string='Commercial third unit')
-    x_note = fields.Text(string='Reason for selling car')
+    x_note = fields.Text(string='Reason for selling car/Rejection')
 
     # One2many relation for multiple approvals
     x_approval_ids = fields.One2many('third.party.registration.approval', 'registration_id', string='Approvals')
@@ -41,7 +50,7 @@ class ThirdPartyRegistration(models.Model):
         ('approved', 'Approved'),
         ('rejected', 'Rejected'),
         ('cancelled', 'Cancelled'),
-    ], default='draft', string='State')
+    ], default='draft', string='State', tracking=True)
 
     # Add onchange handler for better UX
     def _validate_phone_number(self, phone):
@@ -91,10 +100,9 @@ class ThirdPartyRegistration(models.Model):
     @api.constrains('x_attach_files')
     def _check_attachment_type(self):
         for record in self:
-            if record.x_attach_files:
-                # Implement PDF validation logic
-                if not record.x_attach_files.mimetype == 'application/pdf':
-                    raise ValidationError(_('Only PDF files are allowed!'))
+            for attachment in record.x_attach_files:
+                if not attachment.mimetype == 'application/pdf':
+                    raise ValidationError(_('Only PDF files are allowed! File "%s" is not a PDF.') % attachment.name)
 
     @api.model
     def create(self, vals):

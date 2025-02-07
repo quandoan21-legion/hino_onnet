@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_partner_form_inherit_third_party" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit.third.party</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <!-- Adding button in the top button box -->
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                    <button
+                            name="action_create_third_party_registration"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-building-o">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">3rd Party Registration</span>
+                        </div>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

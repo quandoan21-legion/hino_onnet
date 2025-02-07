@@ -6,7 +6,7 @@
             <form string="Register for 3rd unit/ Packaging house">
                 <header>
                     <button name="action_submit" string="Send" type="object" class="oe_highlight"
-                            visible="x_state == 'draft'"/>
+                            invisible="x_state != 'draft' or 'rejected'"/>
                     <button name="action_confirm" string="Approve" type="object" class="oe_highlight"
                             visible="x_state == 'waiting_approval'"/>
                     <button name="action_refuse" string="Reject" type="object" class="oe_highlight"
@@ -14,17 +14,17 @@
                     <button name="action_cancel" string="Cancel" type="object" class="oe_highlight"
                             visible="x_state == 'draft'"/>
                     <button name="action_create_customer" string="Create Customer" type="object"
-                            class="btn-primary" visible="x_state == 'approved'"/>
+                            class="btn-primary" invisible="x_state != 'approved'"/>
                     <field name="x_state" widget="statusbar"
                            statusbar_visible="draft,waiting_approval,approved,rejected,cancelled"/>
                 </header>
                 <sheet>
-                    <div class="oe_title">
+                    <group class="oe_title">
                         <h1>
-                            <field name="x_name" placeholder="e.g. Register for 3rd unit/Packaging house"
+                            <field name="x_name" placeholder="e.g. 3rd unit Register/Packaging house"
                                    class="oe_inline"/>
                         </h1>
-                    </div>
+                    </group>
                     <group>
                         <group>
                             <field name="x_registration_code"/>
@@ -36,7 +36,7 @@
                                    placeholder="Search or create with phone number..."/>
                             <field name="x_business_field"/>
                             <field name="x_registration_type"/>
-                            <field name="x_attach_files" widget="binary"/>
+                            <field name="x_attach_files" widget="many2many_binary"/>
                         </group>
                         <group>
                             <field name="x_ability_distribute_standards"/>
@@ -71,7 +71,7 @@
             <tree>
                 <field name="x_registration_code"/>
                 <field name="x_customer_code"/>
-                <field name="x_customer_name"/>
+                <field name="x_name"/>
                 <field name="x_registration_type"/>
                 <field name="x_state"/>
             </tree>
