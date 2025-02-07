@@ -3,7 +3,7 @@
         <!-- Define the sequence for the CUS numbering -->
         <record id="seq_custom_lead" model="ir.sequence">
             <field name="name">CUS Number</field>
-            <field name="code">crm.lead.cus_number</field>
+            <field name="code">res.partner.cus_number</field>
             <field name="padding">4</field>
             <field name="number_increment">1</field>
             <field name="implementation">standard</field>

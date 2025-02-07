@@ -26,7 +26,7 @@
                                 <field name="x_customer_code" />
                                 <field name="phone" />
                                 <field name="mobile" />
-                                <field name="contact_address" />
+                                <field name="x_contact_address" />
                                 <field name="x_district" />
                                 <field name="x_state_id" />
                                 <field name="x_business_registration_id" />
@@ -86,7 +86,7 @@
                                         <field name="email" />
                                         <field name="phone" />
                                         <field name="mobile" />
-                                        <field name="contact_address" />
+                                        <field name="x_contact_address" />
                                         <field name="x_district" />
                                         <field name="x_state_id" />
                                         <field name="x_function" />
@@ -147,7 +147,7 @@
                                     <tree editable="bottom">
                                         <field name="x_district" />
                                         <field name="x_state_id" />
-                                        <field name="contact_address" />
+                                        <field name="x_contact_address" />
                                     </tree>
                                 </field>
                             </page>

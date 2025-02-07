@@ -14,15 +14,15 @@ class ResPartner(models.Model):
     x_dealer_id = fields.Char(string='Dealer', readonly=True) # liên quan đến dealer.group - chưa có giải thích cụ thể
     x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch', default=lambda self: self.env.company, tracking=True, readonly=True)
     x_customer_type = fields.Selection(
-        [('draft', 'Draft'), ('third_party', 'Third Party'), ('body_maker', 'Body Maker')],
-        string='Customer Type', default='draft', tracking=True
+        [('last_customer', 'Last Customer'), ('third_party', 'Third Party'), ('body_maker', 'Body Maker')],
+        string='Customer Type', default='last_customer', tracking=True
     )
-    contact_address = fields.Char(string="Complete Address", store=True)
+    x_contact_address = fields.Char(string="Address", store=True)
     x_function = fields.Char(string='Function')
     x_customer_code = fields.Char(string='Customer Code', tracking=True, readonly=True, copy=False)
     x_district = fields.Char(string='District')
     x_state_id = fields.Many2one('res.country.state', string="State/Province")
-    x_field_sale_id = fields.Char(string='Field Sale') # liên quan đến khu vực bán hàng 2.2.2 dùng many2one relation {Khu vực bán hàng}
+    x_field_sale_id = fields.Many2one('sale.area',string='Field Sale')
     x_currently_rank_id = fields.Many2one('customer.rank', string='Currently Rank')
     x_business_registration_id = fields.Char(string='Business Registration ID', help='Business Registration ID')
     x_identity_number = fields.Char(string='Identity Number', help='National or Personal Identity Number')
@@ -40,19 +40,38 @@ class ResPartner(models.Model):
     x_contact_line_ids = fields.One2many('contact.line', 'x_partner_id', string='Contact Lines')
     x_owned_car_line_ids = fields.One2many('owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines')
     x_vehicle_images = fields.Binary(attachment=True)
+
+    @api.depends('is_company')
+    def _compute_company_type(self):
+        for partner in self:
+            if partner.company_type == 'internal_hmv':
+                continue
+            partner.company_type = 'company' if partner.is_company else 'person'
+
+    def _write_company_type(self):
+        for partner in self:
+            if partner.company_type == 'internal_hmv':
+                continue
+            partner.is_company = partner.company_type == 'company'
+
+    @api.onchange('company_type')
+    def onchange_company_type(self):
+        if self.company_type == 'internal_hmv':
+            return
+        self.is_company = (self.company_type == 'company')
             
     @api.model
     def create(self, vals):
         if not vals.get('x_customer_code'):
-            vals['x_customer_code'] = self.env['ir.sequence'].next_by_code('crm.lead.cus_number')
+            vals['x_customer_code'] = self.env['ir.sequence'].next_by_code('res.partner.cus_number')
         return super(ResPartner, self).create(vals)
 
     def write(self, vals):
         for record in self:
             if not record.x_customer_code and not vals.get('x_customer_code'):
-                vals['x_customer_code'] = self.env['ir.sequence'].next_by_code('crm.lead.cus_number')
+                vals['x_customer_code'] = self.env['ir.sequence'].next_by_code('res.partner.cus_number')
         return super(ResPartner, self).write(vals)
-    
+
     @api.constrains('x_business_registration_id')
     def _check_business_registration_id(self):
         for record in self:
@@ -72,26 +91,36 @@ class ResPartner(models.Model):
     def _check_identity_number(self):
         for record in self:
             if record.x_identity_number:
+                existing = self.search([
+                    ('x_identity_number', '=', record.x_identity_number),
+                    ('id', '!=', record.id)
+                ])
+                if existing:
+                    raise ValidationError("The Identity number must be unique.")
+
+            if record.x_identity_number:
                 if not re.match(r'^\d{9,12}$', record.x_identity_number):
                     raise ValidationError("The Identity number must contain from 9 to 12 digits.")
     
     @api.constrains('phone', 'mobile')
     def _check_phone_number_format(self):
         for record in self:
-            if record.phone and not re.fullmatch(r'0\d{9}', record.phone):
-                raise ValidationError("Phone number must be exactly 10 digits and start with 0.")
-            if record.mobile and not re.fullmatch(r'0\d{9}', record.mobile):
-                raise ValidationError("Mobile number must be exactly 10 digits and start with 0.")
+            if record.phone and not re.fullmatch(r'0\d{1,10}', record.phone):
+                raise ValidationError("Phone number must not more than 10 digits and start with 0.")
+            if record.mobile and not re.fullmatch(r'0\d{1,10}', record.mobile):
+                raise ValidationError("Mobile number must not more than 10 digits and start with 0.")
 
     @api.constrains('company_type', 'x_business_registration_id', 'x_customer_type', 'x_register_sale_3rd_id', 'x_identity_number')
     def _check_required_fields(self):
         for record in self:
+            if record.company_type == 'internal_hmv':
+                continue  
+            if record.company_type == 'person' and not record.x_identity_number:
+                raise ValidationError("Identity Number is required for individuals. Please enter a valid Identity Number.")
             if record.company_type == 'company' and not record.x_business_registration_id:
                 raise ValidationError("Business Registration ID is required for companies. Please enter a valid Business Registration ID.")
             if record.x_customer_type == 'third_party' and not record.x_register_sale_3rd_id:
                 raise ValidationError("Register Sale 3rd is required for Third Party customers. Please enter a valid Register Sale 3rd ID.")
-            if record.company_type == 'person' and not record.x_identity_number:
-                raise ValidationError("Identity Number is required for individuals. Please enter a valid Identity Number.")
     
     # def _compute_potential_count(self):
     #     for record in self:

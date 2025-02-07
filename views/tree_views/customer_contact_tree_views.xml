@@ -12,7 +12,7 @@
                 <field name="x_dealer_branch_id" optional="show"/>
                 <field name="x_customer_type" optional="show"/>
                 <field name="x_customer_code" optional="hide"/>
-                <field name="contact_address" optional="show"/>
+                <field name="x_contact_address" optional="show"/>
                 <field name="x_district" optional="hide"/>
                 <field name="x_state_id" optional="hide"/>
                 <field name="x_field_sale_id" optional="hide"/>
