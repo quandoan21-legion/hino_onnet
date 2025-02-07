@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Tree View for Customer Rank -->
+    <!-- Tree View for Sale Area -->
     <record id="sale_area_tree_view" model="ir.ui.view">
         <field name="name">sale.area.tree</field>
         <field name="model">sale.area</field>
