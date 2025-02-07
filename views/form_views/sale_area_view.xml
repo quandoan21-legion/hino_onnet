@@ -21,7 +21,7 @@
                         </group>
                         <notebook>
                             <page string="Province">
-                                <field name="x_sales_area_detali_ids" mode="tree,form">
+                                <field name="x_sales_area_detail_ids" mode="tree,form">
                                     <tree>
                                         <field name="x_number"/>
                                         <field name="x_code"/>
