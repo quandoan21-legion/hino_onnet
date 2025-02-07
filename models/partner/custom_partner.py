@@ -1,3 +1,4 @@
+import re
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
@@ -38,7 +39,7 @@ class ResPartner(models.Model):
     x_contact_line_ids = fields.One2many('contact.line', 'x_partner_id', string='Contact Lines')
     x_owned_car_line_ids = fields.One2many('owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines')
     x_vehicle_images = fields.Binary(string="Vehicle Image", attachment=True)
-
+            
     @api.model
     def create(self, vals):
         if not vals.get('x_customer_code'):
@@ -52,7 +53,7 @@ class ResPartner(models.Model):
         return super(ResPartner, self).write(vals)
     
     @api.constrains('x_business_registration_id')
-    def _check_unique_business_registration_id(self):
+    def _check_business_registration_id(self):
         for record in self:
             if record.x_business_registration_id:
                 existing = self.search([
@@ -61,12 +62,35 @@ class ResPartner(models.Model):
                 ])
                 if existing:
                     raise ValidationError("Business Registration ID must be unique.")
+        
+            if record.x_business_registration_id:
+                if not re.fullmatch(r'\d{1,10}', record.x_business_registration_id):
+                    raise ValidationError("Business Registration ID must contain only numbers and be at most 10 digits long.")
+    
+    @api.constrains('x_identity_number')
+    def _check_identity_number(self):
+        for record in self:
+            if record.x_identity_number:
+                if not re.match(r'^\d{9,12}$', record.x_identity_number):
+                    raise ValidationError("The Identity number must contain from 9 to 12 digits.")
+    
+    @api.constrains('phone', 'mobile')
+    def _check_phone_number_format(self):
+        for record in self:
+            if record.phone and not re.fullmatch(r'0\d{9}', record.phone):
+                raise ValidationError("Phone number must be exactly 10 digits and start with 0.")
+            if record.mobile and not re.fullmatch(r'0\d{9}', record.mobile):
+                raise ValidationError("Mobile number must be exactly 10 digits and start with 0.")
 
-    @api.constrains('company_type', 'x_business_registration_id')
-    def _check_business_registration_required(self):
+    @api.constrains('company_type', 'x_business_registration_id', 'x_customer_type', 'x_register_sale_3rd_id', 'x_identity_number')
+    def _check_required_fields(self):
         for record in self:
             if record.company_type == 'company' and not record.x_business_registration_id:
                 raise ValidationError("Business Registration ID is required for companies. Please enter a valid Business Registration ID.")
+            if record.x_customer_type == 'third_party' and not record.x_register_sale_3rd_id:
+                raise ValidationError("Register Sale 3rd is required for Third Party customers. Please enter a valid Register Sale 3rd ID.")
+            if record.company_type == 'person' and not record.x_identity_number:
+                raise ValidationError("Identity Number is required for individuals. Please enter a valid Identity Number.")
     
     # def _compute_potential_count(self):
     #     for record in self:

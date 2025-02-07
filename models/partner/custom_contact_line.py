@@ -19,7 +19,7 @@ class CustomContactLine(models.Model):
     x_phone = fields.Char(string='Phone')
     x_mobile = fields.Char(string='Mobile')
     x_email = fields.Char(string='Email')
-    x_contact_address = fields.Char(string='Address')
+    x_contact_address = fields.Char(string='Contact Address')
     x_district = fields.Char(string='Department')
     x_state_id = fields.Many2one('res.country.state', string='State/Province')
     x_function = fields.Char(string='Function')

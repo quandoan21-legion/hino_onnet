@@ -8,13 +8,13 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
+                        <field name="company_type" widget="radio"
+                            options="{'horizontal': true}" />
                         <field name="avatar_128" invisible="1" />
                         <field name="image_1920" widget="image" class="oe_avatar"
                             options="{&quot;preview_image&quot;: &quot;avatar_128&quot;}" />
                         <group>
                             <group>
-                                <field name="company_type" widget="radio"
-                                    options="{'horizontal': true}" />
                                 <field name="x_dealer_id" />
                                 <field name="x_dealer_branch_id" />
                                 <field name="x_customer_type" />
@@ -184,13 +184,5 @@
                 </form>
             </field>
         </record>
-
-        <!-- <record id="field_res_partner_x_vehicle_images" model="ir.model.fields">
-            <field name="name">x_vehicle_images</field>
-            <field name="model_id" ref="model_res_partner" />
-            <field name="ttype">many2many</field>
-            <field name="relation">ir.attachment</field>
-            <field name="field_description">Vehicle Images</field>
-        </record> -->
     </data>
 </odoo>
