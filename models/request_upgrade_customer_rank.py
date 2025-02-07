@@ -1,5 +1,5 @@
 from odoo import models, fields, api
-
+from odoo.exceptions import ValidationError
 class CustomerRankUpgrade(models.Model):
     _name = 'customer.rank.upgrade'
     _description = 'Customer Rank Upgrade'
@@ -19,14 +19,17 @@ class CustomerRankUpgrade(models.Model):
         copy=False,
     )
     x_partner_id = fields.Many2one(
-        'res.partner',
+        'crm.lead',
         string='Customer',
-        required=True
+        required=True,
+        ondelete='cascade'
     )
     x_currently_rank_id = fields.Many2one(
         'customer.rank',
         string='Current Customer Rank',
-        readonly=True
+        readonly=True,
+        compute='_compute_currently_rank_id',
+        store=True
     )
     x_rank_upgrade_id = fields.Many2one(
         'customer.rank',
@@ -49,6 +52,56 @@ class CustomerRankUpgrade(models.Model):
         'owned.team.car.line', 'customer_rank_upgrade_id', string="Owned Vehicle List"
     )
 
+
+    @api.constrains('x_quantity_of_hino', 'x_total_quantity', 'x_rank_upgrade_id')
+    def _check_vehicle_count(self):
+        for record in self:
+            if record.x_rank_upgrade_id:
+                min_hino = record.x_rank_upgrade_id.min_hino_vehicles
+                max_hino = record.x_rank_upgrade_id.max_hino_vehicles
+                min_total = record.x_rank_upgrade_id.min_owned_vehicles
+                max_total = record.x_rank_upgrade_id.max_owned_vehicles
+
+                if not (min_hino <= record.x_quantity_of_hino <= max_hino):
+                    raise ValidationError(
+                        f"Số lượng xe Hino ({record.x_quantity_of_hino}) phải nằm trong khoảng từ {min_hino} đến {max_hino}."
+                    )
+
+                if not (min_total <= record.x_total_quantity <= max_total):
+                    raise ValidationError(
+                        f"Tổng số xe ({record.x_total_quantity}) phải nằm trong khoảng từ {min_total} đến {max_total}."
+                    )
+    @api.depends('x_partner_id')
+    def _compute_currently_rank_id(self):
+        for record in self:
+            if record.x_partner_id and record.x_partner_id.x_partner_rank_id:
+                record.x_currently_rank_id = record.x_partner_id.x_partner_rank_id
+            else:
+                record.x_currently_rank_id = False
+
+    @api.onchange('x_partner_id')
+    def _onchange_x_partner_id(self):
+        """ Tự động lấy danh sách xe khi chọn khách hàng """
+        for record in self:
+            if record.x_partner_id:
+                record.x_owned_team_car_ids = [(5, 0, 0)]  # Xóa danh sách cũ
+                cars = self.env['owned.team.car.line'].search([('lead_id', '=', record.x_partner_id.id)])
+                record.x_owned_team_car_ids = [(4, car.id) for car in cars]
+
+    @api.depends('x_owned_team_car_ids.quantity')
+    def _compute_total_quantity(self):
+        """ Tính tổng số lượng xe từ danh sách x_owned_team_car_ids """
+        for record in self:
+            record.x_total_quantity = sum(record.x_owned_team_car_ids.mapped('quantity'))
+
+    @api.depends('x_owned_team_car_ids.model_name', 'x_owned_team_car_ids.quantity')
+    def _compute_quantity_of_hino(self):
+        """Tính số lượng xe có model_name chứa 'hino'."""
+        for record in self:
+            record.x_quantity_of_hino = sum(
+                car.quantity for car in record.x_owned_team_car_ids
+                if car.model_name and 'hino' in car.model_name.name.lower()
+            )
     @api.model
     def create(self, vals):
         if vals.get('x_request_form_code', 'New') == 'New':
@@ -74,28 +127,3 @@ class CustomerRankUpgrade(models.Model):
 
     def action_reset_to_draft(self):
         self.write({'status': 'draft'})
-
-    @api.depends('x_partner_id', 'x_owned_team_car_ids')
-    def _compute_quantity_of_hino(self):
-        for record in self:
-            if record.x_partner_id:
-                record.x_quantity_of_hino = sum(
-                    self.env['owned.team.car.line'].search([
-                        ('partner_id', '=', record.x_partner_id.id),
-                        ('model_name.name', '=', 'Hino')
-                    ]).mapped('quantity')
-                )
-            else:
-                record.x_quantity_of_hino = 0
-
-    @api.depends('x_partner_id', 'x_owned_team_car_ids')
-    def _compute_total_quantity(self):
-        for record in self:
-            if record.x_partner_id:
-                record.x_total_quantity = sum(
-                    self.env['owned.team.car.line'].search([
-                        ('partner_id', '=', record.x_partner_id.id)
-                    ]).mapped('quantity')
-                )
-            else:
-                record.x_total_quantity = 0
