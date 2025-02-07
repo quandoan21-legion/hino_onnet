@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 from odoo.exceptions import UserError, ValidationError
+import re
 import logging
 
 # Initialize logger
@@ -20,7 +21,7 @@ class ThirdPartyRegistration(models.Model):
     x_customer_name = fields.Many2one('res.partner', string='Customer Name', required=True)
     x_customer_code = fields.Many2one('res.partner', string='Customer Code', readonly=True)
     x_representative = fields.Many2one('res.partner', string='Representative', required=True)
-    x_phone = fields.Char(string='Phone Number', required=True)
+    x_phone = fields.Many2one('res.partner', string='Phone Number', required=True,  domain="[('phone', '!=', False)]")
     x_business_field = fields.Many2one('res.partner.industry', string='Business Field')
     x_registration_type = fields.Many2one('res.partner.category', string='Registration Type')
     x_attach_files = fields.Binary(string='Attachment', attachment=True)
@@ -40,18 +41,34 @@ class ThirdPartyRegistration(models.Model):
         ('cancelled', 'Cancelled'),
     ], default='draft', string='State')
 
-    # Add field constraints
+    # Add onchange handler for better UX
+    @api.onchange('x_phone')
+    def _onchange_phone(self):
+        if self.x_phone:
+            # Set customer name if phone is selected
+            self.x_customer_name = self.x_phone
+            self.x_customer_code = self.x_phone
+
     @api.constrains('x_phone')
     def _check_phone(self):
         for record in self:
             if record.x_phone:
-                # Check for duplicates
-                duplicate = self.env['res.partner'].search([
-                    ('phone', '=', record.x_phone),
-                    ('id', '!=', record.x_customer_name.id)
-                ], limit=1)
-                if duplicate:
-                    raise ValidationError(_('Phone number already exists for another customer!'))
+                if not record.x_phone.phone:
+                    raise ValidationError(_('Phone number cannot be empty!'))
+
+                # Clean the phone number - remove spaces and special characters
+                phone = re.sub(r'[\s.-]', '', record.x_phone.phone)
+
+                # Vietnamese phone number pattern
+                vn_phone_pattern = r'^(84|0)(2|3|4|5|7|8|9)([0-9]{8})$'
+
+                if not re.match(vn_phone_pattern, phone):
+                    raise ValidationError(_(
+                        'Invalid Vietnamese phone number format! '
+                        'Phone number must be in one of these formats:\n'
+                        '- Mobile: 84|0 + [3,5,7,8,9] + 8 digits\n'
+                        '- Landline: 84|0 + [2,4] + 8 digits'
+                    ))
 
     # Add file validation
     @api.constrains('x_attach_files')

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from . import custom_lead
+from .lead import custom_lead, custom_lead_methods
 from . import tab_custom_lead
 from . import customer_rank
 from . import custom_partner
