@@ -17,6 +17,7 @@ class ResPartner(models.Model):
         [('draft', 'Draft'), ('third_party', 'Third Party'), ('body_maker', 'Body Maker')],
         string='Customer Type', default='draft', tracking=True
     )
+    contact_address = fields.Char(string="Complete Address", store=True)
     x_function = fields.Char(string='Function')
     x_customer_code = fields.Char(string='Customer Code', tracking=True, readonly=True, copy=False)
     x_district = fields.Char(string='District')
@@ -38,7 +39,7 @@ class ResPartner(models.Model):
     x_bank_line_ids = fields.One2many('bank.line', 'x_partner_id', string='Bank Lines')
     x_contact_line_ids = fields.One2many('contact.line', 'x_partner_id', string='Contact Lines')
     x_owned_car_line_ids = fields.One2many('owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines')
-    x_vehicle_images = fields.Binary(string="Vehicle Image", attachment=True)
+    x_vehicle_images = fields.Binary(attachment=True)
             
     @api.model
     def create(self, vals):
@@ -146,4 +147,12 @@ class ResPartner(models.Model):
                 'default_x_partner_id': self.id,
                 'default_name': self.x_name or "New Contact",
             },
+        }
+
+    def action_upgrade_client(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Customer Rank',
+            'view_mode': 'tree,form',
+            'res_model': 'crm.lead', # link đến phần nâng hạng khách hàng hiện tại để crm.lead
         }
