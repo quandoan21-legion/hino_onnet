@@ -1,7 +1,8 @@
-from odoo import models, fields, api, exceptions, ValidationError
+from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class SaleAreaDetailMethods(models.Model):
-    _inherit = 'sale.area.detail.line'
+    _inherit = 'sales.area.detail.line'
     
     @api.model
     def create(self, vals):
