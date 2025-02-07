@@ -41,6 +41,12 @@ class ResPartner(models.Model):
     x_owned_car_line_ids = fields.One2many('owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines')
     x_vehicle_images = fields.Binary(attachment=True)
 
+    @api.model
+    def create(self, vals):
+        if not vals.get('x_customer_code'):
+            vals['x_customer_code'] = self.env['ir.sequence'].next_by_code('res.partner.cus_number')
+        return super().create(vals)
+
     @api.depends('is_company')
     def _compute_company_type(self):
         for partner in self:
@@ -59,18 +65,6 @@ class ResPartner(models.Model):
         if self.company_type == 'internal_hmv':
             return
         self.is_company = (self.company_type == 'company')
-            
-    @api.model
-    def create(self, vals):
-        if not vals.get('x_customer_code'):
-            vals['x_customer_code'] = self.env['ir.sequence'].next_by_code('res.partner.cus_number')
-        return super(ResPartner, self).create(vals)
-
-    def write(self, vals):
-        for record in self:
-            if not record.x_customer_code and not vals.get('x_customer_code'):
-                vals['x_customer_code'] = self.env['ir.sequence'].next_by_code('res.partner.cus_number')
-        return super(ResPartner, self).write(vals)
 
     @api.constrains('x_business_registration_id')
     def _check_business_registration_id(self):
