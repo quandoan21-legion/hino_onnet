@@ -32,6 +32,7 @@ class SaleRegion(models.Model):
     x_field_sale_ids = fields.Many2many(
         'sale.area', 
         string='Sales Area', 
+        required=False,
         help="Select sales areas. Default is unchecked for Free Sales Area."
     )
     x_attach_file = fields.Binary(
