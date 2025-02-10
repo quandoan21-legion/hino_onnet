@@ -49,6 +49,7 @@
         'views/menu/cross_region_suggest_menu_items.xml',
         'views/menu/cross_region_sale_menu_items.xml',
 
+        'views/menu/cross_region_sale_menu_items.xml',
         'views/menu/sale_area_menu_items.xml',
         'views/menu/customer_rank_menu_items.xml',
         'views/menu/main_menu_items.xml',

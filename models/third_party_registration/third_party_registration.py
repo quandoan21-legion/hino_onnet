@@ -155,15 +155,37 @@ class ThirdPartyRegistration(models.Model):
             if self.x_registration_type and self.x_registration_type in category_mapping:
                 category_ids = [(4, category_mapping[self.x_registration_type])]
 
-            new_customer = self.env['res.partner'].create({
+            # Create customer values dictionary
+            customer_vals = {
                 'name': self.x_name,
                 'phone': self.x_phone,
                 'industry_id': self.x_business_field.id if self.x_business_field else False,
                 'category_id': category_ids,
-            })
+                'x_customer_type': self.x_registration_type,  # Set customer type based on registration
+                'x_identity_number': self.x_identity_number,  # Add identity number
+                'x_register_sale_3rd_id': self.x_registration_code,  # Link registration code
+            }
 
-            self.x_customer_name = new_customer.id
-            self.x_customer_code = new_customer.id
+            # Validate identity number before creating customer
+            if not self.x_identity_number or not re.match(r'^\d{9,12}$', self.x_identity_number):
+                raise ValidationError(_('Please enter a valid identity number (9-12 digits)'))
+
+            # Check for duplicate identity number
+            existing_partner = self.env['res.partner'].search([
+                ('x_identity_number', '=', self.x_identity_number),
+                ('id', '!=', self.x_customer_name.id if self.x_customer_name else False)
+            ], limit=1)
+
+            if existing_partner:
+                raise ValidationError(_('A customer with this identity number already exists'))
+
+            new_customer = self.env['res.partner'].create(customer_vals)
+
+            # Update registration record
+            self.write({
+                'x_customer_name': new_customer.id,
+                'x_customer_code': new_customer.ref,  # Use partner reference as customer code
+            })
 
             return {
                 'type': 'ir.actions.act_window',
@@ -173,11 +195,25 @@ class ThirdPartyRegistration(models.Model):
                 'view_mode': 'form',
                 'target': 'current',
                 'context': {
-                    'default_x_registration_code': self.x_registration_code,  # Điền sẵn mã phiếu đăng ký
+                    'default_x_registration_code': self.x_registration_code,
                 }
             }
         except Exception as e:
-            # Log the error for debugging
             _logger.error('Error creating customer: %s', str(e))
-            # Raise user-friendly error
             raise UserError(_('Could not create customer. Please check if all required fields are filled correctly.'))
+
+    @api.constrains('x_identity_number')
+    def _check_identity_number(self):
+        """Validate identity number format"""
+        for record in self:
+            if record.x_identity_number:
+                if not re.match(r'^\d{9,12}$', record.x_identity_number):
+                    raise ValidationError(_("The Identity number must contain from 9 to 12 digits."))
+
+                # Check for duplicates
+                existing = self.env['res.partner'].search([
+                    ('x_identity_number', '=', record.x_identity_number),
+                    ('id', '!=', record.x_customer_name.id if record.x_customer_name else False)
+                ])
+                if existing:
+                    raise ValidationError(_("This Identity number is already registered."))
