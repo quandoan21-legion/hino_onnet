@@ -3,7 +3,7 @@
     <data>
         <!-- Form View for Sale Area Configure -->
         <record id="view_form_sale_area_configure" model="ir.ui.view">
-            <field name="name">sale.area.configure</field>
+            <field name="name">sale.area.configure.form</field>
             <field name="model">sale.area</field>
             <field name="arch" type="xml">
                 <form string="Sale Area Configure">
@@ -17,7 +17,7 @@
                             <field name="x_field_sale_code" />
                             <field name="x_is_free_sales_area" />
                             <field name="x_release_time" />
-                            <field name="x_attach_file" />
+                            <field name="x_attach_file" widget="image"/>
                         </group>
                         <notebook>
                             <page string="Province">
