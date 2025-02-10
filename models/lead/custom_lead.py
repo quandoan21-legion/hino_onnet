@@ -18,12 +18,12 @@ class CustomLead(models.Model):
     x_contact_person_ids = fields.One2many('crm.lead.contact.person', 'lead_id', string='Contact')
     x_customer_status = fields.Selection(
         [
-            ('personal', 'Personal'),
+            ('person', 'Individual'),
             ('company', 'Company'),
-            ('internal_hmv', 'Internal_HMV')
+            ('internal_hmv', 'Internal HMV')
         ],
         string="Customer Status",
-        default='personal'
+        default='person'
     )
     x_partner_id = fields.Many2one('res.partner', string='Customer', tracking=True)
     x_partner_name = fields.Char(string='Customer Name', compute='_compute_partner_details', store=True, tracking=True)
@@ -39,11 +39,9 @@ class CustomLead(models.Model):
         [('draft', 'Draft'), ('third_party', 'Third Party'), ('body_maker', 'Body Maker')],
         string='Third part/Body maker', default='draft', tracking=True
     )
-    x_phone = fields.Integer(string='Phone number', tracking=True, require=True)
-    x_email_from = fields.Char(string='Email', tracking=True)
-    x_vat = fields.Char(string='Business registration number (Tax code)', tracking=True)
-    x_identity_number = fields.Char(string='Citizen identification card', tracking=True)
-    x_industry_id = fields.Many2one('res.partner.industry', string='Business Field', require=True)
+    x_vat = fields.Char(string='Business Registration ID (Tax code)', tracking=True)
+    x_identity_number = fields.Char(string='Identity Number', tracking=True)
+    x_industry_id = fields.Many2one('res.partner.industry', string='Industry', require=True)
     # x_request_sale_3rd_barrels_id = fields.Many2one('res.request.sale.3rd.barrels', string='Đề nghị bán lấn vùng/Bên thứ 3/Nhà đóng thùng', readonly=True)
     x_purchase_type = fields.Selection(
         [('online_shopping', 'Online Shopping'), ('bidding', 'Bidding'), ('other', 'Other')],

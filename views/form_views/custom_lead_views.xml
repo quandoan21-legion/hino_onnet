@@ -44,8 +44,8 @@
                                 <field name="x_purchase_type" readonly="x_readonly_fields"/>
                             </group>
                             <group>
-                                <field name="x_phone" readonly="x_readonly_fields"/>
-                                <field name="x_email_from" readonly="x_readonly_fields"/>
+                                <field name="phone" readonly="x_readonly_fields"/>
+                                <field name="email_from" readonly="x_readonly_fields"/>
                                 <field name="x_vat" readonly="x_readonly_fields"/>
 
                                 <field name="x_identity_number" readonly="x_readonly_fields"/>
