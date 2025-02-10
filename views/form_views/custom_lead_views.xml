@@ -21,16 +21,19 @@
                     <sheet>
                         <div class="oe_title">
                             <field name="x_customer_status" widget="radio" options="{'horizontal': true}"/>
-                            <h1><field name="name" class="oe_inline"/></h1>
+                            <h1>
+                                <field name="name" nolabel="1" placeholder="Enter customer name..."/>
+                            </h1>
                         </div>
+
                         <group>
                             <group>
                                 <field name="x_partner_id" readonly="x_readonly_fields"/>
+                                <field name="x_partner_name" readonly="x_readonly_fields"/>
                                 <field name="x_state_id" readonly="x_readonly_fields"/>
                                 <field name="x_contact_address_complete"/>
                                 <field name="x_website" widget="url" readonly="x_readonly_fields"/>
                                 <field name="x_partner_rank_id" readonly="x_readonly_fields"/>
-                                <field name="x_customer_rank" readonly="x_readonly_fields"/>
 
 
                                 <!--                                <field name="x_customer_id"/>-->
