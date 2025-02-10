@@ -179,5 +179,5 @@ class ResPartner(models.Model):
             'type': 'ir.actions.act_window',
             'name': 'Customer Rank',
             'view_mode': 'tree,form',
-            'res_model': 'crm.lead', # link đến phần nâng hạng khách hàng hiện tại để crm.lead
+            'res_model': 'crm.lead',
         }
