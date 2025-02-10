@@ -8,5 +8,5 @@ class CustomLeadLine(models.Model):
 
     x_model_name = fields.Char(string='Range of vehicle')
     x_quantity = fields.Integer(string='Number')
-    x_brand_name = fields.Char(string='Car Name')
     x_is_hino_vehicle = fields.Boolean(string='Is Hino Vehicle', default=False)
+    x_brand_name = fields.Char(string='Car Name')
