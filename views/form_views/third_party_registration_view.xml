@@ -6,7 +6,7 @@
             <form string="Register for 3rd unit/ Packaging house">
                 <header>
                     <button name="action_submit" string="Send" type="object" class="oe_highlight"
-                            invisible="x_state != 'draft' or 'rejected'"/>
+                            visible="x_state == 'draft' or 'rejected'"/>
                     <button name="action_confirm" string="Approve" type="object" class="oe_highlight"
                             visible="x_state == 'waiting_approval'"/>
                     <button name="action_refuse" string="Reject" type="object" class="oe_highlight"

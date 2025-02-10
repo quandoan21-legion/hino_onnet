@@ -19,13 +19,15 @@ class ThirdPartyRegistration(models.Model):
     x_name = fields.Char(string='3rd Unit Register/Packaging House', required=True)
     x_registration_code = fields.Char(string='Registration Code', readonly=True)
     x_customer_name = fields.Many2one('res.partner', string='Customer Name', required=True)
-    x_customer_code = fields.Many2one('res.partner', string='Customer Code', readonly=True)
+    x_customer_code = fields.Char(related='x_customer_name.ref', string='Customer Code', readonly=True)
     x_representative = fields.Many2one('res.partner', string='Representative', required=True)
-    x_phone = fields.Many2one('res.partner', string='Phone Number', required=True,
-                              domain="[('phone', '!=', False)]",
-                              context={'default_phone': True})  # Thêm context để form tạo mới hiển thị trường phone
+    x_phone = fields.Char(related='x_customer_name.phone', string='Phone', required=True)
     x_business_field = fields.Many2one('res.partner.industry', string='Business Field')
-    x_registration_type = fields.Many2one('res.partner.category', string='Registration Type')
+    x_registration_type = fields.Selection([
+        ('third_party', 'Third Party'),
+        ('packaging', 'Packaging Unit'),
+        ('body_maker', 'Body Maker')
+    ], string='Registration Type', required=True)
     x_attach_files = fields.Many2many(
         'ir.attachment',
         'third_party_reg_attachment_rel',
@@ -143,8 +145,15 @@ class ThirdPartyRegistration(models.Model):
     def action_create_customer(self):
         try:
             category_ids = []
-            if self.x_registration_type:
-                category_ids = [(4, self.x_registration_type.id)]
+            # Map selection value to category
+            category_mapping = {
+                'third_party': self.env.ref('your_module.category_third_party').id,
+                'packaging': self.env.ref('your_module.category_packaging').id,
+                'body_maker': self.env.ref('your_module.category_body_maker').id,
+            }
+
+            if self.x_registration_type and self.x_registration_type in category_mapping:
+                category_ids = [(4, category_mapping[self.x_registration_type])]
 
             new_customer = self.env['res.partner'].create({
                 'name': self.x_name,
@@ -152,6 +161,7 @@ class ThirdPartyRegistration(models.Model):
                 'industry_id': self.x_business_field.id if self.x_business_field else False,
                 'category_id': category_ids,
             })
+
             self.x_customer_name = new_customer.id
             self.x_customer_code = new_customer.id
 
