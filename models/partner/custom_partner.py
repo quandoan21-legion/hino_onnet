@@ -134,7 +134,7 @@ class ResPartner(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Leads',
-            'view_mode': 'form',
+            'view_mode': 'tree,form',
             'res_model': 'crm.lead',
             'domain': [('x_partner_id', '=', self.id)],
             'context': {'default_x_partner_id': self.id},

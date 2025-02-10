@@ -26,10 +26,9 @@ class CustomLead(models.Model):
         default='person'
     )
     x_partner_id = fields.Many2one('res.partner', string='Customer', tracking=True)
-    x_partner_name = fields.Char(string='Customer Name', compute='_compute_partner_details', store=True, tracking=True)
-    x_website = fields.Char(string="Website", store=True, tracking=True, compute='_compute_partner_details')
-    x_contact_address_complete = fields.Char(string="Contact Address", help="Customer's detailed address.",
-                                             compute="_compute_partner_details", require=True)
+    x_partner_name = fields.Char(string='Customer Name', store=True, tracking=True)
+    x_website = fields.Char(string="Website", store=True, tracking=True)
+    x_contact_address_complete = fields.Char(string="Contact Address", help="Customer's detailed address.", require=True)
 
     # x_customer_id = fields.Many2one('res.partner', string='Customer')
     # x_customer_real_id = fields.Char(string='Customer ID', compute='_compute_customer_real_id', store=True, readonly=True)

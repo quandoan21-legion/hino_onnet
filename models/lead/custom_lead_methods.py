@@ -8,21 +8,12 @@ from odoo.exceptions import ValidationError
 class CustomLeadMethods(models.Model):
     _inherit = 'crm.lead'
 
-    @api.depends('x_partner_id')
-    def _compute_partner_details(self):
-        for record in self:
-            if record.x_partner_id:
-                record.x_partner_name = record.x_partner_id.name
-                record.x_contact_address_complete = record.x_partner_id.contact_address_complete
-                record.x_website = record.x_partner_id.website
-            else:
-                record.x_partner_name = ''
-                record.x_contact_address_complete = ''
-                record.x_website = ''
-
     @api.onchange('x_partner_id')
     def _onchange_x_partner_id(self):
         if self.x_partner_id:
+            self.x_partner_name = self.x_partner_id.name
+            self.x_contact_address_complete = self.x_partner_id.contact_address_complete
+            self.x_website = self.x_partner_id.website
             self.phone = self.x_partner_id.phone
             self.email_from = self.x_partner_id.email
             vat = self.x_partner_id.vat or ''
@@ -39,14 +30,14 @@ class CustomLeadMethods(models.Model):
             self.x_customer_status = 'company' if self.x_partner_id.company_type == 'company' else 'person'
             self.x_contact_address_complete = self.x_partner_id.x_contact_address
 
-    # @api.constrains('x_customer_status', 'x_identity_number', 'x_vat')
-    # def _check_customer_status_requirements(self):
-    #     for record in self:
-    #         if record.x_customer_status == 'person' and not record.x_identity_number:
-    #             raise ValidationError(
-    #                 "For 'Individual', the field 'ID Number/Citizen Identification Number' is required.")
-    #         if record.x_customer_status == 'company' and not record.x_vat:
-    #             raise ValidationError("For 'Company', the field 'Business Registration Number (Tax Code)' is required.")
+    @api.constrains('x_customer_status', 'x_identity_number', 'x_vat')
+    def _check_customer_status_requirements(self):
+        for record in self:
+            if record.x_customer_status == 'person' and not record.x_identity_number:
+                raise ValidationError(
+                    "For 'Individual', the field 'ID Number/Citizen Identification Number' is required.")
+            if record.x_customer_status == 'company' and not record.x_vat:
+                raise ValidationError("For 'Company', the field 'Business Registration Number (Tax Code)' is required.")
 
     @api.constrains('x_identity_number')
     def _check_identity_number(self):
@@ -121,6 +112,7 @@ class CustomLeadMethods(models.Model):
                 'phone': vals.get('phone'),
                 'email': vals.get('email_from'),
                 'vat': vals.get('x_vat'),
+                'website': vals.get('x_website'),
                 'x_business_registration_id': vals.get('x_vat'),
                 'x_identity_number': vals.get('x_identity_number'),
                 'x_industry_id': vals.get('x_industry_id'),
@@ -161,7 +153,7 @@ class CustomLeadMethods(models.Model):
     @api.constrains('x_customer_status', 'x_identity_number', 'x_vat')
     def _check_customer_status_requirements(self):
         for record in self:
-            if record.x_customer_status == 'personal' and not record.x_identity_number:
+            if record.x_customer_status == 'person' and not record.x_identity_number:
                 raise ValidationError("For 'Individual', the field 'ID Number/Citizen Identification Number' is required.")
             if record.x_customer_status == 'company' and not record.x_vat:
                 raise ValidationError("For 'Company', the field 'Business Registration Number (Tax Code)' is required.")
