@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 class CustomerRank(models.Model):
     _name = 'customer.rank'
     _description = 'Customer Rank'
+    _rec_name = 'rank_name'
 
     rank_name = fields.Char(string='Rank Name', required=True)
 

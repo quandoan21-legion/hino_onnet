@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Form View for Proposal Content for Cross-Region Sales / Third Party / Box Manufacturer -->
+        <record id="view_sale_region_form" model="ir.ui.view">
+        <field name="name">sale.region.form</field>
+        <field name="model">sale.region</field>
+        <field name="arch" type="xml">
+            <form string="Sales Region">
+                <sheet>
+                    <group>
+                        <field name="x_dealer_branch_id"/>
+                        <!-- <field name="x_agency_id" readonly="1"/> -->
+                        <field name="x_release_time"/>
+                        <field name="x_content"/>
+                        <field name="x_attach_file" filename="x_attach_file_name"/>
+                        <field name="x_field_sale_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    </data>
+</odoo>
