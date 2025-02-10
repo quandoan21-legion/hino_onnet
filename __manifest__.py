@@ -4,6 +4,8 @@
 
     'summary': "Short (1 phrase/line) summary of the module's purpose",
 
+    'license': "LGPL-3",
+
     'description': """
         Hino project
     """,
