@@ -18,19 +18,28 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'crm', 'hr', 'contacts','mail', 'account'],
+    'depends': ['base', 'crm', 'hr', 'contacts','mail', 'account', 'sale', 'account_accountant'],
 
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
         'data/lead_sequence.xml',
+        'data/partner_sequence.xml',
+        'views/form_views/customer_contact_form_views.xml',
         'views/form_views/custom_lead_views.xml',
         'views/form_views/customer_rank_view.xml',
         'views/form_views/custom_lead_views.xml',
+        'views/tree_views/customer_contact_tree_views.xml',
+        'views/form_views/sale_area_view.xml',
+        'views/form_views/cross_region_suggest_view.xml',
+        'views/tree_views/cross_region_suggest_views.xml',
+        'views/tree_views/sale_area_views.xml',
         'views/tree_views/custom_lead_view.xml',
         'views/tree_views/hino_customer_rank.xml',
         'views/tree_views/approach_channel_view.xml',
+        'views/menu/cross_region_suggest_menu_items.xml',
+        'views/menu/sale_area_menu_items.xml',
         'views/menu/customer_rank_menu_items.xml',
         'views/menu/main_menu_items.xml',
         'views/form_views/custom_rank_upgrade_view.xml',
