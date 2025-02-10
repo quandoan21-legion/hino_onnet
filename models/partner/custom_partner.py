@@ -41,36 +41,31 @@ class ResPartner(models.Model):
     x_owned_car_line_ids = fields.One2many('owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines')
     x_vehicle_images = fields.Binary(attachment=True)
 
-    @api.depends('is_company')
-    def _compute_company_type(self):
-        for partner in self:
-            if partner.company_type == 'internal_hmv':
-                continue
-            partner.company_type = 'company' if partner.is_company else 'person'
-
-    def _write_company_type(self):
-        for partner in self:
-            if partner.company_type == 'internal_hmv':
-                continue
-            partner.is_company = partner.company_type == 'company'
-
-    @api.onchange('company_type')
-    def onchange_company_type(self):
-        if self.company_type == 'internal_hmv':
-            return
-        self.is_company = (self.company_type == 'company')
-            
     @api.model
     def create(self, vals):
         if not vals.get('x_customer_code'):
             vals['x_customer_code'] = self.env['ir.sequence'].next_by_code('res.partner.cus_number')
-        return super(ResPartner, self).create(vals)
+        return super().create(vals)
 
-    def write(self, vals):
-        for record in self:
-            if not record.x_customer_code and not vals.get('x_customer_code'):
-                vals['x_customer_code'] = self.env['ir.sequence'].next_by_code('res.partner.cus_number')
-        return super(ResPartner, self).write(vals)
+    # @api.depends('is_company')
+    # def _compute_company_type(self):
+    #     for partner in self:
+    #         if partner.company_type == 'internal_hmv':
+    #             continue
+    #         partner.company_type = 'company' if partner.is_company else 'person'
+
+    # def _write_company_type(self):
+    #     for partner in self:
+    #         if partner.company_type == 'internal_hmv':
+    #             continue
+    #         partner.is_company = partner.company_type == 'company'
+
+    # @api.onchange('company_type')
+    # def onchange_company_type(self):
+    #     if self.company_type == 'internal_hmv':
+    #         return
+    #     self.is_company = (self.company_type == 'company')
+    
 
     @api.constrains('x_business_registration_id')
     def _check_business_registration_id(self):
@@ -110,14 +105,14 @@ class ResPartner(models.Model):
             if record.mobile and not re.fullmatch(r'0\d{1,10}', record.mobile):
                 raise ValidationError("Mobile number must not more than 10 digits and start with 0.")
 
-    @api.constrains('company_type', 'x_business_registration_id', 'x_customer_type', 'x_register_sale_3rd_id', 'x_identity_number')
+    @api.constrains('x_business_registration_id', 'x_customer_type', 'x_register_sale_3rd_id', 'x_identity_number')
     def _check_required_fields(self):
         for record in self:
             if record.company_type == 'internal_hmv':
                 continue  
-            if record.company_type == 'person' and not record.x_identity_number:
+            if not record.is_company and not record.x_identity_number:
                 raise ValidationError("Identity Number is required for individuals. Please enter a valid Identity Number.")
-            if record.company_type == 'company' and not record.x_business_registration_id:
+            if record.is_company and not record.x_business_registration_id:
                 raise ValidationError("Business Registration ID is required for companies. Please enter a valid Business Registration ID.")
             if record.x_customer_type == 'third_party' and not record.x_register_sale_3rd_id:
                 raise ValidationError("Register Sale 3rd is required for Third Party customers. Please enter a valid Register Sale 3rd ID.")
