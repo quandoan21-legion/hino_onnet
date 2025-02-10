@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View for Sale Region -->
+    <record id="view_sale_region_tree" model="ir.ui.view">
+        <field name="name">sale.region.tree</field>
+        <field name="model">sale.region</field>
+        <field name="arch" type="xml">
+            <tree string="Sales Region">
+                <field name="x_dealer_branch_id"/>
+                <!-- <field name="x_agency_id"/> -->
+                <field name="x_attach_file_name"/>
+                <field name="x_release_time"/>
+                <field name="x_content"/>
+            </tree>
+        </field>
+    </record>
+    <!-- Action -->
+        <record id="action_sale_region" model="ir.actions.act_window">
+            <field name="name">Sales Region Configuration</field>
+            <field name="res_model">sale.region</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+</odoo>

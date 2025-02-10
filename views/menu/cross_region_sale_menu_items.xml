@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="menu_sale_region" name="Sales Region Configuration" parent="menu_cross_region_group" action="action_sale_region" sequence="20"/>
+    </data>
+</odoo>
