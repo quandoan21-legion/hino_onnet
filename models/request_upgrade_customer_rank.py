@@ -254,12 +254,20 @@ class CustomerRankUpgrade(models.Model):
         for record in self:
             record.x_total_quantity = sum(record.x_owned_team_car_ids.mapped('x_quantity'))
 
+    # @api.depends('x_owned_team_car_ids.x_model_name', 'x_owned_team_car_ids.x_quantity')
+    # def _compute_quantity_of_hino(self):
+    #     """Tính số lượng xe có model_name chứa 'hino'."""
+    #     for record in self:
+    #         record.x_quantity_of_hino = sum(
+    #             car.x_quantity for car in record.x_owned_team_car_ids.filtered(lambda c: c.x_model_name and 'hino' in c.x_model_name.name.lower())
+    #         )
     @api.depends('x_owned_team_car_ids.x_model_name', 'x_owned_team_car_ids.x_quantity')
     def _compute_quantity_of_hino(self):
-        """Tính số lượng xe có model_name chứa 'hino'."""
+        """Tính số lượng xe có x_is_hino = True."""
         for record in self:
             record.x_quantity_of_hino = sum(
-                car.x_quantity for car in record.x_owned_team_car_ids.filtered(lambda c: c.x_model_name and 'hino' in c.x_model_name.name.lower())
+                car.x_quantity for car in
+                record.x_owned_team_car_ids.filtered(lambda c: c.x_model_name and c.x_model_name.x_is_hino)
             )
 
     @api.model

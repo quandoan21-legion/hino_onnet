@@ -11,3 +11,4 @@ from . import employee
 from . import member_line, owned_team_car_line, approach_channel, customer_follow_up
 from . import request_upgrade_customer_rank
 from . import approve_history
+from .product import custom_product

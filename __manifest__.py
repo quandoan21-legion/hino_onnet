@@ -44,7 +44,7 @@
         'views/menu/customer_rank_menu_items.xml',
         'views/menu/main_menu_items.xml',
         'views/form_views/custom_rank_upgrade_view.xml',
-
+        'views/custom_view/product_template_views.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

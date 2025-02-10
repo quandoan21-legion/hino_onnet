@@ -34,9 +34,8 @@
                     </group>
 
                     <notebook>
-                       <page string="Hino Vehicles">
-   <field name="x_owned_team_car_ids" >
-
+                       <page string="Hino Vehicles" >
+   <field name="x_owned_team_car_ids" domain="[('x_is_hino_vehicle', '=', True)]">
         <tree editable="bottom">
             <field name="x_brand_name"/>
             <field name="x_model_name"/>
@@ -44,11 +43,10 @@
         </tree>
     </field>
 </page>
-
-                      <page string="Other Vehicles">
-    <field name="x_owned_team_car_ids" >
+                        <page string="Other Vehicles">
+  <field name="x_owned_team_car_ids" domain="[('x_is_hino_vehicle', '=', False)]">
         <tree editable="bottom">
-            <field name="x_brand_car"/>
+            <field name="x_brand_name"/>
             <field name="x_model_name"/>
             <field name="x_quantity"/>
         </tree>
