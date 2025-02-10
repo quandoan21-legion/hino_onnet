@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Tree View for Sale Region -->
+    <!-- Tree View for Sale Region Cross -->
     <record id="view_sale_region_tree" model="ir.ui.view">
         <field name="name">sale.region.tree</field>
         <field name="model">sale.region</field>
