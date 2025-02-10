@@ -7,35 +7,33 @@ from odoo.exceptions import ValidationError
 
 class CustomLeadMethods(models.Model):
     _inherit = 'crm.lead'
-    @api.depends('x_partner_id')
-    def _compute_partner_details(self):
-        for record in self:
-            if record.x_partner_id:
-                record.x_partner_name = record.x_partner_id.name
-                record.x_contact_address_complete = record.x_partner_id.contact_address_complete
-                record.x_website = record.x_partner_id.website
-            else:
-                record.x_partner_name = ''
-                record.x_contact_address_complete = ''
-                record.x_website = ''
 
     @api.onchange('x_partner_id')
     def _onchange_x_partner_id(self):
         if self.x_partner_id:
-            self.x_phone = self.x_partner_id.phone
-            self.x_email_from = self.x_partner_id.email
-            self.x_vat = self.x_partner_id.vat
+            self.x_partner_name = self.x_partner_id.name
+            self.x_contact_address_complete = self.x_partner_id.contact_address_complete
+            self.x_website = self.x_partner_id.website
+            self.phone = self.x_partner_id.phone
+            self.email_from = self.x_partner_id.email
+            vat = self.x_partner_id.vat or ''
+            business_reg_id = self.x_partner_id.x_business_registration_id or ''
+            self.x_vat = f"{vat} / {business_reg_id}".strip(" /")
             self.x_identity_number = self.x_partner_id.x_identity_number
-            self.x_industry_id = self.x_partner_id.industry_id
-            self.x_service_contract = self.x_partner_id.service_contract if hasattr(self.x_partner_id,
-                                                                                    'service_contract') else False
-            self.x_activity_area = self.x_partner_id.activity_area if hasattr(self.x_partner_id,
-                                                                              'activity_area') else ''
+            self.x_industry_id = self.x_partner_id.x_industry_id
+            self.x_service_contract = self.x_partner_id.x_service_contract
+            self.x_activity_area = self.x_partner_id.x_activity_area
+            self.x_state_id = self.x_partner_id.x_state_id
+            self.x_dealer_id = self.x_partner_id.x_dealer_id
+            self.x_dealer_branch_id = self.x_partner_id.x_dealer_branch_id
+            self.x_partner_rank_id = self.x_partner_id.x_currently_rank_id
+            self.x_customer_status = 'company' if self.x_partner_id.company_type == 'company' else 'person'
+            self.x_contact_address_complete = self.x_partner_id.x_contact_address
 
     @api.constrains('x_customer_status', 'x_identity_number', 'x_vat')
     def _check_customer_status_requirements(self):
         for record in self:
-            if record.x_customer_status == 'personal' and not record.x_identity_number:
+            if record.x_customer_status == 'person' and not record.x_identity_number:
                 raise ValidationError(
                     "For 'Individual', the field 'ID Number/Citizen Identification Number' is required.")
             if record.x_customer_status == 'company' and not record.x_vat:
@@ -65,7 +63,7 @@ class CustomLeadMethods(models.Model):
 
 
     @api.model
-    def create(self, values):
+    def create(self, vals):
         print("+++++++++++++++++++++++++++++++++++++++++++++++=")
         # Get the fiscal year suffix (last 2 digits of current fiscal year)
         fiscal_year = self.env['account.fiscal.year'].search([], limit=1, order='date_from desc')
@@ -92,30 +90,53 @@ class CustomLeadMethods(models.Model):
         # Combine the fiscal year suffix and the new sequence number to form the name
         pc_number = "PC" + fiscal_year_suffix + new_number
         # Set the name in the values dictionary
-        values['name'] = pc_number
+        vals['name'] = pc_number
 
-        # Call the parent class's create method to actually create the record
-        return super(CustomLeadMethods, self).create(values)
+        domain = []
+        
+        if vals.get('x_vat'):
+            domain.append(('x_business_registration_id', '=', vals['x_vat']))
+        if vals.get('x_identity_number'):
+            domain.append(('x_identity_number', '=', vals['x_identity_number']))
+
+        existing_partner = None
+        if domain:
+            existing_partner = self.env['res.partner'].search(domain, limit=1)
+
+        if existing_partner:
+            vals['x_partner_id'] = existing_partner.id
+        else:
+            partner_vals = {
+                'name': vals.get('x_partner_name', 'Unnamed Customer'),
+                'x_name': vals.get('x_partner_name'),
+                'phone': vals.get('phone'),
+                'email': vals.get('email_from'),
+                'vat': vals.get('x_vat'),
+                'website': vals.get('x_website'),
+                'x_business_registration_id': vals.get('x_vat'),
+                'x_identity_number': vals.get('x_identity_number'),
+                'x_industry_id': vals.get('x_industry_id'),
+                'x_contact_address': vals.get('x_contact_address_complete'),
+                'company_type': 'company' if vals.get('x_customer_status') == 'company' else 'person',
+                'x_state_id': vals.get('x_state_id'),
+                'x_dealer_id': vals.get('x_dealer_id'),
+                'x_dealer_branch_id': vals.get('x_dealer_branch_id'),
+                'x_activity_area': vals.get('x_activity_area'),
+                'x_service_contract': vals.get('x_service_contract'),   
+                'x_currently_rank_id': vals.get('x_partner_rank_id'),
+            }
+
+            new_partner = self.env['res.partner'].create(partner_vals)
+            vals['x_partner_id'] = new_partner.id
+
+        return super(CustomLeadMethods, self).create(vals)
+
 
 
     @api.depends('x_partner_id')
     def _compute_customer_name(self):
         for record in self:
             record.x_partner_name = record.x_partner_id.name if record.x_partner_id else ''
-
-
-    @api.onchange('x_partner_id')
-    def _onchange_x_partner_id(self):
-        if self.x_partner_id:
-            self.x_phone = self.x_partner_id.phone
-            self.x_email_from = self.x_partner_id.email
-            self.x_vat = self.x_partner_id.vat
-            self.x_identity_number = self.x_partner_id.x_identity_number
-            self.x_industry_id = self.x_partner_id.industry_id
-            self.x_service_contract = self.x_partner_id.service_contract if hasattr(self.x_partner_id,
-                                                                                    'service_contract') else False
-            self.x_activity_area = self.x_partner_id.activity_area if hasattr(self.x_partner_id, 'activity_area') else ''
-
 
     # @api.depends('x_customer_id')
     # def _compute_customer_real_id(self):
@@ -132,7 +153,7 @@ class CustomLeadMethods(models.Model):
     @api.constrains('x_customer_status', 'x_identity_number', 'x_vat')
     def _check_customer_status_requirements(self):
         for record in self:
-            if record.x_customer_status == 'personal' and not record.x_identity_number:
+            if record.x_customer_status == 'person' and not record.x_identity_number:
                 raise ValidationError("For 'Individual', the field 'ID Number/Citizen Identification Number' is required.")
             if record.x_customer_status == 'company' and not record.x_vat:
                 raise ValidationError("For 'Company', the field 'Business Registration Number (Tax Code)' is required.")
@@ -169,3 +190,4 @@ class CustomLeadMethods(models.Model):
         if not reason:
             raise ValidationError("A reason for cancellation is required.")
         self.write({'x_status': 'cancelled'})
+

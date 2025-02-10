@@ -59,7 +59,7 @@
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_potential" type="object"
                                 class="oe_stat_button" icon="fa-star">
-                                <field name="x_potential_count" string="Potential"
+                                <field name="x_potential_count" string="Leads"
                                     widget="statinfo" />
                             </button>
                             <button name="action_view_contracts" type="object"
@@ -153,6 +153,7 @@
                             <page string="Member Unit">
                                 <field name="child_ids">
                                     <tree editable="bottom">
+                                        <field name="x_name" />
                                         <field name="x_district" />
                                         <field name="x_state_id" />
                                         <field name="x_contact_address" />
