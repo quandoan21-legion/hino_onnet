@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <menuitem id="hino_suggestion_content" name="(Cross-region/Third Party/Packer)/Suggestion Content" 
-        parent="sale.menu_sale_config" action="cross_region_suggest_action" sequence="1"/>
+        <menuitem id="menu_cross_region_group" name="(Cross-region/Third Party/Packer)" 
+        parent="sale.menu_sale_config" action="cross_region_suggest_action" sequence="10"/>
+
+        <menuitem id="hino_suggestion_content" name="Suggestion Content" 
+        parent="menu_cross_region_group" action="cross_region_suggest_action" sequence="20"/>
     </data>
 </odoo>

@@ -17,7 +17,7 @@
                             <field name="x_field_sale_code" />
                             <field name="x_is_free_sales_area" />
                             <field name="x_release_time" />
-                            <field name="x_attach_file" widget="image"/>
+                            <field name="x_attach_file" filename="x_attach_file_name"/>
                         </group>
                         <notebook>
                             <page string="Province">

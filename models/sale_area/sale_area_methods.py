@@ -3,6 +3,11 @@ from odoo import models, fields, api, exceptions
 class SaleAreaMethods(models.Model):
     _inherit = 'sale.area'
     
+    # @api.depends('x_field_sale_name')
+    # def _compute_display_name(self):
+    #     for record in self:
+    #         record.display_name = record.x_field_sale_name
+    
     @api.model
     def create(self, vals):
         if vals.get('x_is_free_sales_area') and self.search_count([('x_is_free_sales_area', '=', True)]) > 0:
