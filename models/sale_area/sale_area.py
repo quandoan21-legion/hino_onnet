@@ -2,6 +2,7 @@ from odoo import models, fields, api, exceptions
 
 class SaleArea(models.Model):
     _name = 'sale.area'
+    _rec_name = 'x_field_sale_name'
     
     x_field_sale_name = fields.Char(string='Sale Name', required=True)
     x_field_sale_code = fields.Char(string='Area Code', required=True, readonly=True, copy=False, default=lambda self: self._generate_sale_code())
