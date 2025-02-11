@@ -73,7 +73,6 @@
         </record>
 
         <!-- Define the action -->
-
         <record id="action_bid_authorization_cancel" model="ir.actions.act_window">
             <field name="name">Provide Reason</field>
             <field name="res_model">bid.authorization.approve.history</field>
