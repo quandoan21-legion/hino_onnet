@@ -1,4 +1,5 @@
-from odoo import fields, models, api
+from odoo import fields, models
+
 
 class BodyType(models.Model):
     _name = 'hino.body.type'
@@ -8,8 +9,6 @@ class BodyType(models.Model):
     code = fields.Char(string='Body Code', required=True, copy=False, readonly=True, default='To Be Generated')
     rear_body = fields.Char(string='Body Name', required=True)
 
-    @api.model
-    def create(self, vals):
-        if vals.get('code', 'To Be Generated') == 'To Be Generated':  # Ensure sequence is only assigned if not provided
-            vals['code'] = self.env['ir.sequence'].next_by_code('hino.body.type') or '/'
-        return super(BodyType, self).create(vals)
+    _sql_constraints = [
+        ('unique_rear_body', 'unique(rear_body)', 'The Body Name must be unique!')
+    ]

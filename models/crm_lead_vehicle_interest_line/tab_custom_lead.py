@@ -12,7 +12,7 @@ class VehicleInterest(models.Model):
     # x_province_id = fields.Many2one('res.country.state', string='Province/City', required=True)
     # x_order_detail_3rd = fields.Many2one('order.detail.3rd', string='Third Party Order Details')
     # x_model_type_id = fields.Many2one('product.product', string='Vehicle Type', required=True)
-    # x_body_type_id = fields.Many2one('product.body.type', string='Body Type', required=True)
+    x_body_type_id = fields.Many2one('hino.body.type', string='Body Type', required=True)
     x_quantity = fields.Integer(string='Quantity', required=True)
     x_expected_implementation_time = fields.Date(string='Expected Delivery Date', required=True)
     x_expected_time_sign_contract = fields.Date(string='Expected Contract Signing Date', required=True)

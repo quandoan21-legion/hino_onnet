@@ -35,6 +35,7 @@
         'views/form_views/sale_area_view.xml',
         'views/form_views/cross_region_suggest_view.xml',
         'views/form_views/cross_region_sale_view.xml',
+        'views/form_views/custom_rank_upgrade_view.xml',
         'views/tree_views/cross_region_sale_views.xml',
         'views/tree_views/cross_region_suggest_views.xml',
         'views/tree_views/sale_area_views.xml',
@@ -43,13 +44,12 @@
         'views/tree_views/hino_customer_upgrade_rank.xml',
         'views/tree_views/approach_channel_view.xml',
         'views/tree_views/body_type.xml',
+        'views/inherit_views/product_template_views.xml',
         'views/menu/cross_region_suggest_menu_items.xml',
         'views/menu/cross_region_sale_menu_items.xml',
         'views/menu/sale_area_menu_items.xml',
         'views/menu/customer_rank_menu_items.xml',
         'views/menu/main_menu_items.xml',
-        'views/form_views/custom_rank_upgrade_view.xml',
-        'views/custom_view/product_template_views.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
