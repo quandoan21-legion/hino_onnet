@@ -13,3 +13,4 @@ from . import member_line, owned_team_car_line, approach_channel, customer_follo
 from . import request_upgrade_customer_rank
 from . import approve_history
 from .product import custom_product
+from . import approve_history_wizard

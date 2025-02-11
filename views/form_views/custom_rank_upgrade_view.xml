@@ -59,8 +59,8 @@
 
 
                         <page string="Approval">
-                            <field name="approve_history_ids">
-                                <tree editable="bottom">
+                            <field name="approve_history_ids" >
+                                <tree >
                                     <field name="employee_id"/>
                                     <field name="department_id"/>
                                     <field name="position_id"/>
@@ -70,6 +70,18 @@
                                     <field name="note"/>
                                 </tree>
                             </field>
+<!--                            <field name="approve_history_ids" context="{'form_view_ref': 'your_module.view_approve_history_form'}">-->
+<!--    <tree>-->
+<!--        <field name="employee_id"/>-->
+<!--        <field name="department_id"/>-->
+<!--        <field name="position_id"/>-->
+<!--        <field name="status_from"/>-->
+<!--        <field name="status_to"/>-->
+<!--        <field name="approve_date"/>-->
+<!--        <field name="note"/>-->
+<!--    </tree>-->
+<!--</field>-->
+
                         </page>
                     </notebook>
                 </sheet>
