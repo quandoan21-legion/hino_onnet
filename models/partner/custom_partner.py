@@ -17,6 +17,7 @@ class ResPartner(models.Model):
         [('last_customer', 'Last Customer'), ('third_party', 'Third Party'), ('body_maker', 'Body Maker')],
         string='Customer Type', default='last_customer', tracking=True
     )
+    x_name = fields.Char(string='Name', tracking=True)
     x_contact_address = fields.Char(string="Address", store=True)
     x_function = fields.Char(string='Function')
     x_customer_code = fields.Char(string='Customer Code', tracking=True, readonly=True, copy=False)
@@ -26,7 +27,7 @@ class ResPartner(models.Model):
     x_currently_rank_id = fields.Many2one('customer.rank', string='Currently Rank')
     x_business_registration_id = fields.Char(string='Business Registration ID', help='Business Registration ID')
     x_identity_number = fields.Char(string='Identity Number', help='National or Personal Identity Number')
-    x_industry_id = fields.Many2one('res.partner.industry', string='Business Field', tracking=True)
+    x_industry_id = fields.Many2one('res.partner.industry', string='Industry', tracking=True)
     x_activity_area = fields.Char(string='Activity Area', tracking=True)
     x_service_contract = fields.Boolean(string='Service Contact', tracking=True)
     x_number_of_vehicles = fields.Integer(string='Number of Vehicles')
@@ -47,24 +48,24 @@ class ResPartner(models.Model):
             vals['x_customer_code'] = self.env['ir.sequence'].next_by_code('res.partner.cus_number')
         return super().create(vals)
 
-    # @api.depends('is_company')
-    # def _compute_company_type(self):
-    #     for partner in self:
-    #         if partner.company_type == 'internal_hmv':
-    #             continue
-    #         partner.company_type = 'company' if partner.is_company else 'person'
+    @api.depends('is_company')
+    def _compute_company_type(self):
+        for partner in self:
+            if partner.company_type == 'internal_hmv':
+                continue
+            partner.company_type = 'company' if partner.is_company else 'person'
 
-    # def _write_company_type(self):
-    #     for partner in self:
-    #         if partner.company_type == 'internal_hmv':
-    #             continue
-    #         partner.is_company = partner.company_type == 'company'
+    def _write_company_type(self):
+        for partner in self:
+            if partner.company_type == 'internal_hmv':
+                continue
+            partner.is_company = partner.company_type == 'company'
 
-    # @api.onchange('company_type')
-    # def onchange_company_type(self):
-    #     if self.company_type == 'internal_hmv':
-    #         return
-    #     self.is_company = (self.company_type == 'company')
+    @api.onchange('company_type')
+    def onchange_company_type(self):
+        if self.company_type == 'internal_hmv':
+            return
+        self.is_company = (self.company_type == 'company')
     
 
     @api.constrains('x_business_registration_id')
@@ -132,7 +133,7 @@ class ResPartner(models.Model):
     def action_view_potential(self):
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Potential',
+            'name': 'Leads',
             'view_mode': 'tree,form',
             'res_model': 'crm.lead',
             'domain': [('x_partner_id', '=', self.id)],

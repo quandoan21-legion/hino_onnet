@@ -6,7 +6,11 @@ class CustomBankLine(models.Model):
 
     x_partner_id = fields.Many2one('res.partner', string='Partner')
     x_branch = fields.Char(string="Branch")
-    acc_number = fields.Many2one('res.partner.bank', string='Account Number')
+    acc_number = fields.Many2one(
+        'res.partner.bank',
+        string='Account Number',
+        context={'show_acc_number_only': True}
+    )
     bank_id = fields.Many2one('res.bank', string='Bank', compute='_compute_bank_id', store=True)
 
     @api.depends('acc_number')

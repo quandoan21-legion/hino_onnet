@@ -1,0 +1,11 @@
+<odoo>
+    <data noupdate="1">
+        <record id="seq_hino_body_type" model="ir.sequence">
+            <field name="name">Body Type Sequence</field>
+            <field name="code">hino.body.type</field>
+            <field name="prefix">T</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>
