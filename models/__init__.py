@@ -8,5 +8,9 @@ from . import customer_rank
 from .partner import custom_partner, custom_bank_line, custom_contact_line
 from . import crm_lead_contact_person
 from . import employee
+<<<<<<< Updated upstream
 from . import member_line, owned_team_car_line, approach_channel, customer_follow_up
 from . import bid_authorization, bid_authorization_approve_history
+=======
+from . import member_line, owned_team_car_line
+>>>>>>> Stashed changes

@@ -113,6 +113,21 @@
                                     </tree>
                                 </field>
                             </page>
+
+                            <page string="Owned Team Car">
+                                        <field name="model_name"/>
+                                        <field name="quantity"/>
+                                        <field name="brand_car"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Members">
+                                <field name="x_member_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="member_id"/>
+                                    </tree>
+                                </field>
+                            </page>
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
@@ -121,7 +136,6 @@
                         <field name="message_ids" widget="mail_thread" readonly="x_readonly_fields"/>
                     </div>
                 </form>
-            </field>
         </record>
     </data>
 </odoo>
