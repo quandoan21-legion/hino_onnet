@@ -37,6 +37,7 @@
         'views/form_views/cross_region_sale_view.xml',
         'views/form_views/custom_rank_upgrade_view.xml',
         'views/form_views/body_type_form_views.xml',
+        'views/form_views/customer_interest_vehicle.xml',
         'views/tree_views/cross_region_sale_views.xml',
         'views/tree_views/cross_region_suggest_views.xml',
         'views/tree_views/sale_area_views.xml',
