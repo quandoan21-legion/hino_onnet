@@ -33,8 +33,6 @@ class ResPartner(models.Model):
     x_number_of_vehicles = fields.Integer(string='Number of Vehicles')
     x_hino_vehicle = fields.Integer(string='Hino Vehicle')
     x_number_repair_order = fields.Integer(string='Number of Repair Order')
-    x_repair_order_from_id = fields.Integer(string='Repair Order From') # liên quan đến nhóm 2 dùng repair.order field
-    x_repair_order_to_id = fields.Integer(string='Repair Order To') # liên quan đến nhóm 2 dùng repair.order field
     x_cumulative_points = fields.Integer(string='Cumulative Points')
     x_register_sale_3rd_id = fields.Char(string='Register Sale 3rd') # liên quan đến phần 2.2.3 dùng many2one relation
     x_bank_line_ids = fields.One2many('bank.line', 'x_partner_id', string='Bank Lines')
@@ -178,6 +176,6 @@ class ResPartner(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Customer Rank',
-            'view_mode': 'tree,form',
-            'res_model': 'crm.lead',
+            'view_mode': 'form',
+            'res_model': 'customer.rank.upgrade',
         }
