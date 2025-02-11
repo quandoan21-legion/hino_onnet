@@ -28,13 +28,18 @@
                     <group>
                         <group>
                             <field name="x_registration_code" readonly="1"/>
-                            <field name="x_customer_id" widget="many2one" options="{'no_open': True}"/>
+                            <!--                            <field name="x_customer_id" widget="many2one" options="{'no_open': True}"/>-->
+                            <field name="x_customer_id"
+                                   widget="many2one"
+                                   context="{'form_view_ref': 'hino_onnet.view_form_custom_customer'}"
+                                   options="{'no_create_edit': false,'no_quick_create': true,'no_open': true}"/>
                             <field name="x_customer_code" readonly="1"/>
                             <field name="x_representative_id"/>
                             <field name="x_phone"/>
                             <field name="x_business_field_id"/>
                             <field name="x_registration_type"/>
-                            <field name="x_attach_files" widget="many2many_binary"/>
+                            <field name="x_attach_files" widget="many2many_binary"
+                                   options="{'accept': 'application/pdf'}"/>
                         </group>
                         <group>
                             <field name="x_ability_distribute_standards"/>

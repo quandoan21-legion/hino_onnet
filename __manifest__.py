@@ -17,7 +17,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'crm', 'hr', 'contacts','mail', 'account', 'sale', 'account_accountant','sale_management'],
+    'depends': ['base', 'crm', 'hr', 'contacts','mail', 'account', 'sale', 'account_accountant','sale_management','web'],
 
     'data': [
         'data/registration_code_sequence.xml',
