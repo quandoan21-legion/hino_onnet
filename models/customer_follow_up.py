@@ -1,6 +1,7 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
+
 class CRMFollowUp(models.Model):
     _name = "crm.follow.up"
     _description = "Customer Follow-Up"
@@ -17,8 +18,8 @@ class CRMFollowUp(models.Model):
 
     x_sale_person_follow_up_id = fields.Many2one('hr.employee', string="Salesperson Follow-Up ID")
 
-@api.constrains('x_day_contact')
-def _check_day_contact(self):
-    for record in self:
-        if record.x_day_contact > fields.Date.today():
-            raise ValidationError("The day contact cannot be set in the future")
+    @api.constrains('x_day_contact')
+    def _check_day_contact(self):
+        for record in self:
+            if record.x_day_contact > fields.Date.today():
+                raise ValidationError("The day contact cannot be set in the future")

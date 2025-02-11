@@ -26,4 +26,11 @@
               action="action_third_party_registration_tree"
               sequence="10"/>
 
+     <!-- New menu under Contacts -->
+    <menuitem id="custom_contact_menu"
+              name="View contact"
+              parent="contacts.menu_contacts"
+              action="custom_customer_action"
+              sequence="10"/>
+
 </odoo>
