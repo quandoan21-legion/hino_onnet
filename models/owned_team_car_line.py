@@ -6,7 +6,7 @@ class CustomLeadLine(models.Model):
     lead_id = fields.Many2one('crm.lead', string='Lead')
     x_partner_id = fields.Many2one('res.partner', string='Partner')
 
-
+    # x_model_name = fields.Char(string='Range of vehicle')
     x_model_name = fields.Many2one('product.product', string='Range of vehicle')
     x_quantity = fields.Integer(string='Number')
     x_brand_name = fields.Char(string='Car Name')
@@ -22,19 +22,7 @@ class CustomLeadLine(models.Model):
     x_brand_car = fields.Char(string='Car Firm Name')
 
     customer_rank_upgrade_id = fields.Many2one('customer.rank.upgrade', string='Potential customer')
-    # x_hino_vehicles = fields.One2many(
-    #     "owned.team.car.line",
-    #     "customer_rank_upgrade_id",
-    #     string="Hino Vehicles",
-    #     domain=[('x_is_hino_vehicle', '=', True)]
-    # )
-    #
-    # x_other_vehicles = fields.One2many(
-    #     "owned.team.car.line",
-    #     "customer_rank_upgrade_id",
-    #     string="Other Vehicles",
-    #     domain=[('x_is_hino_vehicle', '=', False)]
-    # )
+
     @api.depends('x_model_name')
     def _compute_x_is_hino_vehicle(self):
         """Tự động lấy giá trị x_is_hino từ product.product"""
