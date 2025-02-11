@@ -78,7 +78,7 @@
                             <page string="Vehicle Customer Interest">
                                 <field name="x_vehicle_interest_ids" mode="tree,form">
                                     <tree>
-                                        <field name="x_customer" />
+                                        <field name="x_partner_name" />
                                         <field name="x_address" />
                                         <field name="x_quantity" />
                                         <field name="x_body_type_id" />

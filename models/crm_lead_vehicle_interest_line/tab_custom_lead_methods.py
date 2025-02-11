@@ -5,30 +5,25 @@ import re
 class VehicleInterestLineMethods(models.Model):
     _inherit = 'crm.lead.vehicle.interest.line'
 
-    @api.onchange('x_order_detail_3rd', 'x_partner_name')
-    def _onchange_fields(self):
-        if self.x_order_detail_3rd:
-            self.x_partner_name = self.x_order_detail_3rd.partner_id
-            self.x_customer = self.x_order_detail_3rd.partner_id.name
-            self.x_address = self.x_order_detail_3rd.partner_id.street
-            self.x_province_id = self.x_order_detail_3rd.partner_id.state_id
-            self.x_model_type_id = self.x_order_detail_3rd.model_type_id
-            self.x_body_type_id = self.x_order_detail_3rd.body_type_id
-
-        elif self.x_partner_name:
-            self.x_customer = self.x_partner_name.name
-            self.x_address = self.x_partner_name.street or ''
-            self.x_province_id = self.x_partner_name.state_id
-
+    # @api.onchange('x_order_detail_3rd', 'x_partner_name')
+    # def _onchange_fields(self):
+    #     if self.x_order_detail_3rd:
+    #         self.x_partner_name = self.x_order_detail_3rd.partner_id
+    #         self.x_customer = self.x_order_detail_3rd.partner_id.name
+    #         self.x_address = self.x_order_detail_3rd.partner_id.street
+    #         self.x_province_id = self.x_order_detail_3rd.partner_id.state_id
+    #         self.x_model_type_id = self.x_order_detail_3rd.model_type_id
+    #         self.x_body_type_id = self.x_order_detail_3rd.body_type_id
+    #
+    #     elif self.x_partner_name:
+    #         self.x_customer = self.x_partner_name.name
+    #         self.x_address = self.x_partner_name.street or ''
+    #         self.x_province_id = self.x_partner_name.state_id
+    #
 
     @api.constrains('x_customer', 'x_address', 'x_expected_implementation_time', 'x_expected_time_sign_contract')
     def _check_fields(self):
         for record in self:
-            if not record.x_customer:
-                raise ValidationError("Customer cannot be empty.")
-            if not re.match("^[a-zA-Z\s]+$", record.x_customer):
-                raise ValidationError("Customer name cannot contain numbers or special characters.")
-
             if not record.x_address or record.x_address.isdigit():
                 raise ValidationError("Address cannot contain only numbers.")
             if not any(char.isdigit() for char in record.x_address) and not any(char.isalpha() for char in record.x_address):
