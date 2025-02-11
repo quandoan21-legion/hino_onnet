@@ -26,6 +26,7 @@
         'security/ir.model.access.csv',
         'data/lead_sequence.xml',
         'data/partner_sequence.xml',
+        'data/bid_authorization_sequence.xml',
         'views/form_views/customer_contact_form_views.xml',
         'views/form_views/custom_lead_views.xml',
         'views/form_views/customer_rank_view.xml',
@@ -42,6 +43,7 @@
         'views/menu/sale_area_menu_items.xml',
         'views/menu/customer_rank_menu_items.xml',
         'views/menu/main_menu_items.xml',
+        'views/bid_authorization_views.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

@@ -11,3 +11,5 @@ access_approach_channel,hino_onnet.approach.channel,model_approach_channel,base.
 access_bank_line,hino_onnet.bank.line,model_bank_line,base.group_user,1,1,1,1
 access_contact_line,hino_onnet.contact.line,model_contact_line,base.group_user,1,1,1,1
 access_hino_onnet_customer_follow_up, hino_onnet.crm.follow.up,model_crm_follow_up,,1,1,1,1
+access_bid_authorization,bid.authorization,model_bid_authorization,base.group_user,1,1,1,1
+access_bid_authorization_approve_history,bid.authorization.approve.history,model_bid_authorization_approve_history,base.group_user,1,1,1,1
