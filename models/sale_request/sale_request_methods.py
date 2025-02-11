@@ -2,7 +2,7 @@ from odoo import models, fields,api
 from odoo.exceptions import ValidationError
 from datetime import datetime
 
-class SaleRequest(models.Model):
+class SaleRequestMethods(models.Model):
     _inherit = 'sale.request'
 
     # Override Methods
@@ -10,11 +10,10 @@ class SaleRequest(models.Model):
     def create(self, vals):
         if not vals.get('x_request_code'):
             vals['x_request_code'] = self.env['ir.sequence'].next_by_code('sale.request.sequence')
-        return super(SaleRequest, self).create(vals)
+        return super(SaleRequestMethods, self).create(vals)
 
-    @api.model
     def _generate_request_code(self):
-        sequence = self.env['ir.sequence'].next_by_code('your.model.request.code') or '/'
+        sequence = self.env['ir.sequence'].next_by_code('sale.request.sequence') or '/'
         return sequence
     
     @api.model
@@ -67,42 +66,51 @@ class SaleRequest(models.Model):
     def action_submit(self):
         self.ensure_one()
         self.write({
-            'state': 'pending',
-            'request_date': fields.Date.today()
+            'x_state': 'pending',
+            'x_request_date': fields.Date.today()
         })
 
     def action_approve(self):
         self.ensure_one()
-        if self.x_customer_id:
-            self.x_customer_id.write({
-                'out_of_area_dealer_id': self.x_request_dealer_id.id
-            })
-        
         self.write({
-            'state': 'approved',
-            'approve_date': fields.Date.today()
+            'x_state': 'approved',
+            'x_approve_date': fields.Date.today()
         })
 
-    def action_reject(self):
-        """Reject the request"""
+    def action_refuse(self):
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Từ chối đề nghị',
-            'res_model': 'sale.request.reject.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {'default_request_id': self.id}
-        }
+        self.write({
+            'x_state': 'rejected',
+            'x_approve_date': fields.Date.today()
+        })
 
     def action_cancel(self):
-        """Cancel the request"""
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Hủy đề nghị',
-            'res_model': 'sale.request.cancel.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {'default_request_id': self.id}
-        }
+        self.write({
+            'x_state': 'cancelled',
+            'x_approve_date': fields.Date.today()
+        })
+
+    def action_partial_sale(self):
+        self.ensure_one()
+        if self.x_state != 'approved':
+            raise ValidationError("Can only transition to 'Partial Sale' after approval.")
+
+        self.write({
+            'x_state': 'partial_sale'
+        })
+
+    def action_complete(self):
+        self.ensure_one()
+        if self.x_state not in ['approved', 'partial_sale']:
+            raise ValidationError("Can only mark as 'Completed' if in 'Approved' or 'Partial Sale' state.")
+
+        self.write({
+            'x_state': 'completed'
+        })
+        
+    def action_send_mail(self):
+        self.ensure_one()
+        template = self.env.ref('your_module.sale_request_mail_template', raise_if_not_found=False)
+        if template:
+            template.send_mail(self.id, force_send=True)
