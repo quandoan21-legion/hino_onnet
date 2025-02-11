@@ -2,5 +2,6 @@
 <odoo>
     <data>
         <menuitem id="hino_sale_area_menu" name="Configure Sales Area" parent="sale.menu_sale_config" action="sale_area_action" sequence="1"/>
+        <menuitem name="Body Type Configuration" id="body_type_menu" parent="sale.menu_sale_config" action="body_type_act_window"/>
     </data>
 </odoo>
