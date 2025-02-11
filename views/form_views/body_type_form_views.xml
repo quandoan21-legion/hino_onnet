@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="body_type_form_view" model="ir.ui.view">
+            <field name="name">hino_onnet.body_type.form</field>
+            <field name="model">hino.body.type</field>
+            <field name="arch" type="xml">
+                <form string="New Rear Body Type">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="code"/>
+                            </group>
+                            <group>
+                                <field name="rear_body"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>
+
+
