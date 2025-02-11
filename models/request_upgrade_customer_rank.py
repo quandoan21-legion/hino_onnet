@@ -1,6 +1,3 @@
-
-
-
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
@@ -112,13 +109,6 @@ class CustomerRankUpgrade(models.Model):
         for record in self:
             record.x_total_quantity = sum(record.x_owned_team_car_ids.mapped('x_quantity'))
 
-    # @api.depends('x_owned_team_car_ids.x_model_name', 'x_owned_team_car_ids.x_quantity')
-    # def _compute_quantity_of_hino(self):
-    #     """Tính số lượng xe có model_name chứa 'hino'."""
-    #     for record in self:
-    #         record.x_quantity_of_hino = sum(
-    #             car.x_quantity for car in record.x_owned_team_car_ids.filtered(lambda c: c.x_model_name and 'hino' in c.x_model_name.name.lower())
-    #         )
     @api.depends('x_owned_team_car_ids.x_model_name', 'x_owned_team_car_ids.x_quantity')
     def _compute_quantity_of_hino(self):
         """Tính số lượng xe có x_is_hino = True."""
@@ -143,7 +133,7 @@ class CustomerRankUpgrade(models.Model):
             vals['x_request_form_code'] = next_number
 
         return super().create(vals)
-    #     return super().create(vals)
+
 
     def action_update_data(self):
         for record in self:
@@ -161,31 +151,28 @@ class CustomerRankUpgrade(models.Model):
         self.write({'status': 'pending'})
 
     def action_cancel(self):
+        """Pop up a form to create an approval history record without customer_rank_upgrade_id."""
         self.ensure_one()
-
-        # Log the approval history
-        history = self.env['approve.history'].create({
-            'employee_id': self.env.user.employee_id.id,
-            'department_id': self.env.user.employee_id.department_id.id,
-            'position_id': self.env.user.employee_id.job_id.id,
-            'status_from': self.status,
-            'status_to': 'canceled',
-            'approve_date': fields.Datetime.now(),
-            'note': 'Canceled by user',
-            'customer_rank_upgrade_id': self.id,
-        })
 
         # Change the status to 'canceled'
         self.write({'status': 'canceled'})
 
-        # Return action to open the approval history in a pop-up with CRUD enabled
+        # Open the approval history form without unwanted fields
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Approval History',
+            'name': 'Create Approval History',
             'res_model': 'approve.history',
-            'view_mode': 'tree,form',  # Allow viewing both list and form
-            'domain': [('customer_rank_upgrade_id', '=', self.id)],
-            'context': {'default_customer_rank_upgrade_id': self.id},  # Autofill relationship
+            'view_mode': 'form',
+
+            'context': {
+                'default_employee_id': self.env.user.employee_id.id,
+                'default_department_id': self.env.user.employee_id.department_id.id,
+                'default_position_id': self.env.user.employee_id.job_id.id,
+                'default_status_from': self.status,
+                'default_status_to': 'canceled',
+                'default_approve_date': fields.Datetime.now(),
+                'default_customer_rank_upgrade_id': self.id,
+            },
             'target': 'new',  # Open as a pop-up
         }
 
@@ -193,7 +180,28 @@ class CustomerRankUpgrade(models.Model):
         self.write({'status': 'approved'})
 
     def action_refuse(self):
+        self.ensure_one()
+
+        # Change the status to 'canceled'
         self.write({'status': 'rejected'})
+
+        # Return action to open the approval history form for new record creation
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Create Approval History',
+            'res_model': 'approve.history',
+            'view_mode': 'form',
+            'context': {
+                'default_employee_id': self.env.user.employee_id.id,
+                'default_department_id': self.env.user.employee_id.department_id.id,
+                'default_position_id': self.env.user.employee_id.job_id.id,
+                'default_status_from': 'pending',
+                'default_status_to': 'rejected',
+                'default_approve_date': fields.Datetime.now(),
+                'default_customer_rank_upgrade_id': self.id,
+            },
+            'target': 'new',  # Opens as a pop-up
+        }
 
     def action_reset_to_draft(self):
         self.write({'status': 'draft'})

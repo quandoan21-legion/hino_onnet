@@ -6,7 +6,7 @@ class CustomLeadLine(models.Model):
     lead_id = fields.Many2one('crm.lead', string='Lead')
     x_partner_id = fields.Many2one('res.partner', string='Partner')
 
-    # x_model_name = fields.Char(string='Range of vehicle')
+
     x_model_name = fields.Many2one('product.product', string='Range of vehicle')
     x_quantity = fields.Integer(string='Number')
     x_brand_name = fields.Char(string='Car Name')
