@@ -80,8 +80,8 @@
                                     <tree>
                                         <field name="x_customer" />
                                         <field name="x_address" />
-                                        <field name="x_quantity" />
                                         <field name="x_body_type_id" />
+                                        <field name="x_quantity" />
                                         <field name="x_expected_implementation_time" />
                                         <field name="x_expected_time_sign_contract" />
                                         <field name="x_note" />
