@@ -57,6 +57,12 @@ class CustomerRankUpgrade(models.Model):
                                       store=False)
     model_ids_hino_names = fields.Many2many('product.product', string='Hino Model Names',
                                             compute='_compute_hino_model_names', store=False)
+    # is_updated = fields.Boolean(string="Data Updated", default=False)
+    # can_refuse = fields.Boolean(compute="_compute_can_refuse", store=True)
+    # @api.depends('is_updated')
+    # def _compute_can_refuse(self):
+    #     for record in self:
+    #         record.can_refuse = record.is_updated
 
     @api.depends('x_owned_team_car_ids.x_model_name')
     def _compute_hino_model_names(self):
@@ -154,6 +160,8 @@ class CustomerRankUpgrade(models.Model):
         return super().create(vals)
 
     def action_update_data(self):
+        self.write({'status': 'draft'})
+        # self.write({'is_updated': True})
         for record in self:
             if record.x_partner_id:
                 # Clear and update owned vehicle list
