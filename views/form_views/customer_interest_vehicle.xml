@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="vehicle_interest_form_view" model="ir.ui.view">
+            <field name="name">vehicle.interest.form</field>
+            <field name="model">crm.lead.vehicle.interest.line</field>
+            <field name="arch" type="xml">
+                <form string="Vehicle Customer Interest">
+                    <sheet>
+                        <group>
+                            <field name="lead_id" invisible="1"/>
+                            <field name="x_partner_code"/>
+                            <field name="x_partner_name"/>
+                            <field name="x_address"/>
+                            <field name="x_province_id"/>
+                            <field name="x_quantity"/>
+                            <field name="x_model_id"/>
+                            <field name="x_body_type_id"/>
+
+                            <field name="x_expected_implementation_time" widget="date"
+                                   options="{'format': 'MMM YYYY'}"/>
+                            <field name="x_expected_time_sign_contract" widget="date" options="{'format': 'MMM YYYY'}"/>
+
+                            <field name="x_note"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

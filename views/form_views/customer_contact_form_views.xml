@@ -48,8 +48,6 @@
                                 <field name="x_number_of_vehicles" />
                                 <field name="x_hino_vehicle" />
                                 <field name="x_number_repair_order" />
-                                <field name="x_repair_order_from_id" />
-                                <field name="x_repair_order_to_id" />
                                 <field name="x_cumulative_points" />
                                 <field name="x_currently_rank_id" />
                                 <field name="x_field_sale_id" />
@@ -166,23 +164,23 @@
                                         widget="image" />
                                 </group>
                             </page>
-                            <page string="Owned vehicle fleet">
+                            <page string="Owned Vehicle Fleet">
                                 <field name="x_owned_car_line_ids">
                                     <tree editable="bottom">
-                                        <field name="x_brand_name" />
-                                        <field name="x_is_hino_vehicle" optional="hide" />
                                         <field name="x_model_name" />
+                                        <field name="x_brand_name" />
                                         <field name="x_quantity" />
+                                        <field name="x_is_hino_vehicle" invisible="1" />
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Owned Hino vehicle fleet">
+                            <page string="Owned Hino Vehicle Fleet">
                                 <field name="x_owned_car_line_ids">
                                     <tree editable="bottom">
+                                        <field name="x_model_id" />
                                         <field name="x_brand_name" />
-                                        <field name="x_is_hino_vehicle" optional="hide" />
-                                        <field name="x_model_name" />
-                                        <field name="x_quantity" />
+                                        <field name="x_hino_quantity" />
+                                        <field name="x_is_hino_vehicle" invisible="1" />
                                     </tree>
                                 </field>
                             </page>

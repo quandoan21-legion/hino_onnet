@@ -8,12 +8,9 @@
             <tree string="Sale Requests">
                 <field name="x_request_code"/>
                 <!-- <field name="x_request_dealer_id"/> -->
-                <field name="x_customer_name"/>
-                <field name="x_customer_region"/>
-                <field name="x_state"/>
                 <field name="x_request_date"/>
-                <field name="x_expected_sale_date"/>
-                <field name="x_approve_date"/>
+                <field name="x_customer_type"/>
+                <field name="x_state"/>
             </tree>
         </field>
     </record>

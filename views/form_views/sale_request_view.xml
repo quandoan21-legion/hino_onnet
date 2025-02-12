@@ -11,7 +11,7 @@
                     <button name="action_approve" string="Approve" class="oe_highlight" type="object" />
                     <button name="action_refuse" string="Refuse" class="oe_highlight" type="object"/>
                     <button name="action_cancel" string="Cancel" class="oe_highlight" type="object"/>
-                    <button name="action_send_mail" string="Send Mail" class="oe_highlight" type="object"/>
+                    <button string="Send Mail" class="oe_highlight"/>
 
                     <field name="x_state" widget="statusbar" statusbar_visible="draft,pending,approved,rejected,partial_sale,completed,cancelled" />
                 </header>
@@ -35,7 +35,7 @@
                             <field name="x_business_registration_id"/>
                         </group>
                         <group>
-                            <!-- <field name="x_request_content_id"/> -->
+                            <field name="x_request_content_id"/>
                             <field name="x_reason"/>
                             <field name="x_old_customer"/>
                             <field name="x_customer_type"/>
