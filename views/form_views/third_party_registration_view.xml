@@ -5,16 +5,16 @@
         <field name="arch" type="xml">
             <form string="Register for 3rd unit/ Packaging house">
                 <header>
-                    <button name="action_submit" string="Send" type="object" class="oe_highlight"
-                            visible="x_state == 'draft' or x_state == 'rejected'"/>
-                    <button name="action_approve" string="Approve" type="object" class="oe_highlight"
-                            visible="x_state == 'pending'"/>
-                    <button name="action_reject" string="Reject" type="object" class="oe_highlight"
-                            visible="x_state == 'pending'"/>
+                    <button name="action_submit" string="Submit" type="object" class="oe_highlight"
+                            invisible="x_state not in ('draft', 'rejected')"/>
+                    <button name="action_approve" string="Confirm" type="object" class="oe_highlight"
+                            invisible="x_state not in 'pending'"/>
+                    <button name="action_reject" string="Refuse" type="object" class="oe_highlight"
+                            invisible="x_state not in 'pending'"/>
                     <button name="action_cancel" string="Cancel" type="object" class="oe_highlight"
-                            visible="x_state == 'draft'"/>
+                            invisible="x_state not in 'draft'"/>
                     <button name="action_create_customer" string="Create Customer" type="object"
-                            class="btn-primary" visible="x_state == 'approved'"/>
+                            class="btn-primary" invisible="x_state not in 'approved'"/>
                     <field name="x_state" widget="statusbar"
                            statusbar_visible="draft,pending,approved,rejected,cancelled"/>
                 </header>
@@ -46,6 +46,7 @@
                             <field name="x_barrels_3rd_processes"/>
                             <field name="x_unit_3rd_commercial"/>
                             <field name="x_note"/>
+                            <field name="x_rejection_reason"/>
                         </group>
                     </group>
                     <notebook>

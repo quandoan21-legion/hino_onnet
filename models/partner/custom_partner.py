@@ -40,6 +40,18 @@ class ResPartner(models.Model):
     x_owned_car_line_ids = fields.One2many('owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines')
     x_vehicle_images = fields.Binary(attachment=True)
 
+    @api.constrains('phone')
+    def _check_phone_unique(self):
+        for record in self:
+            if record.phone:
+                # Tìm kiếm các bản ghi khác có cùng số điện thoại
+                existing = self.search([
+                    ('phone', '=', record.phone),
+                    ('id', '!=', record.id)
+                ])
+                if existing:
+                    raise ValidationError("Phone number must be unique.")
+
     @api.model
     def create(self, vals):
         if not vals.get('x_customer_code'):
