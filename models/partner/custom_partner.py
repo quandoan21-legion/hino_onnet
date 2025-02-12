@@ -30,8 +30,10 @@ class ResPartner(models.Model):
     x_industry_id = fields.Many2one('res.partner.industry', string='Industry', tracking=True)
     x_activity_area = fields.Char(string='Activity Area', tracking=True)
     x_service_contract = fields.Boolean(string='Service Contact', tracking=True)
+
     x_number_of_vehicles = fields.Integer(string='Number of Vehicles')
     x_hino_vehicle = fields.Integer(string='Hino Vehicle')
+
     x_number_repair_order = fields.Integer(string='Number of Repair Order')
     x_cumulative_points = fields.Integer(string='Cumulative Points')
     x_register_sale_3rd_id = fields.Char(string='Register Sale 3rd') # liên quan đến phần 2.2.3 dùng many2one relation
