@@ -1,11 +1,25 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hino_onnet_customer_rank,hino_onnet.customer.rank,model_customer_rank,base.group_user,1,1,1,1
-access_hino_onnet_vehicle_interest_line,hino_onnet.crm.lead.vehicle.interest_line,model_crm_lead_vehicle_interest_line,,1,1,1,1
 access_hino_onnet_owned_team_car_line,hino_onnet.owned.team.car.line,model_owned_team_car_line,base.group_user,1,1,1,1
 access_hino_onnet_member_line,hino_onnet.member.line,model_member_line,base.group_user,1,1,1,1
-access_sale_area_user,sale.area.user,model_sale_area,base.group_user,1,1,1,1
-access_sale_area_detail_line_user,sales.area.detail.line.user,model_sales_area_detail_line,base.group_user,1,1,1,1
-access_hino_onnet_vehicle_interest_line,hino_onnet.crm.lead.vehicle.interest_line,model_crm_lead_vehicle_interest_line,base.group_user,1,1,1,1
+access_hino_onnet_sale_area,hino_onnet.sale.area,model_sale_area,base.group_user,1,1,1,1
+access_hino_onnet_sale_area_detail_line,hino_onnet.sales.area.detail.line,model_sales_area_detail_line,base.group_user,1,1,1,1
+access_hino_onnet_vehicle_interest_line,hino_onnet.crm.lead.vehicle.interest.line,model_crm_lead_vehicle_interest_line,base.group_user,1,1,1,1
+access_hino_onnet_cross_region_suggest,hino_onnet.cross.region.suggest,model_cross_region_suggest,base.group_user,1,1,1,1
+access_hino_onnet_sale_region,hino_onnet.sale.region,model_sale_region,base.group_user,1,1,1,1
+access_hino_onnet_lead_contact_person,hino_onnet.crm.lead.contact.person,model_crm_lead_contact_person,,1,1,1,1
+access_approach_channel,hino_onnet.approach.channel,model_approach_channel,base.group_user,1,1,1,1
+access_bank_line,hino_onnet.bank.line,model_bank_line,base.group_user,1,1,1,1
+access_contact_line,hino_onnet.contact.line,model_contact_line,base.group_user,1,1,1,1
+access_hino_onnet_customer_follow_up, hino_onnet.crm.follow.up,model_crm_follow_up,,1,1,1,1
+access_hino_onnet_vehicle_interest_line,hino_onnet.crm.lead.vehicle.interest_line,model_crm_lead_vehicle_interest_line,,1,1,1,1
 access_hino_onnet_lead_contact_person,hino_onnet.crm.lead.contact.person,model_crm_lead_contact_person,,1,1,1,1
 access_approach_channel,hino_onnet.approach.channel,model_approach_channel,base.group_user,1,1,1,1
 access_hino_onnet_customer_follow_up, hino_onnet.crm.follow.up,model_crm_follow_up,,1,1,1,1
+access_customer_rank_upgrade_all,access_customer_rank_upgrade,model_customer_rank_upgrade,base.group_user,1,1,1,1
+access_approve_history,access_approve_history,model_approve_history,base.group_user,1,1,1,1
+access_hino_onnet_vehicle_interest_line,hino_onnet.crm.lead.vehicle.interest_line,model_crm_lead_vehicle_interest_line,,1,1,1,1
+access_hino_onnet_lead_contact_person,hino_onnet.crm.lead.contact.person,model_crm_lead_contact_person,,1,1,1,1
+access_approach_channel,hino_onnet.approach.channel,model_approach_channel,base.group_user,1,1,1,1
+access_hino_onnet_customer_follow_up, hino_onnet.crm.follow.up,model_crm_follow_up,,1,1,1,1
+access_hino_onnet_body_type, hino_onnet.sale.body.type,model_hino_body_type,,1,1,1,1

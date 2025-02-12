@@ -18,4 +18,11 @@
               parent="crm.crm_menu_config"
               action="approach_channel_act_window"
               sequence="50"/>
+
+    <!-- New menu under Contacts -->
+    <menuitem id="custom_contact_menu"
+              name="View contact"
+              parent="contacts.menu_contacts"
+              action="custom_customer_action"
+              sequence="10"/>
 </odoo>

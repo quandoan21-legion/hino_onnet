@@ -1,0 +1,16 @@
+<odoo>
+    <record id="view_approve_history_tree" model="ir.ui.view">
+        <field name="name">approve.history.tree</field>
+        <field name="model">approve.history</field>
+        <field name="arch" type="xml">
+            <tree string="Lịch sử phê duyệt">
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="position_id"/>
+                <field name="status_from"/>
+                <field name="status_to"/>
+                <field name="approve_date"/>
+            </tree>
+        </field>
+    </record>
+</odoo>
