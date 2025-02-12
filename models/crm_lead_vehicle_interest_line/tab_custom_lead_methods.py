@@ -1,6 +1,6 @@
-from odoo import models, fields, api
+from odoo import models, api
 from odoo.exceptions import ValidationError
-import re
+
 
 class VehicleInterestLineMethods(models.Model):
     _inherit = 'crm.lead.vehicle.interest.line'
