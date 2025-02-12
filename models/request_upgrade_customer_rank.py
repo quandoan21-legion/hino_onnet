@@ -128,23 +128,88 @@ class CustomerRankUpgrade(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('x_request_form_code', 'New') == 'New':
-            vals['x_request_form_code'] = self.env['ir.sequence'].next_by_code('customer.rank.upgrade') or '00001'
+            existing_codes = self.search([], order='x_request_form_code desc', limit=1).mapped('x_request_form_code')
+            if existing_codes:
+                next_number = str(int(existing_codes[0]) + 1).zfill(5)
+            else:
+                next_number = '00001'
+
+            while self.search_count([('x_request_form_code', '=', next_number)]) > 0:
+                next_number = str(int(next_number) + 1).zfill(5)
+
+            vals['x_request_form_code'] = next_number
+
         return super().create(vals)
 
     def action_update_data(self):
-        self._compute_quantity_of_hino()
-        self._compute_total_quantity()
+        for record in self:
+            if record.x_partner_id:
+                # Clear and update owned vehicle list
+                record.x_owned_team_car_ids = [(5, 0, 0)]  # Clear existing data
+                cars = self.env['owned.team.car.line'].search([('x_partner_id', '=', record.x_partner_id.id)])
+                record.x_owned_team_car_ids = [(4, car.id) for car in cars]
+
+            # Recalculate vehicle-related values
+        record._compute_quantity_of_hino()
+        record._compute_total_quantity()
 
     def action_submit(self):
         self.write({'status': 'pending'})
 
     def action_cancel(self):
+        """Pop up a form to create an approval history record without customer_rank_upgrade_id."""
+        self.ensure_one()
+
+        # Change the status to 'canceled'
         self.write({'status': 'canceled'})
+
+        # Open the approval history form without unwanted fields
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Create Approval History',
+            'res_model': 'approve.history',
+            'view_mode': 'form',
+
+            'context': {
+                'default_employee_id': self.env.user.employee_id.id,
+                'default_department_id': self.env.user.employee_id.department_id.id,
+                'default_position_id': self.env.user.employee_id.job_id.id,
+                'default_status_from': self.status,
+                'default_status_to': 'canceled',
+                'default_approve_date': fields.Datetime.now(),
+                'default_customer_rank_upgrade_id': self.id,
+            },
+            'target': 'new',  # Open as a pop-up
+        }
+        # self.write({'status': 'canceled'})
     def action_approve(self):
         self.write({'status': 'approved'})
 
     def action_refuse(self):
+        self.ensure_one()
+
+        # Change the status to 'canceled'
         self.write({'status': 'rejected'})
+
+        # Return action to open the approval history form for new record creation
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Create Approval History',
+            'res_model': 'approve.history',
+            'view_mode': 'form',
+            'context': {
+                'default_employee_id': self.env.user.employee_id.id,
+                'default_department_id': self.env.user.employee_id.department_id.id,
+                'default_position_id': self.env.user.employee_id.job_id.id,
+                'default_status_from': 'pending',
+                'default_status_to': 'rejected',
+                'default_approve_date': fields.Datetime.now(),
+                'default_customer_rank_upgrade_id': self.id,
+            },
+            'target': 'new',  # Opens as a pop-up
+        }
+
+        # self.write({'status': 'rejected'})
 
     def action_reset_to_draft(self):
         self.write({'status': 'draft'})
