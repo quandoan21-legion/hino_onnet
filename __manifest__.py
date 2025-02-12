@@ -25,10 +25,12 @@
     'data': [
         'security/ir.model.access.csv',
         'data/lead_sequence.xml',
+        'data/contract_code_sequence.xml'
         'views/form_views/custom_lead_views.xml',
         'views/form_views/customer_rank_view.xml',
         'views/form_views/custom_lead_views.xml',
         'views/form_views/sale_area_view.xml',
+        'views/form_views/contract_view.xml'
         'views/tree_views/sale_area_views.xml',
         'views/tree_views/custom_lead_view.xml',
         'views/tree_views/hino_customer_rank.xml',
