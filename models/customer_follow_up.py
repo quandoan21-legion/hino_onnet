@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
@@ -17,8 +19,10 @@ class CRMFollowUp(models.Model):
 
     x_sale_person_follow_up_id = fields.Many2one('hr.employee', string="Salesperson Follow-Up ID")
 
-@api.constrains('x_day_contact')
-def _check_day_contact(self):
-    for record in self:
-        if record.x_day_contact > fields.Date.today():
-            raise ValidationError("The day contact cannot be set in the future")
+    @api.constrains('x_day_contact')
+    def _check_day_contact(self):
+        for record in self:
+            is_set_in_the_past = record.x_day_contact < fields.Date.today()
+            print(f"================================: {is_set_in_the_past}")
+            if record.x_day_contact < fields.Date.today():
+                raise ValidationError("The day contact cannot be set in the past!")
