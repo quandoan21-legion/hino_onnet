@@ -20,7 +20,7 @@ class CustomerRankUpgrade(models.Model):
         copy=False
     )
     x_partner_id = fields.Many2one(
-        'res.partner',  # Thay đổi từ crm.lead thành res.partner
+        'res.partner',
         string='Customer',
         required=True,
         ondelete='cascade'

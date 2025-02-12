@@ -5,9 +5,9 @@
         <field name="arch" type="xml">
             <form string="Customer Rank Upgrade">
                 <sheet>
-                    <group>
-                        <!--    <field name="model_ids_hino" />-->
-                    </group>
+                   <group>
+<!--    <field name="model_ids_hino" />-->
+</group>
 
                     <header>
                         <!-- Buttons -->
@@ -35,25 +35,24 @@
                     </group>
 
                     <notebook>
-                        <page string="Hino Vehicles">
-                            <field name="x_owned_team_car_ids" domain="[('x_is_hino_vehicle', '=', True)]" readonly="1">
-                                <tree edit="false" create="false" delete="false" options="{'no_open': True}">
-                                    <field name="x_brand_name"/>
-                                    <field name="x_model_name" domain="[('x_is_hino', '=', True)]"/>
-                                    <field name="x_quantity"/>
-                                </tree>
-                            </field>
-                        </page>
+                       <page string="Hino Vehicles" >
+   <field name="x_owned_team_car_ids" domain="[('x_is_hino_vehicle', '=', True)]">
+        <tree editable="bottom">
+            <field name="x_brand_name" />
+            <field name="x_model_id" domain="[('x_is_hino', '=', True)]"/>
+            <field name="x_hino_quantity"/>
+        </tree>
+    </field>
+</page>
                         <page string="Other Vehicles">
-                            <field name="x_owned_team_car_ids" domain="[('x_is_hino_vehicle', '=', False)]" readonly="1">
-                                <tree edit="false" create="false" delete="false" options="{'no_open': True}" domain="[('x_is_hino_vehicle', '=', False)]" readonly="1">
-                                    <field name="x_brand_name"/>
-                                    <field name="x_model_name" domain="[('x_is_hino', '=', False)]"/>
-                                    <field name="x_quantity"/>
-                                    <field name="x_is_hino_vehicle"/>
-                                </tree>
-                            </field>
-                        </page>
+  <field name="x_owned_team_car_ids" domain="[('x_is_hino_vehicle', '=', False)]">
+        <tree editable="bottom">
+            <field name="x_brand_name"/>
+            <field name="x_model_id" domain="[('x_is_hino', '=', False)]"/>
+            <field name="x_quantity"/>
+        </tree>
+    </field>
+</page>
 
 
 
