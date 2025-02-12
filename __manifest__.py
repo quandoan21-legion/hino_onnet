@@ -28,7 +28,7 @@
         'data/partner_sequence.xml',
         'data/body_type_sequence.xml',
         'data/lead_sequence.xml',
-        'data/contract_code_sequence.xml'
+        'data/contract_code_sequence.xml',
         'views/form_views/customer_contact_form_views.xml',
         'views/form_views/custom_lead_views.xml',
         'views/form_views/customer_rank_view.xml',

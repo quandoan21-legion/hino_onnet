@@ -2,7 +2,7 @@
 <odoo>
         <menuitem id="crm_contract"
               name="contract"
-              parent="crm_menu_root"
+              parent="crm.crm_menu_root"
               action=""
     />
 </odoo>
