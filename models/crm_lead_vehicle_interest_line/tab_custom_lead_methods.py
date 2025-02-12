@@ -21,11 +21,11 @@ class VehicleInterestLineMethods(models.Model):
     #         self.x_province_id = self.x_partner_name.state_id
     #
 
-    @api.constrains('x_customer', 'x_address', 'x_expected_implementation_time', 'x_expected_time_sign_contract')
+    @api.constrains('x_address', 'x_expected_implementation_time', 'x_expected_time_sign_contract')
     def _check_fields(self):
         for record in self:
             if not record.x_address or record.x_address.isspace():
-                raise ValidationError("Address cannot contain only space.")
+                raise ValidationError("Address cannot contain only space and not null.")
             if not any(char.isdigit() for char in record.x_address) and not any(char.isalpha() for char in record.x_address):
                 raise ValidationError("Address must contain both letters and numbers.")
 
