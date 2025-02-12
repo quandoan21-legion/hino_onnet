@@ -186,15 +186,31 @@ class CustomerRankUpgrade(models.Model):
                 'default_employee_id': self.env.user.employee_id.id,
                 'default_department_id': self.env.user.employee_id.department_id.id,
                 'default_position_id': self.env.user.employee_id.job_id.id,
-                'default_status_from': self.status,
+                'default_status_from': 'draft',
                 'default_status_to': 'canceled',
                 'default_approve_date': fields.Datetime.now(),
                 'default_customer_rank_upgrade_id': self.id,
             },
             'target': 'new',  # Open as a pop-up
         }
+
     def action_approve(self):
+        self.ensure_one()
+
+        # Change the status to 'canceled'
         self.write({'status': 'approved'})
+
+        self.env['approve.history'].create({
+            'employee_id': self.env.user.employee_id.id,
+            'department_id': self.env.user.employee_id.department_id.id,
+            'position_id': self.env.user.employee_id.job_id.id,
+            'status_from': 'pending',  # Trạng thái trước khi duyệt
+            'status_to': 'approved',  # Trạng thái sau khi duyệt
+            'approve_date': fields.Date.today(),
+            'customer_rank_upgrade_id': self.id,
+        })
+
+        return True
 
     def action_refuse(self):
         self.ensure_one()
@@ -221,4 +237,19 @@ class CustomerRankUpgrade(models.Model):
         }
 
     def action_reset_to_draft(self):
+        self.ensure_one()
+
+        # Change the status to 'canceled'
         self.write({'status': 'draft'})
+
+        self.env['approve.history'].create({
+            'employee_id': self.env.user.employee_id.id,
+            'department_id': self.env.user.employee_id.department_id.id,
+            'position_id': self.env.user.employee_id.job_id.id,
+            'status_from': 'rejected',  # Trạng thái trước khi duyệt
+            'status_to': 'draft',  # Trạng thái sau khi duyệt
+            'approve_date': fields.Date.today(),
+            'customer_rank_upgrade_id': self.id,
+        })
+
+        return True
