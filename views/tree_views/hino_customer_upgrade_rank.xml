@@ -4,7 +4,7 @@
         <field name="model">customer.rank.upgrade</field>
         <field name="arch" type="xml">
             <tree string="Upgrade Customer Rank Requests">
-                <field name="x_request_form_code"/>
+                <field name="x_request_form_code" />
                 <field name="x_partner_id"/>
                 <field name="x_currently_rank_id"/>
                 <field name="x_rank_upgrade_id"/>
