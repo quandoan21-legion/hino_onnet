@@ -33,14 +33,24 @@ class ResPartner(models.Model):
     x_number_of_vehicles = fields.Integer(string='Number of Vehicles')
     x_hino_vehicle = fields.Integer(string='Hino Vehicle')
     x_number_repair_order = fields.Integer(string='Number of Repair Order')
-    x_repair_order_from_id = fields.Integer(string='Repair Order From') # liên quan đến nhóm 2 dùng repair.order field
-    x_repair_order_to_id = fields.Integer(string='Repair Order To') # liên quan đến nhóm 2 dùng repair.order field
     x_cumulative_points = fields.Integer(string='Cumulative Points')
     x_register_sale_3rd_id = fields.Char(string='Register Sale 3rd') # liên quan đến phần 2.2.3 dùng many2one relation
     x_bank_line_ids = fields.One2many('bank.line', 'x_partner_id', string='Bank Lines')
     x_contact_line_ids = fields.One2many('contact.line', 'x_partner_id', string='Contact Lines')
     x_owned_car_line_ids = fields.One2many('owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines')
     x_vehicle_images = fields.Binary(attachment=True)
+
+    @api.constrains('phone')
+    def _check_phone_unique(self):
+        for record in self:
+            if record.phone:
+                # Tìm kiếm các bản ghi khác có cùng số điện thoại
+                existing = self.search([
+                    ('phone', '=', record.phone),
+                    ('id', '!=', record.id)
+                ])
+                if existing:
+                    raise ValidationError("Phone number must be unique.")
 
     @api.model
     def create(self, vals):
@@ -80,7 +90,7 @@ class ResPartner(models.Model):
                     raise ValidationError("Business Registration ID must be unique.")
         
             if record.x_business_registration_id:
-                if not re.fullmatch(r'\d{1,10}', record.x_business_registration_id):
+                if not re.fullmatch(r'\d{1,9}', record.x_business_registration_id):
                     raise ValidationError("Business Registration ID must contain only numbers and be at most 10 digits long.")
     
     @api.constrains('x_identity_number')
@@ -101,9 +111,9 @@ class ResPartner(models.Model):
     @api.constrains('phone', 'mobile')
     def _check_phone_number_format(self):
         for record in self:
-            if record.phone and not re.fullmatch(r'0\d{1,10}', record.phone):
+            if record.phone and not re.fullmatch(r'0\d{1,9}', record.phone):
                 raise ValidationError("Phone number must not more than 10 digits and start with 0.")
-            if record.mobile and not re.fullmatch(r'0\d{1,10}', record.mobile):
+            if record.mobile and not re.fullmatch(r'0\d{1,9}', record.mobile):
                 raise ValidationError("Mobile number must not more than 10 digits and start with 0.")
 
     @api.constrains('x_business_registration_id', 'x_customer_type', 'x_register_sale_3rd_id', 'x_identity_number')
@@ -178,6 +188,6 @@ class ResPartner(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Customer Rank',
-            'view_mode': 'tree,form',
-            'res_model': 'crm.lead',
+            'view_mode': 'form',
+            'res_model': 'customer.rank.upgrade',
         }
