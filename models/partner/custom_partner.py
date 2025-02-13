@@ -34,7 +34,7 @@ class ResPartner(models.Model):
     x_hino_vehicle = fields.Integer(string='Hino Vehicle')
     x_number_repair_order = fields.Integer(string='Number of Repair Order')
     x_cumulative_points = fields.Integer(string='Cumulative Points')
-    x_register_sale_3rd_id = fields.Char(string='Register Sale 3rd') # liên quan đến phần 2.2.3 dùng many2one relation
+    x_register_sale_3rd_id = fields.Many2one('third.party.registration', string='Register Sale 3rd')
     x_bank_line_ids = fields.One2many('bank.line', 'x_partner_id', string='Bank Lines')
     x_contact_line_ids = fields.One2many('contact.line', 'x_partner_id', string='Contact Lines')
     x_owned_car_line_ids = fields.One2many('owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines')
@@ -44,7 +44,6 @@ class ResPartner(models.Model):
     def _check_phone_unique(self):
         for record in self:
             if record.phone:
-                # Tìm kiếm các bản ghi khác có cùng số điện thoại
                 existing = self.search([
                     ('phone', '=', record.phone),
                     ('id', '!=', record.id)
