@@ -16,3 +16,4 @@ from .third_party_registration import third_party_registration, third_party_regi
 from . import request_upgrade_customer_rank
 from . import approve_history
 from .product import custom_product
+from .sale_request import sale_detail
