@@ -57,6 +57,18 @@ class CustomerRankUpgrade(models.Model):
                                       store=False)
     model_ids_hino_names = fields.Many2many('product.product', string='Hino Model Names',
                                             compute='_compute_hino_model_names', store=False)
+    @api.onchange('status')
+    def _toggle_readonly_fields(self):
+        if self.status == 'draft':
+            self.update({
+                'x_request_form_code': False,
+                'x_partner_id': False,
+                'x_currently_rank_id': False,
+                'x_rank_upgrade_id': False,
+                'x_quantity_of_hino': False,
+                'x_total_quantity': False,
+            })
+
     # is_updated = fields.Boolean(string="Data Updated", default=False)
     # can_refuse = fields.Boolean(compute="_compute_can_refuse", store=True)
     # @api.depends('is_updated')

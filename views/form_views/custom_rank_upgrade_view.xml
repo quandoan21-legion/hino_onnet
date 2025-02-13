@@ -17,16 +17,16 @@
                         <button name="action_approve" type="object" string="Approve" class="btn-secondary" invisible="status in ('draft','approved','rejected','canceled')"/>
                         <button name="action_refuse" type="object" string="Refuse" class="btn-secondary" invisible="status in ('approved','rejected','draft','canceled')"/>
                         <button name="action_reset_to_draft" type="object" string="Reset to Draft" class="btn-secondary" invisible="status in ('pending','approved','draft','canceled')"/>
-                        <field name="status" widget="statusbar" options="{'clickable': True}" string=""/>
+                        <field name="status" widget="statusbar" options="{'clickable': False}" string=""/>
                     </header>
 
                     <group>
                         <field name="x_request_form_code" readonly="1"/>
-                        <field name="x_partner_id" required="1"/>
+                        <field name="x_partner_id" required="1" readonly="status not in ('draft')"/>
                     </group>
                     <group>
                         <field name="x_currently_rank_id" readonly="1"/>
-                        <field name="x_rank_upgrade_id"/>
+                        <field name="x_rank_upgrade_id" readonly="status not in ('draft')"/>
                     </group>
                     <group>
                         <field name="x_quantity_of_hino" readonly="1"/>
@@ -61,9 +61,9 @@
                                     <field name="employee_id"/>
                                     <field name="department_id"/>
                                     <field name="position_id"/>
-                                    <field name="status_from"/>
-                                    <field name="status_to"/>
-                                    <field name="approve_date"/>
+                                    <field name="status_from" readonly="1"/>
+                                    <field name="status_to" readonly="1"/>
+                                    <field name="approve_date" readonly="1"/>
                                     <field name="note"/>
                                 </tree>
                             </field>
