@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="custom_lead_report_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <t t-foreach="docs" t-as="o">
+                        <h2>Lead Report</h2>
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <strong>Lead Name:</strong>
+                                <span t-field="o.name" />
+                            </div>
+                            <div class="col-6">
+                                <strong>Status:</strong>
+                                <span t-field="o.x_status" />
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-6">
+                                <strong>Customer:</strong>
+                                <span t-field="o.x_partner_id.name" />
+                            </div>
+                            <div class="col-6">
+                                <strong>Customer Type:</strong>
+                                <span t-field="o.x_customer_type" />
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <strong>Address:</strong>
+                                <span t-field="o.x_contact_address_complete" />
+                            </div>
+                        </div>
+
+                        <!-- Vehicle Interest Section -->
+                        <h3 class="mt-4">Vehicle Interests</h3>
+                        <table class="table table-bordered mt-2">
+                            <thead>
+                                <tr>
+                                    <th>Vehicle</th>
+                                    <th>Quantity</th>
+                                    <th>Body Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.x_vehicle_interest_ids" t-as="interest">
+                                    <td>
+                                        <span t-field="interest.x_body_type_id.name" />
+                                    </td>
+                                    <td>
+                                        <span t-field="interest.x_quantity" />
+                                    </td>
+                                    <td>
+                                        <span t-field="interest.x_expected_implementation_time" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Contact Persons Section -->
+                        <h3 class="mt-4">Contact Persons</h3>
+                        <table class="table table-bordered mt-2">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.x_contact_person_ids" t-as="contact">
+                                    <td>
+                                        <span t-field="contact.x_name" />
+                                    </td>
+                                    <td>
+                                        <span t-field="contact.x_email" />
+                                    </td>
+                                    <td>
+                                        <span t-field="contact.x_phone_number" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

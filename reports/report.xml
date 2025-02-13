@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_custom_lead" model="ir.actions.report">
+        <field name="name">Lead Report</field>
+        <field name="model">crm.lead</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">hino_onnet.custom_lead_report_template</field>
+        <field name="binding_model_id" ref="crm.model_crm_lead" />
+        <field name="binding_type">report</field>
+    </record>
+</odoo>
