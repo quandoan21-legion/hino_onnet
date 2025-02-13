@@ -1,6 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
-
+from datetime import timedelta
 class SaleRequestMethods(models.Model):
     _inherit = 'sale.request'
 
@@ -83,17 +83,10 @@ class SaleRequestMethods(models.Model):
         for record in self:
             if record.x_attach_file and not record.x_attach_filename.lower().endswith('.pdf'):
                 raise ValidationError('Only PDF files are allowed')
-
-    @api.constrains('x_customer_type', 'x_province_id', 'x_end_customer_ids')
-    def _check_sales_region(self):
-        for record in self:
-            if record.x_customer_type in ['third_party', 'box_packer'] and not record.x_end_customer_ids:
-                raise ValidationError('Invalid sales region. Complete end customer details.')
-
+            
     def action_submit(self):
         self.ensure_one()
         self._check_region()
-        self._check_sales_region()
         vals = {'x_state': 'pending', 'x_request_date': fields.Date.today()}
         tracking_values = []
         for field, value in vals.items():
@@ -110,6 +103,18 @@ class SaleRequestMethods(models.Model):
                         'new_value_char': str(value) if isinstance(value, (str, bool, int, float)) else None,
                     }))
         self.write(vals)
+        
+        self.env['mail.activity'].create({
+            'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
+            'note': f'Please review request {self.x_request_code} submitted by {self.env.user.name}',
+            'res_id': self.id,
+            'res_model_id': self.env['ir.model'].search([('model', '=', self._name)], limit=1).id,
+            'summary': f'Review Request {self.x_request_code}',
+            # 'user_id': self.x_hmv_approver_id.id,
+            'date_deadline': fields.Date.today() + timedelta(days=2)  # Set 2-day deadline
+        })
+        
+        
         msg = f"""
             Request submitted for approval
             Submitted by: {self.env.user.name}
