@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_request_refuse_wizard_view" model="ir.ui.view">
+        <field name="name">sale.request.refuse.wizard.form</field>
+        <field name="model">sale.request.refuse.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reason Rejection">
+                <group>
+                    <field name="refuse_reason" placeholder="Enter the reason for rejection..." />
+                </group>
+                <footer>
+                    <button name="confirm_refuse" type="object" string="Submit" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

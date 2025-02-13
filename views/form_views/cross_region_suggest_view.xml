@@ -9,7 +9,7 @@
                 <form string="Proposal Content for Cross-Region Sales / Third Party / Box Manufacturer">
                     <sheet>
                         <group>
-                            <field name="x_number"/>
+                            <!-- <field name="x_number"/> -->
                             <field name="x_suggest_code"/>
                         </group>
                         <field name="x_suggest_content" nolabel="1" placeholder="Enter proposal content..."/>
