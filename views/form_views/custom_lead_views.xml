@@ -13,7 +13,7 @@
                             invisible="x_status != 'draft'" class="oe_highlight" />
                         <button name="action_create_customer" string="Create Customer" type="object"
                             invisible="x_status != 'draft'" class="oe_highlight" />
-                        <button name="action_proposal"
+                        <button name="action_view_third_party_registration"
                             string="Propose in Encroaching area/Third party/Body maker"
                             type="object"
                             invisible="x_status != 'draft'" />
@@ -59,6 +59,7 @@
                                 <field name="x_industry_id" readonly="x_readonly_fields" />
                                 <field name="x_service_contract" readonly="x_readonly_fields" />
                                 <field name="x_activity_area" readonly="x_readonly_fields" />
+                                <field name="x_request_sale_3rd_barrels_id" readonly="x_readonly_fields" />
                                 <!--                                <field name="x_dealer_id" />-->
                                 <field name="x_dealer_branch_id" readonly="x_readonly_fields" />
                                 <field name="x_sale_person_id" readonly="x_readonly_fields" />
