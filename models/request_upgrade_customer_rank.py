@@ -240,6 +240,7 @@ class CustomerRankUpgrade(models.Model):
             'status_to': self._get_status_display_name('approved'),  # Trạng thái sau khi duyệt
             'approve_date': fields.Date.today(),
             'customer_rank_upgrade_id': self.id,
+            'note': 'Approved by ' + self.env.user.name,  # Ensure a note is set
         })
 
         return True
@@ -264,6 +265,7 @@ class CustomerRankUpgrade(models.Model):
                 'default_status_to': self._get_status_display_name('rejected'),
                 'default_approve_date': fields.Datetime.now(),
                 'default_customer_rank_upgrade_id': self.id,
+                'note': 'Reset to draft by ' + self.env.user.name,
             },
             'target': 'new',  # Opens as a pop-up
         }
@@ -282,6 +284,7 @@ class CustomerRankUpgrade(models.Model):
             'status_to': self._get_status_display_name('draft'),  # Trạng thái sau khi duyệt
             'approve_date': fields.Date.today(),
             'customer_rank_upgrade_id': self.id,
+            'note': 'Reset to draft by ' + self.env.user.name,
         })
 
         return True
