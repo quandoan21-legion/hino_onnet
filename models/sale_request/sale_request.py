@@ -5,18 +5,18 @@ class SaleRequest(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'x_request_date desc, x_request_code desc'
     
-    x_request_code = fields.Char(string='Request Code', readonly=True, required=True, default=lambda self: self._generate_request_code())   
+    x_request_code = fields.Char(string="Request Code", readonly=True, copy=False, default=lambda self: self._generate_request_code())
     # x_request_dealer_id  = fields.Many2one('res.partner', string='Dealer', required=True, readonly=True, tracking=True, domain="[('is_dealer', '=', True)]")
     # x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch', required=True, readonly=True, tracking=True, default=lambda self: self.env.company)
-    # x_customer_id = fields.Many2one('res.partner', string='Customer', required=False, readonly=True, tracking=True)
+    x_customer_id = fields.Many2one('res.partner', string='Customer', required=False, tracking=True)
     x_customer_name = fields.Char(string='Customer Name', required=True, tracking=True)
-    x_lead_code_id = fields.Many2one('crm.lead', string='Lead Code', readonly=True, tracking=True)
+    x_lead_code_id = fields.Many2one('crm.lead', string='Lead Code', tracking=True, readonly=True)
     x_customer_address = fields.Char(string='Customer Address', required=False, tracking=True)
     x_province_id  = fields.Many2one('res.country.state', string='Province', required=True, tracking=True)
     x_customer_region = fields.Many2one('sale.area', string='Customer Region', tracking=True, readonly=True, store=True, compute='_compute_customer_region_id')
     x_identitfication_id = fields.Char(string='Identification', required=True, tracking=True)
     x_business_registration_id = fields.Char(string='Business Registration', required=True, tracking=True)
-    # x_request_content_id = fields.Many2one('request.content', required=True, tracking=True)
+    x_request_content_id = fields.Many2one('cross.region.suggest', string='Request Content', required=True, tracking=True)
     x_reason = fields.Char(string='Reason',tracking=True)
     x_old_customer =  fields.Boolean(string='Old Customer', store=True, tracking=True)
     x_customer_type = fields.Selection([

@@ -2,7 +2,7 @@
     <data noupdate="1">
         <record id="seq_request_code" model="ir.sequence">
             <field name="name">Request Code Sequence</field>
-            <field name="code">your.model.request.code</field>
+            <field name="code">sale.request.sequence</field>
             <field name="prefix">ĐNBTV</field>
             <field name="padding">4</field>
             <field name="number_next">1</field>

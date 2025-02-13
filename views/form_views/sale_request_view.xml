@@ -7,13 +7,12 @@
         <field name="arch" type="xml">
             <form string="Sale Request">
                 <header>
-                    <button string="Submit" class="oe_highlight" />
-                    <button string="Approved" class="oe_highlight" />
-                    <button string="Rejected" class="oe_highlight" />
-                    <button string="Cancel" class="oe_highlight" />
-                    <button string="Send Mail" class="oe_highlight" />
-                    <field name="x_state" widget="statusbar"
-                            statusbar_visible="draft,pending,approved,rejected,partial_sale,completed,cancelled" />
+                    <button name="action_submit" string="Submit" class="oe_highlight" type="object" invisible="x_state not in ('draft')"/>
+                    <button name="action_approve" string="Approve" class="oe_highlight" type="object" invisible="x_state not in ('pending')"/>
+                    <button name="action_refuse" string="Refuse" class="oe_highlight" type="object" invisible="x_state not in ('pending')"/>
+                    <button name="action_cancel" string="Cancel" class="oe_highlight" type="object" invisible="x_state not in ('draft')"/>
+                    <button string="Send Mail" class="oe_highlight"/>
+                    <field name="x_state" widget="statusbar" statusbar_visible="draft,pending,approved,rejected,partial_sale,completed,cancelled" />
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -25,8 +24,8 @@
                         <group>
                             <!-- <field name="x_request_dealer_id"/> -->
                             <!-- <field name="x_dealer_branch_id"/> -->
+                            <field name="x_customer_id"/>
                             <field name="x_customer_name"/>
-                            <!-- <field name="x_customer_id"/> -->
                             <field name="x_lead_code_id"/>
                             <field name="x_customer_address"/>
                             <field name="x_province_id"/>
@@ -35,7 +34,7 @@
                             <field name="x_business_registration_id"/>
                         </group>
                         <group>
-                            <!-- <field name="x_request_content_id"/> -->
+                            <field name="x_request_content_id"/>
                             <field name="x_reason"/>
                             <field name="x_old_customer"/>
                             <field name="x_customer_type"/>
@@ -45,11 +44,14 @@
                             <field name="x_expected_to_sign_contract"/>
                             <field name="x_approve_date" readonly="1"/>
                             <field name="x_attach_file" filename="x_attach_filename"/>
-                            <field name="x_attach_filename"/>
                         </group>
                     </group>
-
                 </sheet>
+                <div class="oe_chatter" position="inside">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
