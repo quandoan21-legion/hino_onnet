@@ -1,5 +1,4 @@
-from odoo import models, fields, api
-from datetime import datetime
+from odoo import models, fields
 
 class CRMContract(models.Model):
     _name = 'crm.contract'
@@ -51,11 +50,11 @@ class CRMContract(models.Model):
         string="Sign week",
         tracking=True,
     )
-    dealer_id = fields.Many2one(
-        'dealer.group',
-        string="Dealer",
-        readonly=True,
-    )
+    # dealer_id = fields.Many2one(
+    #     'dealer.group',
+    #     string="Dealer",
+    #     readonly=True,
+    # )
     dealer_branch_id = fields.Many2one(
         'res.company',
         string="Dealer branch",
@@ -67,17 +66,5 @@ class CRMContract(models.Model):
         string="Salesperson"
     )
     purchase_type = fields.Selection(
-        selection = lambda self: self.env['crm.lead']._field['x_purchase_type'].selection
+        selection = lambda self: self.env['crm.lead']._fields['x_purchase_type'].selection
     )
-
-@api.model
-def create(self, vals):
-
-    # Get the current fiscal year
-    fiscal_year = self.env['account.fiscal.year'].search([], order="date_from desc", limit=1)
-    year_suffix = fiscal_year.name[-2:] if fiscal_year else datetime.today().year%100
-
-    sequence = self.env['ir.sequence'].next_by_code('crm.contract') or "0001"
-    vals["contract_code"] = f"C0{year_suffix}{sequence}"
-
-    return super().create(vals)

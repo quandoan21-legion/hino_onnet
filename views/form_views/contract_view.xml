@@ -2,35 +2,36 @@
 <odoo>
     <data>
         <record id="view_form_crm_contract" model="ir.ui.view">
-            <field name="name">crm.lead.form</field>
-            <field name="model">crm.lead</field>
+            <field name="name">crm.contract.form</field>
+            <field name="model">crm.contract</field>
             <field name="priority">10</field>
-            <field name="arch" type="xml"></field>
-        </record>
-        <form>
-        <header>
-            <button string="Sales infomation"/>
-            <button string="Cancel"/>
-            <field name="status" widget="statusbar"
-                   statusbar_visible="draft,in_progress,completed,cancelled"/>
-        </header>
-        <sheet>
-            <group>
-                <field name="contract_code"/>
-                <field name="customer_id"/>
-                <field name="lead_code_id"/>
-                <field name="address"/>
-                <field name="customer_class_id"/>
-                <field name="attachment_ids"/>
-                <field name="sign_day"/>
-                <field name="sign_week"/>
-                <field name="dealer_id"/>
-                <field name="dealer_branch_id"/>
-                <field name="salesperson_id"/>
-                <field name="purchase_type"/>
-            </group>
+            <field name="arch" type="xml">
+                <form>
+                <header>
+                    <button string="Sales information"/>
+                    <button string="Cancel"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="draft,in_progress,completed,cancelled"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="contract_code"/>
+                        <field name="customer_id"/>
+                        <field name="lead_code_id"/>
+                        <field name="address"/>
+                        <field name="customer_class_id"/>
+                        <field name="attachment_ids"/>
+                        <field name="sign_day"/>
+                        <field name="sign_week"/>
+<!--                    <field name="dealer_id"/>-->
+                        <field name="dealer_branch_id"/>
+                        <field name="salesperson_id"/>
+                        <field name="purchase_type"/>
+                    </group>
 
-        </sheet>
-        </form>
+                </sheet>
+                </form>
+            </field>
+        </record>
     </data>
 </odoo>
