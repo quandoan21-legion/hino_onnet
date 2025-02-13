@@ -26,6 +26,10 @@
         'security/ir.model.access.csv',
 
         'wizards/third_party_registration_rejection_wizard_view.xml',
+        'wizards/lead_report_wizard.xml',
+
+        'reports/lead_report_template.xml',
+        'reports/report.xml',
 
         'data/partner_sequence.xml',
         'data/body_type_sequence.xml',
