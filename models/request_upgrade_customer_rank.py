@@ -260,7 +260,7 @@ class CustomerRankUpgrade(models.Model):
                 'default_employee_id': self.env.user.employee_id.id,
                 'default_department_id': self.env.user.employee_id.department_id.id,
                 'default_position_id': self.env.user.employee_id.job_id.id,
-                'default_status_from': self._get_status_display_name(self.status),
+                'default_status_from': self._get_status_display_name('pending'),
                 'default_status_to': self._get_status_display_name('rejected'),
                 'default_approve_date': fields.Datetime.now(),
                 'default_customer_rank_upgrade_id': self.id,
