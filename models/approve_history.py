@@ -5,7 +5,7 @@ class ApproveHistory(models.Model):
     _name = 'approve.history'
     _description = 'Approval History'
 
-    employee_id = fields.Many2one('hr.employee', string="Approver", required=True)
+    employee_id = fields.Many2one('hr.employee', string="Approver", required=True,readonly=True)
     department_id = fields.Many2one('hr.department', string="Department", related="employee_id.department_id", readonly=True)
     position_id = fields.Many2one('hr.job', string="Position", related="employee_id.job_id", readonly=True)
     status_from = fields.Char(string="From Status", required=True, readonly=True)

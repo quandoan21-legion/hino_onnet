@@ -1,6 +1,13 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
+STATUS_SELECTION = {
+    'draft': 'Draft',
+    'pending': 'Pending Approval',
+    'approved': 'Approved',
+    'rejected': 'Rejected',
+    'canceled': 'Canceled',
+}
 class CustomerRankUpgrade(models.Model):
     _name = 'customer.rank.upgrade'
     _description = 'Customer Rank Upgrade'
@@ -57,6 +64,9 @@ class CustomerRankUpgrade(models.Model):
                                       store=False)
     model_ids_hino_names = fields.Many2many('product.product', string='Hino Model Names',
                                             compute='_compute_hino_model_names', store=False)
+
+    def _get_status_display_name(self, status):
+        return STATUS_SELECTION.get(status, status)
     @api.onchange('status')
     def _toggle_readonly_fields(self):
         if self.status == 'draft':
@@ -206,8 +216,8 @@ class CustomerRankUpgrade(models.Model):
                 'default_employee_id': self.env.user.employee_id.id,
                 'default_department_id': self.env.user.employee_id.department_id.id,
                 'default_position_id': self.env.user.employee_id.job_id.id,
-                'default_status_from': 'draft',
-                'default_status_to': 'canceled',
+                'default_status_from': self._get_status_display_name(self.status),
+                'default_status_to': self._get_status_display_name('canceled'),
                 'default_approve_date': fields.Datetime.now(),
                 'default_customer_rank_upgrade_id': self.id,
             },
@@ -226,8 +236,8 @@ class CustomerRankUpgrade(models.Model):
             'employee_id': self.env.user.employee_id.id,
             'department_id': self.env.user.employee_id.department_id.id,
             'position_id': self.env.user.employee_id.job_id.id,
-            'status_from': 'pending',  # Trạng thái trước khi duyệt
-            'status_to': 'approved',  # Trạng thái sau khi duyệt
+            'status_from': self._get_status_display_name(self.status),  # Trạng thái trước khi duyệt
+            'status_to': self._get_status_display_name('approved'),  # Trạng thái sau khi duyệt
             'approve_date': fields.Date.today(),
             'customer_rank_upgrade_id': self.id,
         })
@@ -250,8 +260,8 @@ class CustomerRankUpgrade(models.Model):
                 'default_employee_id': self.env.user.employee_id.id,
                 'default_department_id': self.env.user.employee_id.department_id.id,
                 'default_position_id': self.env.user.employee_id.job_id.id,
-                'default_status_from': 'pending',
-                'default_status_to': 'rejected',
+                'default_status_from': self._get_status_display_name(self.status),
+                'default_status_to': self._get_status_display_name('rejected'),
                 'default_approve_date': fields.Datetime.now(),
                 'default_customer_rank_upgrade_id': self.id,
             },
@@ -268,8 +278,8 @@ class CustomerRankUpgrade(models.Model):
             'employee_id': self.env.user.employee_id.id,
             'department_id': self.env.user.employee_id.department_id.id,
             'position_id': self.env.user.employee_id.job_id.id,
-            'status_from': 'rejected',  # Trạng thái trước khi duyệt
-            'status_to': 'draft',  # Trạng thái sau khi duyệt
+            'status_from': self._get_status_display_name(self.status),  # Trạng thái trước khi duyệt
+            'status_to': self._get_status_display_name('draft'),  # Trạng thái sau khi duyệt
             'approve_date': fields.Date.today(),
             'customer_rank_upgrade_id': self.id,
         })
