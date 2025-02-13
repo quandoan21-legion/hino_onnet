@@ -30,7 +30,7 @@
                             <field name="x_customer_address"/>
                             <field name="x_province_id"/>
                             <field name="x_customer_region"/>
-                            <field name="x_identitfication_id"/>
+                            <field name="x_identification_id"/>
                             <field name="x_business_registration_id"/>
                         </group>
                         <group>
