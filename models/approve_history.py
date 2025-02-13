@@ -11,7 +11,7 @@ class ApproveHistory(models.Model):
     status_from = fields.Char(string="From Status", required=True, readonly=True)
     status_to = fields.Char(string="To Status", required=True,readonly=True)
     approve_date = fields.Date(string="Approval Date", required=True,readonly=True)
-    note = fields.Text(string="Reason")
+    note = fields.Text(string="Reason" ,required=True)
     # rank_upgrade_id = fields.Many2one('customer.rank.upgrade', string="Customer Rank Upgrade")
     customer_rank_upgrade_id = fields.Many2one(
         'customer.rank.upgrade', string="Customer Rank Upgrade", ondelete="cascade",readonly=True
