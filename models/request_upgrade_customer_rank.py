@@ -87,12 +87,12 @@ class CustomerRankUpgrade(models.Model):
 
                 if not (min_hino <= record.x_quantity_of_hino <= max_hino):
                     raise ValidationError(
-                        f"Số lượng xe Hino ({record.x_quantity_of_hino}) phải nằm trong khoảng từ {min_hino} đến {max_hino}."
+                        f"Quantity of Hino ({record.x_quantity_of_hino}) must from {min_hino} to {max_hino}."
                     )
 
                 if not (min_total <= record.x_total_quantity <= max_total):
                     raise ValidationError(
-                        f"Tổng số xe ({record.x_total_quantity}) phải nằm trong khoảng từ {min_total} đến {max_total}."
+                        f"Total car ({record.x_total_quantity}) must from {min_total} to {max_total}."
                     )
 
     @api.depends('x_partner_id')
