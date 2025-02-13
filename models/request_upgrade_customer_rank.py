@@ -207,6 +207,8 @@ class CustomerRankUpgrade(models.Model):
 
         # Change the status to 'canceled'
         self.write({'status': 'approved'})
+        if self.x_partner_id and self.x_rank_upgrade_id:
+            self.x_partner_id.write({'x_currently_rank_id': self.x_rank_upgrade_id.id})
 
         self.env['approve.history'].create({
             'employee_id': self.env.user.employee_id.id,
