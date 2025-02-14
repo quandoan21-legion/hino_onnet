@@ -30,3 +30,4 @@ access_third_party_registration_reject_wizard,hino_onnet.third.party.registratio
 access_res_partner,hino_onnet.res_partner,model_res_partner,base.group_user,1,1,1,1
 access_hino_onnet_body_type, hino_onnet.sale.body.type,model_hino_body_type,,1,1,1,1
 access_sale_detail_all,sale.detail all access,model_sale_detail,,1,1,1,1
+access_sale_detail_user,sale.detail.user,model_sale_detail,base.group_user,1,1,1,1
