@@ -15,6 +15,7 @@ access_hino_onnet_customer_follow_up, hino_onnet.crm.follow.up,model_crm_follow_
 access_hino_onnet_vehicle_interest_line,hino_onnet.crm.lead.vehicle.interest_line,model_crm_lead_vehicle_interest_line,,1,1,1,1
 access_hino_onnet_sale_request,hino_onnet.sale.request,model_sale_request,base.group_user,1,1,1,1
 access_sale_request_refuse_wizard,sale.request.refuse.wizard,model_sale_request_refuse_wizard,,1,1,1,0
+access_hino_onnet_sales_request_approval,hino_onnet.sales.request.approval,model_sales_request_approval,base.group_user,1,1,1,1
 access_hino_onnet_lead_contact_person,hino_onnet.crm.lead.contact.person,model_crm_lead_contact_person,,1,1,1,1
 access_approach_channel,hino_onnet.approach.channel,model_approach_channel,base.group_user,1,1,1,1
 access_hino_onnet_customer_follow_up, hino_onnet.crm.follow.up,model_crm_follow_up,,1,1,1,1

@@ -30,7 +30,7 @@
                             <field name="x_customer_address"/>
                             <field name="x_province_id"/>
                             <field name="x_customer_region"/>
-                            <field name="x_identitfication_id"/>
+                            <field name="x_identification_id"/>
                             <field name="x_business_registration_id"/>
                         </group>
                         <group>
@@ -46,6 +46,21 @@
                             <field name="x_attach_file" filename="x_attach_filename"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Approval History">
+                            <field name="approval_history_ids" readonly="1">
+                                <tree>
+                                    <field name="x_confirmer_id"/>
+                                    <field name="x_department_id"/>
+                                    <field name="x_position_id"/>
+                                    <field name="x_state_from"/>
+                                    <field name="x_state_to"/>
+                                    <field name="x_confirm_date"/>
+                                    <field name="x_reason"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="oe_chatter" position="inside">
                     <field name="message_follower_ids" widget="mail_followers"/>
