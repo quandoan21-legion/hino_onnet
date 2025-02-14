@@ -3,6 +3,7 @@ from odoo import fields, models, api
 
 class AccessModel(models.Model):
     _name = 'approach.channel'
+    _rec_name='x_code'
 
     x_code = fields.Char(string='Code')
     x_approach_channel = fields.Char(string='Approce Channel')
