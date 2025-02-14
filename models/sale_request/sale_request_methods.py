@@ -28,27 +28,6 @@ class SaleRequestMethods(models.Model):
                     ('province_ids', 'in', record.province_id.id)
                 ], limit=1)
 
-    @api.depends('x_customer_id', 'x_identification_id', 'x_business_registration')
-    def _compute_old_customer(self):
-        for record in self:
-            record.x_old_customer = False
-            if record.x_customer_id or self.env['res.partner'].search([
-                ('identification_id', '=', record.x_identification_id),
-                ('business_registration', '=', record.x_business_registration)
-            ], limit=1):
-                record.x_old_customer = True
-
-    @api.depends('x_sale_detail_ids.qty_done', 'x_sale_detail_ids.qty_confirmed')
-    def _compute_sale_status(self):
-        for record in self:
-            if record.x_state in ['approved', 'partial_sale', 'completed'] and record.x_sale_detail_ids:
-                total_done = sum(record.x_sale_detail_ids.mapped('qty_done'))
-                total_confirmed = sum(record.x_sale_detail_ids.mapped('qty_confirmed'))
-                if total_done == total_confirmed:
-                    record.x_state = 'completed'
-                elif total_done > 0:
-                    record.x_state = 'partial_sale'
-
     @api.onchange('x_customer_id')
     def _onchange_customer_id(self):
         if self.x_customer_id:
@@ -58,14 +37,21 @@ class SaleRequestMethods(models.Model):
             self.x_lead_code_id = self.env['crm.lead'].search([
                 ('partner_id', '=', self.x_customer_id.id)
             ], order="create_date desc", limit=1)
+            self.x_identification_id = self.x_customer_id.x_identity_number or False
+            self.x_business_registration_id = self.x_customer_id.x_business_registration_id or False
+            if self.env.context.get('default_is_potential_form') and self.x_lead_code_id:
+                self.x_customer_id.readonly = True
 
-    @api.onchange('x_lead_code_id')
-    def _onchange_lead_code_id(self):
-        if self.x_lead_code_id:
-            self.x_customer_name = self.x_lead_code_id.contact_name
-            self.x_customer_address = self.x_lead_code_id.street
-            self.x_province_id = self.x_lead_code_id.state_id
-            self.x_customer_id = False
+            self.x_old_customer = bool(self.x_customer_id)
+
+    @api.depends('x_customer_id', 'x_identification_id', 'x_business_registration_id')
+    def _compute_old_customer(self):
+        for record in self:
+            record.x_old_customer = False
+            if record.x_customer_id and self.env['res.partner'].search([
+                ('id', '=', record.x_customer_id.id)
+            ], limit=1):
+                record.x_old_customer = True
 
     @api.onchange('x_customer_type', 'x_province_id')
     def _check_region(self):
@@ -146,13 +132,11 @@ class SaleRequestMethods(models.Model):
         }
 
     def action_cancel(self):
-        for request in self:
-            if request.x_state != 'draft':
-                raise ValidationError(_('Only draft requests can be canceled.'))
-            if self.env.user != request.create_uid:
-                raise ValidationError(_('Only the creator can cancel this request.'))
-            if not request.x_cancellation_reason:
-                raise ValidationError(_('Provide a cancellation reason.'))
-            request.write({'x_state': 'cancelled'})
-            request.message_post(body=f'Request cancelled. Reason: {request.x_cancellation_reason}')
-        return True
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Enter Cancel Reason',
+            'res_model': 'sale.request.cancel.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_sale_request_id': self.id}
+        }
