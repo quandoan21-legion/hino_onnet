@@ -112,13 +112,24 @@ class ResPartner(models.Model):
     @api.constrains('phone', 'mobile')
     def _check_phone_number_format(self):
         for record in self:
-            if record.phone and not re.fullmatch(r'0\d{9}$', record.phone):
-                raise ValidationError("Phone number must be exactly 10 digits and start with 0.")
-            if record.mobile and not re.fullmatch(r'0\d{9}$', record.mobile):
-                raise ValidationError("Mobile number must be exactly 10 digits and start with 0.")
-    #
-    # @api.constrains('x_business_registration_id', 'x_customer_type', 'x_register_sale_3rd_id', 'x_identity_number')
-    # def _check_required_fields(self):
+            if record.phone and not re.fullmatch(r'0\d{1,9}', record.phone):
+                raise ValidationError("Phone number must not more than 10 digits and start with 0.")
+            if record.mobile and not re.fullmatch(r'0\d{1,9}', record.mobile):
+                raise ValidationError("Mobile number must not more than 10 digits and start with 0.")
+
+    @api.constrains('x_business_registration_id', 'x_customer_type', 'x_register_sale_3rd_id', 'x_identity_number')
+    def _check_required_fields(self):
+        for record in self:
+            if record.company_type == 'internal_hmv':
+                continue  
+            if not record.is_company and not record.x_identity_number:
+                raise ValidationError("Identity Number is required for individuals. Please enter a valid Identity Number.")
+            if record.is_company and not record.x_business_registration_id:
+                raise ValidationError("Business Registration ID is required for companies. Please enter a valid Business Registration ID.")
+            if record.x_customer_type == 'third_party' and not record.x_register_sale_3rd_id:
+                raise ValidationError("Register Sale 3rd is required for Third Party customers. Please enter a valid Register Sale 3rd ID.")
+    
+    # def _compute_potential_count(self):
     #     for record in self:
     #         record.x_potential_count = self.env['crm.lead'].search_count([('x_partner_id', '=', record.id)]) 
 
