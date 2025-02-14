@@ -3,87 +3,115 @@
     <template id="custom_lead_report_template">
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
-                <div class="page">
-                    <t t-foreach="docs" t-as="o">
-                        <h2>Lead Report</h2>
-                        <div class="row mt-4">
-                            <div class="col-6">
-                                <strong>Lead Name:</strong>
-                                <span t-field="o.name" />
-                            </div>
-                            <div class="col-6">
-                                <strong>Status:</strong>
-                                <span t-field="o.x_status" />
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-6">
-                                <strong>Customer:</strong>
-                                <span t-field="o.x_partner_id.name" />
-                            </div>
-                            <div class="col-6">
-                                <strong>Customer Type:</strong>
-                                <span t-field="o.x_customer_type" />
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-12">
-                                <strong>Address:</strong>
-                                <span t-field="o.x_contact_address_complete" />
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <!-- Custom Header -->
+                        <div class="container-fluid mb-4" style="border-bottom: 3px solid #2c3e50;">
+                            <div class="row">
+                                <div class="col-6 text-left">
+                                    <h2 style="color: #2c3e50; font-weight: 700; font-size: 24px;">LEAD PROFILE</h2>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <span style="color: #7f8c8d; font-size: 14px;"> Date: <span t-field="o.create_date" t-options='{"format": "dd MMM yyyy"}' /> </span>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Vehicle Interest Section -->
-                        <h3 class="mt-4">Vehicle Interests</h3>
-                        <table class="table table-bordered mt-2">
-                            <thead>
-                                <tr>
-                                    <th>Vehicle</th>
-                                    <th>Quantity</th>
-                                    <th>Body Type</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr t-foreach="o.x_vehicle_interest_ids" t-as="interest">
-                                    <td>
-                                        <span t-field="interest.x_body_type_id.name" />
-                                    </td>
-                                    <td>
-                                        <span t-field="interest.x_quantity" />
-                                    </td>
-                                    <td>
-                                        <span t-field="interest.x_expected_implementation_time" />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <!-- Main Content -->
+                        <div class="container" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+                            <!-- Key Information Section -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h4 style="border-bottom: 2px solid; padding-bottom: 5px;">BASIC INFORMATION</h4>
+                                    <table class="table table-sm table-borderless">
+                                        <tr>
+                                            <td class="font-weight-bold" width="20%">Lead Name</td>
+                                            <td width="30%"><span t-field="o.name" /></td>
+                                            <td class="font-weight-bold" width="20%">Status</td>
+                                            <td width="30%"><span t-field="o.x_status" class="badge" style="background-color: #e74c3c; color: white;" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-weight-bold">Dealer</td>
+                                            <td><span t-field="o.x_dealer_id.name" /></td>
+                                            <td class="font-weight-bold">Dealer Branch</td>
+                                            <td><span t-field="o.x_dealer_branch_id.name" /></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
 
-                        <!-- Contact Persons Section -->
-                        <h3 class="mt-4">Contact Persons</h3>
-                        <table class="table table-bordered mt-2">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr t-foreach="o.x_contact_person_ids" t-as="contact">
-                                    <td>
-                                        <span t-field="contact.x_name" />
-                                    </td>
-                                    <td>
-                                        <span t-field="contact.x_email" />
-                                    </td>
-                                    <td>
-                                        <span t-field="contact.x_phone_number" />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </t>
-                </div>
+                            <!-- Customer Details Section -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h4 style="border-bottom: 2px solid; padding-bottom: 5px;">CUSTOMER DETAILS</h4>
+                                    <table class="table table-sm table-borderless">
+                                        <tr>
+                                            <td class="font-weight-bold" width="40%">Customer Name</td>
+                                            <td><span t-field="o.x_partner_name" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-weight-bold">Address</td>
+                                            <td><span t-field="o.x_contact_address_complete" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-weight-bold">VAT</td>
+                                            <td><span t-field="o.x_vat" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-weight-bold">Customer Type</td>
+                                            <td><span t-field="o.x_customer_status" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-weight-bold">Industry</td>
+                                            <td><span t-field="o.x_industry_id.name" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-weight-bold">Website</td>
+                                            <td><span t-field="o.x_website" /></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Sales Information Section -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h4 style="border-bottom: 2px solid; padding-bottom: 5px;">SALES INFORMATION</h4>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="card shadow-sm">
+                                                <div class="card-body">
+                                                    <h6 class="card-subtitle mb-2 text-muted">Approaching Channel</h6>
+                                                    <p class="card-text" t-field="o.x_approaching_channel_id.x_code" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="card shadow-sm">
+                                                <div class="card-body">
+                                                    <h6 class="card-subtitle mb-2 text-muted">Sales Person</h6>
+                                                    <p class="card-text" t-field="o.x_sale_person_id.name" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="card shadow-sm">
+                                                <div class="card-body">
+                                                    <h6 class="card-subtitle mb-2 text-muted">Service Contract</h6>
+                                                    <p class="card-text" t-field="o.x_service_contract" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Footer -->
+                        <div class="footer" style="color: #7f8c8d; font-size: 12px; margin-top: 30px;">
+                            <div class="text-center"> Generated by <span t-field="res_company.name" /> • Page <span class="page" /> of <span class="topage" /> </div>
+                        </div>
+                    </div>
+                </t>
             </t>
         </t>
     </template>

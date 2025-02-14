@@ -28,7 +28,7 @@ class ThirdPartyRegistration(models.Model):
         readonly=False,  # Allow editing
         tracking=True
     )
-    x_business_field_id = fields.Many2one('res.partner.industry', string='Business Field', tracking=True)
+    x_business_field_id = fields.Many2one('res.partner.industry', string='Industry', tracking=True)
     x_registration_type = fields.Selection([
         ('last_customer', 'Last Customer'),
         ('third_party', 'Third Party'),
@@ -89,6 +89,7 @@ class ThirdPartyRegistration(models.Model):
     def _onchange_customer_id(self):
         if self.x_customer_id and self.x_customer_id.phone:
             self.x_phone = self.x_customer_id.phone
+            self.x_business_field_id = self.x_customer_id.x_industry_id
 
     def action_submit(self):
         """Submit registration for approval"""

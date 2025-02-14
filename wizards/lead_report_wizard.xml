@@ -8,7 +8,8 @@
                 <group>
                     <field name="date_from" />
                     <field name="date_to" />
-                    <field name="branch_id" />
+                    <field name="x_dealer_id" />
+                    <field name="x_branch_id" />
                 </group>
                 <footer>
                     <button name="action_print_report" type="object" string="Print Report"
