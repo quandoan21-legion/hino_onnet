@@ -49,6 +49,7 @@
         'views/form_views/body_type_form_views.xml',
         'views/form_views/sale_request_view.xml',
         'views/form_views/wizard_pop_refuse_view.xml',
+        'views/form_views/wizard_pop_cancel_view.xml',
         'views/tree_views/sale_request_views.xml',
         'views/form_views/customer_interest_vehicle.xml',
         'views/tree_views/cross_region_sale_views.xml',
