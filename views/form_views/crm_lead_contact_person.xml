@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_lead_contact_form_view" model="ir.ui.view">
+            <field name="name">crm.lead.contact.person.form.view</field>
+            <field name="model">crm.lead.contact.person</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="x_name"/>
+                    <field name="x_email"/>
+                    <field name="x_function"/>
+                    <field name="x_phone_number"/>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

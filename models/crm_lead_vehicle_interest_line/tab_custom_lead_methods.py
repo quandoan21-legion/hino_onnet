@@ -5,22 +5,6 @@ from odoo.exceptions import ValidationError
 class VehicleInterestLineMethods(models.Model):
     _inherit = 'crm.lead.vehicle.interest.line'
 
-    # @api.onchange('x_order_detail_3rd', 'x_partner_name')
-    # def _onchange_fields(self):
-    #     if self.x_order_detail_3rd:
-    #         self.x_partner_name = self.x_order_detail_3rd.partner_id
-    #         self.x_customer = self.x_order_detail_3rd.partner_id.name
-    #         self.x_address = self.x_order_detail_3rd.partner_id.street
-    #         self.x_province_id = self.x_order_detail_3rd.partner_id.state_id
-    #         self.x_model_type_id = self.x_order_detail_3rd.model_type_id
-    #         self.x_body_type_id = self.x_order_detail_3rd.body_type_id
-    #
-    #     elif self.x_partner_name:
-    #         self.x_customer = self.x_partner_name.name
-    #         self.x_address = self.x_partner_name.street or ''
-    #         self.x_province_id = self.x_partner_name.state_id
-    #
-
     @api.constrains('x_address', 'x_expected_implementation_time', 'x_expected_time_sign_contract')
     def _check_fields(self):
         for record in self:
@@ -50,7 +34,7 @@ class VehicleInterestLineMethods(models.Model):
     @api.model
     def create(self, vals):
         lead = self.env['crm.lead'].browse(vals.get('lead_id'))
-        if lead and lead.x_readonly_fields:
+        if lead and lead.x_status != 'draft':
             raise ValidationError(
                 "You cannot create a new vehicle interest line because this lead form is not in DRAFT status.")
         return super(VehicleInterestLineMethods, self).create(vals)
@@ -58,7 +42,7 @@ class VehicleInterestLineMethods(models.Model):
     @api.model
     def write(self, vals):
         for record in self:
-            if record.lead_id.x_readonly_fields:
+            if record.lead_id.x_status != 'draft':
                 raise ValidationError(
                     "You cannot edit the vehicle interest line because this lead form is not in DRAFT status.")
         return super(VehicleInterestLineMethods, self).write(vals)
