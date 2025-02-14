@@ -7,7 +7,7 @@ class CustomLead(models.Model):
     x_readonly_fields = fields.Boolean(compute="_compute_readonly_fields", store=True)
     name = fields.Char(string='Lead Name', required=True, readonly=True, default="PCxxxxxx")
     # Notebook lines
-    x_member_line_ids = fields.One2many('member.line', 'lead_id', string='Member Lines')
+    x_member_unit_ids = fields.One2many('member.unit', 'lead_id', string='Member Unit')
     x_owned_team_car_line_ids = fields.One2many('owned.team.car.line', 'lead_id', string='Owned Team Car Lines')
     x_customer_follow_up_ids = fields.One2many('crm.follow.up', 'lead_id', string='Customer Follow-Up')
     # x_partner_rank_id = fields.Many2one('res.partner.rank', string='Rank')
