@@ -16,7 +16,12 @@ class CustomLeadMethods(models.Model):
             self.x_website = self.x_partner_id.website
             self.phone = self.x_partner_id.phone
             self.email_from = self.x_partner_id.email
-            self.x_customer_type = self.x_partner_id.x_customer_type
+
+            if self.x_partner_id.x_customer_type in ['third_party', 'body_maker']:
+                self.x_customer_type = self.x_partner_id.x_customer_type
+            else:
+                self.x_customer_type = 'draft'
+                       
             vat = self.x_partner_id.vat or ''
             business_reg_id = self.x_partner_id.x_business_registration_id or ''
             self.x_vat = f"{vat} / {business_reg_id}".strip(" /")
@@ -31,6 +36,12 @@ class CustomLeadMethods(models.Model):
             self.x_partner_rank_id = self.x_partner_id.x_currently_rank_id
             self.x_customer_status = 'company' if self.x_partner_id.company_type == 'company' else 'person'
             self.x_contact_address_complete = self.x_partner_id.x_contact_address
+
+    @api.constrains('x_customer_type', 'x_partner_id')
+    def _validate_customer_type(self):
+        for record in self:
+            if record.x_partner_id and record.x_partner_id.x_customer_type in ['third_party', 'body_maker'] and record.x_customer_type == 'draft':
+                raise ValidationError("This customer is a Third Party/Body Maker and cannot be switched back to Draft.")
 
     @api.constrains('x_customer_status', 'x_identity_number', 'x_vat')
     def _check_customer_status_requirements(self):
