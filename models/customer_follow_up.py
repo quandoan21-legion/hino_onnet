@@ -21,6 +21,5 @@ class CRMFollowUp(models.Model):
     def _check_day_contact(self):
         for record in self:
             is_set_in_the_past = record.x_day_contact < fields.Date.today()
-            print(f"================================: {is_set_in_the_past}")
             if record.x_day_contact < fields.Date.today():
                 raise ValidationError("The day contact cannot be set in the past!")
