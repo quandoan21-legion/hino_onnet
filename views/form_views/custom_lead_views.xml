@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <field name="x_readonly_fields" invisible="1" />
+                        <field name="x_status" invisible="1"/>
                         <button name="action_mark_failed" string="Reject Order" type="object"
                             invisible="x_status != 'draft'" class="oe_highlight" />
                         <button name="action_create_customer" string="Create Customer" type="object"
@@ -31,55 +31,55 @@
 
                         <group>
                             <group>
-                                <field name="x_partner_id" readonly="x_readonly_fields"
+                                <field name="x_partner_id" readonly="x_status not in ('draft')"
                                     options="{'no_create': True}" />
                                 <field id="person"
                                     name="x_partner_name"
                                     placeholder="e.g. Brandom Freeman"
                                     invisible="x_customer_status == 'company'"
-                                    readonly="x_readonly_fields" />
+                                       readonly="x_status not in ('draft')"/>
                                 <field id="company"
                                     name="x_partner_name"
                                     placeholder="e.g. Lumber Inc"
                                     invisible="x_customer_status == 'person'"
-                                    readonly="x_readonly_fields" />
-                                <field name="x_state_id" readonly="x_readonly_fields" />
-                                <field name="x_contact_address_complete" />
-                                <field name="x_website" widget="url" readonly="x_readonly_fields" />
-                                <field name="x_partner_rank_id" readonly="x_readonly_fields" />
-                                <field name="x_customer_type" readonly="x_readonly_fields" />
-                                <field name="x_purchase_type" readonly="x_readonly_fields" />
+                                       readonly="x_status not in ('draft')"/>
+                                <field name="x_state_id" readonly="x_status not in ('draft')"/>
+                                <field name="x_contact_address_complete" readonly="x_status not in ('draft')"/>
+                                <field name="x_website" widget="url" readonly="x_status not in ('draft')"/>
+                                <field name="x_partner_rank_id" readonly="x_status not in ('draft')"/>
+                                <field name="x_customer_type" readonly="x_status not in ('draft')"/>
+                                <field name="x_purchase_type" readonly="x_status not in ('draft')"/>
                             </group>
                             <group>
-                                <field name="phone" readonly="x_readonly_fields" />
-                                <field name="email_from" readonly="x_readonly_fields" />
-                                <field name="x_vat" readonly="x_readonly_fields" />
-
-                                <field name="x_identity_number" readonly="x_readonly_fields" />
-                                <field name="x_industry_id" readonly="x_readonly_fields" />
-                                <field name="x_service_contract" readonly="x_readonly_fields" />
-                                <field name="x_activity_area" readonly="x_readonly_fields" />
-                                <field name="x_request_sale_3rd_barrels_id" readonly="x_readonly_fields" />
+                                <field name="phone" readonly="x_status not in ('draft')"/>
+                                <field name="email_from" readonly="x_status not in ('draft')"/>
+                                <field name="x_vat" readonly="x_status not in ('draft')"/>
+                                <field name="x_identity_number" readonly="x_status not in ('draft')"/>
+                                <field name="x_industry_id" readonly="x_status not in ('draft')"/>
+                                <field name="x_service_contract" readonly="x_status not in ('draft')"/>
+                                <field name="x_activity_area" readonly="x_status not in ('draft')"/>
+                                <field name="x_request_sale_3rd_barrels_id" readonly="x_status not in ('draft')"/>
                                 <!--                                <field name="x_dealer_id" />-->
-                                <field name="x_dealer_branch_id" readonly="x_readonly_fields" />
-                                <field name="x_sale_person_id" readonly="x_readonly_fields" />
-                                <field name="x_approaching_channel_id" readonly="x_readonly_fields" />
+                                <field name="x_dealer_branch_id" readonly="x_status not in ('draft')"/>
+                                <field name="x_sale_person_id" readonly="x_status not in ('draft')"/>
+                                <field name="x_approaching_channel_id" readonly="x_status not in ('draft')"/>
                             </group>
                         </group>
-                        <group invisible="x_purchase_type != 'bidding'" readonly="x_readonly_fields">
+                        <group invisible="x_purchase_type != 'bidding'" readonly="x_status not in ('draft')">
                             <group>
-                                <field name="x_bidding_package" readonly="x_readonly_fields" />
-                                <field name="x_project" readonly="x_readonly_fields" />
+                                <field name="x_bidding_package" readonly="x_status not in ('draft')"/>
+                                <field name="x_project" readonly="x_status not in ('draft')"/>
                                 <field name="x_estimated_time_of_bid_opening"
-                                    readonly="x_readonly_fields" />
-                                <field name="x_area" readonly="x_readonly_fields" />
+                                       readonly="x_status not in ('draft')"/>
+                                <field name="x_area" readonly="x_status not in ('draft')"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Vehicle Customer Interest">
-                                <field name="x_vehicle_interest_ids" mode="tree,form">
+                                <field name="x_vehicle_interest_ids" mode="tree,form"
+                                       readonly="x_status not in ('draft')">
                                     <tree>
-                                        <field name="x_partner_name" />
+                                        <field name="x_partner_name"/>
                                         <field name="x_address" />
                                         <field name="x_quantity" />
                                         <field name="x_body_type_id" />
@@ -90,7 +90,8 @@
                                 </field>
                             </page>
                             <page string="Owned Team Car">
-                                <field name="x_owned_team_car_line_ids">
+                                <field name="x_owned_team_car_line_ids" mode="tree,form"
+                                       readonly="x_status not in ('draft')">
                                     <tree editable="bottom">
                                         <field name="x_model_name" />
                                         <field name="x_quantity" />
@@ -99,24 +100,38 @@
                                 </field>
                             </page>
                             <page string="Members">
-                                <field name="x_member_line_ids">
+                                <field name="x_member_unit_ids" readonly="x_status not in ('draft')">
                                     <tree editable="bottom">
                                         <field name="member_id" />
                                     </tree>
                                 </field>
                             </page>
                             <page string="Contact">
-                                <field name="x_contact_person_ids" mode="tree,form">
+                                <!--                                <field name="x_contact_person_ids" mode="tree,form" readonly="x_status not in ('draft')">-->
+                                <field name="x_contact_person_ids" mode="tree,form"
+                                       readonly="x_status not in ('draft')">
                                     <tree>
                                         <field name="x_name" />
                                         <field name="x_email" />
                                         <field name="x_function" />
                                         <field name="x_phone_number" />
                                     </tree>
+                                    <form string="Contact Person">
+                                        <sheet>
+                                            <group>
+                                                <field name="partner_id"/>
+                                                <field name="x_name"/>
+                                                <field name="x_email"/>
+                                                <field name="x_function"/>
+                                                <field name="x_phone_number"/>
+                                            </group>
+                                        </sheet>
+                                    </form>
                                 </field>
                             </page>
                             <page string="Customer Follow-Up History">
-                                <field name="x_customer_follow_up_ids" mode="tree,form">
+                                <field name="x_customer_follow_up_ids" mode="tree,form"
+                                       readonly="x_status not in ('draft')">
                                     <tree>
                                         <field name="x_day_contact" />
                                         <field name="x_exchange_content" />
@@ -131,8 +146,8 @@
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"
                             groups="base.group_user"
-                            readonly="x_readonly_fields" />
-                        <field name="message_ids" widget="mail_thread" readonly="x_readonly_fields" />
+                               readonly="x_status not in ('draft')"/>
+                        <field name="message_ids" widget="mail_thread" readonly="x_status not in ('draft')"/>
                     </div>
                 </form>
             </field>
