@@ -91,7 +91,7 @@ class ResPartner(models.Model):
                     raise ValidationError("Business Registration ID must be unique.")
         
             if record.x_business_registration_id:
-                if not re.fullmatch(r'\d{1,9}', record.x_business_registration_id):
+                if not re.fullmatch(r'^\d{1,10}$', record.x_business_registration_id):
                     raise ValidationError("Business Registration ID must contain only numbers and be at most 10 digits long.")
     
     @api.constrains('x_identity_number')
