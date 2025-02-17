@@ -39,8 +39,9 @@ class SaleRequest(models.Model):
     x_expected_to_sign_contract = fields.Date(string='Expected To Sign Contract', tracking=True)
     x_attach_file = fields.Binary(string='Attach File', tracking=True)  
     x_attach_filename = fields.Char(string='Attach File Name', tracking=True)
-    
-    
+
+    approval_history_ids = fields.One2many('sales.request.approval', 'x_request_id', string='Approval History')
+
     _sql_constraints = [
         ('unique_request_code', 'unique(x_request_code)', 'Request Code must be unique!'),
     ]
