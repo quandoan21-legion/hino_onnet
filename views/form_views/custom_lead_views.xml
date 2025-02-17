@@ -16,7 +16,7 @@
                         <button name="action_view_third_party_registration"
                             string="Propose in Encroaching area/Third party/Body maker"
                             type="object"
-                            invisible="x_status != 'draft'" />
+                            invisible="x_customer_type == 'third_party'" />
                         <field name="x_status" widget="statusbar"
                             statusbar_visible="draft,contract signed,in progress,completed,failed,cancelled" />
                     </header>
