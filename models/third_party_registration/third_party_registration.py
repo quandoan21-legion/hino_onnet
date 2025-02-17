@@ -1,6 +1,7 @@
+import logging
+
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
-import logging
 
 # Initialize logger
 _logger = logging.getLogger(__name__)
@@ -217,5 +218,5 @@ class ThirdPartyRegistration(models.Model):
             existing_registration = record.env['third.party.registration'].search(registration_domain, limit=1)
             if existing_registration:
                 raise ValidationError(
-                    f'Phone number already exists in registration: {existing_registration.x_name}'
+                    f'User has already create a registration. \nCreated Registration Form Code: {existing_registration.x_registration_code}'
                 )
