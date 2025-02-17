@@ -11,9 +11,8 @@
                     <button name="action_approve" string="Approve" class="oe_highlight" type="object" invisible="x_state not in ('pending')"/>
                     <button name="action_refuse" string="Refuse" class="oe_highlight" type="object" invisible="x_state not in ('pending')"/>
                     <button name="action_cancel" string="Cancel" class="oe_highlight" type="object" invisible="x_state not in ('draft')"/>
-                    <button string="Send Mail" class="oe_highlight"/>
-<!--                    <field name="x_state" widget="statusbar" statusbar_visible="draft,pending,approved,rejected,partial_sale,completed,cancelled" />-->
-                     <field name="x_state" widget="statusbar" options="{'clickable': True}" />
+                    <button name="action_send_mail" string="Send Mail" class="oe_highlight" type="object" invisible="x_state not in ('draft')"/>
+                    <field name="x_state" widget="statusbar" statusbar_visible="draft,pending,approved,rejected,partial_sale,completed,cancelled" />
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -33,7 +32,7 @@
                             <field name="x_customer_address"/>
                             <field name="x_province_id"/>
                             <field name="x_customer_region"/>
-                            <field name="x_identitfication_id"/>
+                            <field name="x_identification_id"/>
                             <field name="x_business_registration_id"/>
                         </group>
                         <group>

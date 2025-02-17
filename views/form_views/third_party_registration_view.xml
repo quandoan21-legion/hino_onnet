@@ -32,27 +32,28 @@
                             <field name="x_customer_id"
                                    widget="many2one"
                                    context="{'form_view_ref': 'hino_onnet.view_form_custom_customer'}"
+                                   readonly="x_state not in ('draft')"
                                    options="{'no_create_edit': false,'no_quick_create': true,'no_open': true}"/>
                             <field name="x_customer_code" readonly="1"/>
-                            <field name="x_representative_id"/>
-                            <field name="x_phone"/>
-                            <field name="x_business_field_id"/>
-                            <field name="x_registration_type"/>
+                            <field name="x_representative_id" readonly="x_state not in ('draft')"/>
+                            <field name="x_phone" readonly="x_state not in ('draft')"/>
+                            <field name="x_business_field_id" readonly="x_state not in ('draft')"/>
+                            <field name="x_registration_type" readonly="x_state not in ('draft')"/>
                             <field name="x_attach_files" widget="many2many_binary"
-                                   options="{'accept': 'application/pdf'}"/>
+                                   options="{'accept': 'application/pdf'}" readonly="x_state not in ('draft')"/>
                         </group>
                         <group>
-                            <field name="x_ability_distribute_standards"/>
-                            <field name="x_barrels_3rd_processes"/>
-                            <field name="x_unit_3rd_commercial"/>
-                            <field name="x_note"/>
-                            <field name="x_rejection_reason"/>
+                            <field name="x_ability_distribute_standards" readonly="x_state not in ('draft')"/>
+                            <field name="x_barrels_3rd_processes" readonly="x_state not in ('draft')"/>
+                            <field name="x_unit_3rd_commercial" readonly="x_state not in ('draft')"/>
+                            <field name="x_note" readonly="x_state not in ('draft')"/>
+                            <field name="x_rejection_reason" readonly="1"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Approval Information">
                             <field name="x_approval_ids" mode="tree,form">
-                                <tree>
+                                <tree create="0" edit="0" delete="0">
                                     <field name="x_approval_person"/>
                                     <field name="x_department"/>
                                     <field name="x_position"/>

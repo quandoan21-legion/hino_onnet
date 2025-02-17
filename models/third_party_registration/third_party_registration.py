@@ -13,7 +13,7 @@ class ThirdPartyRegistration(models.Model):
     _description = 'Third Party Registration'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'x_registration_code desc'
-    _rec_name = 'x_name'
+    _rec_name = 'x_registration_code'
 
     # Basic Information
     x_name = fields.Char(string='3rd Unit Register/Packaging House', required=True)
@@ -122,7 +122,7 @@ class ThirdPartyRegistration(models.Model):
             if self.x_customer_id:
                 self.x_customer_id.write({
                     'x_customer_type': self.x_registration_type,
-                    'x_register_sale_3rd_id': self.x_registration_code
+                    'x_register_sale_3rd_id': self.id
                 })
 
     def action_reject(self):
@@ -174,7 +174,7 @@ class ThirdPartyRegistration(models.Model):
                 'default_name': customer.name,
                 'default_phone': self.x_phone,
                 'default_x_customer_type': self.x_registration_type,
-                'default_x_register_sale_3rd_id': self.x_registration_code,
+                'default_x_register_sale_3rd_id': self.id,
                 'default_x_industry_id': self.x_business_field_id.id,
                 'default_x_identity_number': customer.x_identity_number,
                 'default_x_customer_code': self.x_customer_code,

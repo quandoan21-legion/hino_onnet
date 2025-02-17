@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_crm_lead_report_wizard" model="ir.ui.view">
+        <field name="name">crm.lead.report.form</field>
+        <field name="model">crm.lead.report</field>
+        <field name="arch" type="xml">
+            <form string="CRM Lead Report">
+                <group>
+                    <field name="date_from" />
+                    <field name="date_to" />
+                    <field name="branch_id" />
+                </group>
+                <footer>
+                    <button name="action_print_report" type="object" string="Print Report"
+                        class="btn-primary" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_crm_lead_report_wizard" model="ir.actions.act_window">
+        <field name="name">Lead Report</field>
+        <field name="res_model">crm.lead.report</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="crm_lead_report_menu"
+        name="Lead Report"
+        parent="crm.crm_menu_report"
+        action="action_crm_lead_report_wizard"/>
+</odoo>

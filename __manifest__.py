@@ -26,6 +26,10 @@
         'security/ir.model.access.csv',
 
         'wizards/third_party_registration_rejection_wizard_view.xml',
+        'wizards/lead_report_wizard.xml',
+
+        'reports/lead_report_template.xml',
+        'reports/report.xml',
 
         'data/partner_sequence.xml',
         'data/sale_request_sequence.xml',
@@ -45,6 +49,7 @@
         'views/form_views/body_type_form_views.xml',
         'views/form_views/sale_request_view.xml',
         'views/form_views/wizard_pop_refuse_view.xml',
+        'views/form_views/wizard_pop_cancel_view.xml',
         'views/tree_views/sale_request_views.xml',
         'views/form_views/customer_interest_vehicle.xml',
         'views/tree_views/cross_region_sale_views.xml',
