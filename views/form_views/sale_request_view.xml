@@ -26,7 +26,9 @@
                             <!-- <field name="x_request_dealer_id"/> -->
                             <!-- <field name="x_dealer_branch_id"/> -->
                             <field name="x_customer_id"/>
-                            <field name="x_customer_name"/>
+                            <field name="x_customer_name"
+
+                            />
                             <field name="x_lead_code_id"/>
                             <field name="x_customer_address"/>
                             <field name="x_province_id"/>
@@ -53,7 +55,12 @@
             <tree editable="bottom">
                 <field name="x_number"/>
                 <field name="x_customers_use_id"/>
-                <field name="x_customers_name"/>
+                <field name="x_customers_name"
+
+
+                invisible="x_customer_type in ('out_of_area')"
+                />
+
                 <field name="x_identification_card"/>
                 <field name="x_specific_address"/>
                 <field name="x_province_id"/>
@@ -64,9 +71,14 @@
 <!--                <field name="x_quantity_done"/>-->
                 <field name="x_note"/>
                 <field name="x_attach_file"/>
+                  <field name="x_customer_type"
+                invisible="1" hidden="1" hide="1"
+                />
+                <field name="x_state" invisible="1"/>
                     <button name="action_cancel" type="object" string="Hủy" class="btn-primary"/>
                     <button name="action_delete_line" type="object" string="Xóa dòng sản phẩm"
                         class="btn-danger"
+                            invisible="x_state in ('draft')"
 
                     />
             </tree>

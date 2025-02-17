@@ -21,10 +21,20 @@ class SaleDetail(models.Model):
     x_note = fields.Char(string='Note')
     x_attach_file = fields.Binary(string='Attach file')
     sale_request_id = fields.Many2one('sale.request', string='Sale Request')
-    def action_cancel(self):
-        """ Khi nhấn button 'Hủy', cập nhật số lượng chốt thành số lượng hoàn thành """
-        for record in self:
-            record.x_quantity_finalize = record.x_quantity_done.quantity if record.x_quantity_done else 0
+    x_customer_type = fields.Selection(
+        related='sale_request_id.x_customer_type',
+        string='Customer Type',
+        store=True
+    )
+    x_state = fields.Selection(
+        related='sale_request_id.x_state',
+        string='Customer state',
+        store=True
+    )
+    # def action_cancel(self):
+    #     """ Khi nhấn button 'Hủy', cập nhật số lượng chốt thành số lượng hoàn thành """
+    #     for record in self:
+    #         record.x_quantity_finalize = record.x_quantity_done.quantity if record.x_quantity_done else 0
 
     @api.model
     def create(self, vals):
@@ -45,4 +55,9 @@ class SaleDetail(models.Model):
                 record.unlink()
             else:
                 raise ValidationError("Chỉ có thể xóa sản phẩm khi phiếu ở trạng thái Nháp!")
+
+    @api.onchange('x_customer_type')
+    def _onchange_customer_type(self):
+        if self.x_customer_type == 'out_of_area':
+            self.x_customer_name = False
 

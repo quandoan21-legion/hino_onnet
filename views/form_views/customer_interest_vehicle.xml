@@ -9,12 +9,15 @@
                     <sheet>
                         <group>
                             <field name="lead_id" invisible="1"/>
+                            <field name="sale_request_id"/>
+                            <field name="sale_detail_ids"/>
                             <field name="x_partner_code"/>
                             <field name="x_partner_name"/>
                             <field name="x_address"/>
                             <field name="x_province_id"/>
                             <field name="x_quantity"/>
-                            <field name="x_model_id"/>
+                            <field name="x_model_id" />
+
                             <field name="x_body_type_id"/>
 
                             <field name="x_expected_implementation_time" widget="date"
