@@ -7,9 +7,11 @@ class SaleDetail(models.Model):
 
     x_number = fields.Integer(string='STT',readonly=True)
     x_customers_use_id = fields.Many2one(
-        'res.partner', string='Customer use id', help='Mã khách hàng từ đề nghị bán trái vùng/Bên thứ 3/Nhà đóng thùng'
+        'res.partner', string='Customer use id', help='Mã khách hàng từ đề nghị bán trái vùng/Bên thứ 3/Nhà đóng thùng',
+
     )
     x_customers_name = fields.Char(string='Customer name')
+    # x_customer_name = fields.Char(string='Customer Name')
     x_identification_card = fields.Many2one('res.partner', string='CCCD/CMND')
     x_specific_address = fields.Char(string='Address')
     x_province_id = fields.Many2one('res.country.state', string='Provice', required=True)
@@ -29,7 +31,8 @@ class SaleDetail(models.Model):
     x_state = fields.Selection(
         related='sale_request_id.x_state',
         string='Customer state',
-        store=True
+        store=True,
+        invisible=True
     )
     # def action_cancel(self):
     #     """ Khi nhấn button 'Hủy', cập nhật số lượng chốt thành số lượng hoàn thành """
@@ -59,5 +62,9 @@ class SaleDetail(models.Model):
     @api.onchange('x_customer_type')
     def _onchange_customer_type(self):
         if self.x_customer_type == 'out_of_area':
-            self.x_customer_name = False
+            self.x_customers_name = False
 
+    @api.depends('x_identification_card')
+    def _compute_identification_number(self):
+        for record in self:
+            record.x_identification_number = record.x_identification_card.x_identity_number if record.x_identification_card else False
