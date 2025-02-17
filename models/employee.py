@@ -3,6 +3,8 @@ from odoo import models, fields, api
 class EmployeeDemo(models.Model):
     _inherit = 'hr.employee'
 
+    x_identity_number = fields.Char(string='Identity Number', help='National or Personal Identity Number')
+
     @api.model
     def create_demo_job(self):
         job_obj = self.env['hr.job']

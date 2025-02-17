@@ -34,11 +34,15 @@
         'data/partner_sequence.xml',
         'data/sale_request_sequence.xml',
         'data/body_type_sequence.xml',
+
+        'views/inherit_views/product_template_views.xml',
+        'views/inherit_views/res_partner_views.xml',
+        'views/inherit_views/employee_inherit_views.xml',
+
         'views/form_views/customer_contact_form_views.xml',
         'views/form_views/custom_lead_views.xml',
         'views/form_views/customer_rank_view.xml',
         'views/form_views/third_party_registration_view.xml',
-        'views/form_views/res_partner_views.xml',
         'views/form_views/custom_lead_views.xml',
         'views/tree_views/customer_contact_tree_views.xml',
         'views/form_views/sale_area_view.xml',
@@ -58,13 +62,11 @@
         'views/tree_views/hino_customer_rank.xml',
         'views/tree_views/hino_customer_upgrade_rank.xml',
         'views/tree_views/approach_channel_view.xml',
-
         'views/tree_views/body_type.xml',
-        'views/inherit_views/product_template_views.xml',
+
         'views/menu/cross_region_suggest_menu_items.xml',
         'views/menu/sale_request_menu_items.xml',
         'views/menu/cross_region_sale_menu_items.xml',
-
         'views/menu/cross_region_sale_menu_items.xml',
         'views/menu/sale_area_menu_items.xml',
         'views/menu/customer_rank_menu_items.xml',

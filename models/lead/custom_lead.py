@@ -11,8 +11,6 @@ class CustomLead(models.Model):
     x_owned_team_car_line_ids = fields.One2many('owned.team.car.line', 'lead_id', string='Owned Team Car Lines')
     x_customer_follow_up_ids = fields.One2many('crm.follow.up', 'lead_id', string='Customer Follow-Up')
     x_partner_rank_id = fields.Many2one('customer.rank', string='Rank', require=True)
-
-
     x_contact_person_ids = fields.One2many('crm.lead.contact.person', 'lead_id', string='Contact')
     x_customer_status = fields.Selection(
         [
@@ -27,11 +25,6 @@ class CustomLead(models.Model):
     x_partner_name = fields.Char(string='Customer Name', store=True, tracking=True)
     x_website = fields.Char(string="Website", store=True, tracking=True)
     x_contact_address_complete = fields.Char(string="Contact Address", help="Customer's detailed address.", require=True)
-
-    # x_customer_id = fields.Many2one('res.partner', string='Customer')
-    # x_customer_real_id = fields.Char(string='Customer ID', compute='_compute_customer_real_id', store=True, readonly=True)
-    # x_customer_name = fields.Char(string='Customer Name')
-
     x_customer_type = fields.Selection(
         [('draft', 'Draft'), ('third_party', 'Third Party'), ('body_maker', 'Body Maker')],
         string='Third part/Body maker', default='draft', tracking=True
@@ -42,7 +35,8 @@ class CustomLead(models.Model):
     x_request_sale_3rd_barrels_id = fields.Many2one('third.party.registration',
                                                     string='Proposal to sell in Encroaching area/Third party/Body maker',
                                                     readonly=True,
-                                                    domain="[('x_customer_id', '=', x_partner_id)]")
+                                                    domain="[('x_customer_id', '=', x_partner_id), ('x_state', '=', 'approved')]")
+                                                    # domain="[('x_state', '=', 'approved')]")
     x_purchase_type = fields.Selection(
         [('online_shopping', 'Online Shopping'), ('bidding', 'Bidding'), ('other', 'Other')],
         string='Purchase type', tracking=True, require=True
@@ -54,8 +48,8 @@ class CustomLead(models.Model):
     x_area = fields.Char(string='Area', tracking=True)
     x_service_contract = fields.Boolean(string='Service Contact', tracking=True, require=True)
     x_activity_area = fields.Char(string='Activity Area', tracking=True, require=True)
-    x_dealer_id = fields.Many2one('res.partner', string='Dealer', readonly=True, require=True)
-    x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch', default=lambda self: self.env.company, tracking=True, require=True)
+    x_dealer_id = fields.Many2one('res.users', string='Dealer', readonly=True, default=lambda self: self.env.user)
+    x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch', default=lambda self: self.env.company, tracking=True, require=True, readonly=True)
     x_sale_person_id = fields.Many2one('hr.employee', string='Sales Person', domain=[('job_id.name', '=', 'Sales staff')], tracking=True, require=True)
     x_approaching_channel_id = fields.Many2one('approach.channel', string='Approaching channels', tracking=True, require=True)
     x_state_id = fields.Many2one(
