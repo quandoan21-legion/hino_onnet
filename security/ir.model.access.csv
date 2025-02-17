@@ -1,7 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hino_onnet_customer_rank,hino_onnet.customer.rank,model_customer_rank,base.group_user,1,1,1,1
 access_hino_onnet_owned_team_car_line,hino_onnet.owned.team.car.line,model_owned_team_car_line,base.group_user,1,1,1,1
-access_hino_onnet_member_line,hino_onnet.member.line,model_member_line,base.group_user,1,1,1,1
+access_hino_onnet_member_unit,hino_onnet.member.unit,model_member_unit,base.group_user,1,1,1,1
 access_hino_onnet_sale_area,hino_onnet.sale.area,model_sale_area,base.group_user,1,1,1,1
 access_hino_onnet_sale_area_detail_line,hino_onnet.sales.area.detail.line,model_sales_area_detail_line,base.group_user,1,1,1,1
 access_hino_onnet_vehicle_interest_line,hino_onnet.crm.lead.vehicle.interest.line,model_crm_lead_vehicle_interest_line,base.group_user,1,1,1,1
@@ -29,3 +29,4 @@ access_third_party_registration_approval,hino_onnet.third.party.registration.app
 access_third_party_registration_reject_wizard,hino_onnet.third.party.registration.reject.wizard,model_third_party_registration_reject_wizard,base.group_user,1,1,1,1
 access_res_partner,hino_onnet.res_partner,model_res_partner,base.group_user,1,1,1,1
 access_hino_onnet_body_type, hino_onnet.sale.body.type,model_hino_body_type,,1,1,1,1
+access_crm_lead_report,hino_onnet.crm.lead.report,model_crm_lead_report,base.group_user,1,1,1,1
