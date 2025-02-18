@@ -8,27 +8,34 @@
             <field name="arch" type="xml">
                 <form>
                 <header>
-                    <button string="Sales information"/>
+                    <button string="Retail information"/>
                     <button string="Cancel"/>
                     <field name="status" widget="statusbar"
                            statusbar_visible="draft,in_progress,completed,cancelled"/>
                 </header>
                 <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="contract_code" nolabel="1" style="margin-bottom: 0px;"/>
+                        </h1>
+                    </div>
                     <group>
-                        <field name="contract_code"/>
-                        <field name="customer_id"/>
-                        <field name="lead_code_id"/>
-                        <field name="address"/>
-                        <field name="customer_class_id"/>
-                        <field name="attachment_ids"/>
-                        <field name="sign_day"/>
-                        <field name="sign_week"/>
-<!--                    <field name="dealer_id"/>-->
-                        <field name="dealer_branch_id"/>
-                        <field name="salesperson_id"/>
-                        <field name="purchase_type"/>
+                        <group>
+                            <field name="customer_id"/>
+                            <field name="lead_code_id"/>
+                            <field name="address"/>
+                            <field name="customer_class_id"/>
+                            <field name="attachment_ids"/>
+                        </group>
+                        <group>
+                            <field name="sign_day"/>
+                            <field name="sign_week"/>
+    <!--                    <field name="dealer_id"/>-->
+                            <field name="dealer_branch_id"/>
+                            <field name="salesperson_id"/>
+                            <field name="purchase_type"/>
+                        </group>
                     </group>
-
                 </sheet>
                 </form>
             </field>

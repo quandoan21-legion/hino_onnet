@@ -96,6 +96,3 @@ class CRMContractLine(models.Model):
         ('cancel','Cancel'),
         ('done','Done'),
     ],string="status", default="in_progress", tracking=True)
-
-
-

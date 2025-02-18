@@ -1,3 +1,5 @@
+from email.policy import default
+
 from odoo import models, fields
 
 class CRMContract(models.Model):
@@ -12,10 +14,10 @@ class CRMContract(models.Model):
     ], string='Status', default='draft', tracking=True)
 
     contract_code = fields.Char(
-        string='Contract code',
+        string="Contract code",
+        required=True,
         readonly=True,
-        copy=False,
-        tracking=True,
+        default="COXXXXXX"
     )
     customer_id = fields.Many2one(
         'res.partner',
@@ -63,7 +65,7 @@ class CRMContract(models.Model):
     salesperson_id = fields.Many2one(
         'hr.employee',
         domain=[('job_title', '=', 'Sales staff')],
-        string="Salesperson"
+        string="Salesperson",
     )
     purchase_type = fields.Selection(
         selection = lambda self: self.env['crm.lead']._fields['x_purchase_type'].selection
