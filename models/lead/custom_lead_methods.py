@@ -24,7 +24,7 @@ class CustomLeadMethods(models.Model):
                        
             vat = self.x_partner_id.vat or ''
             business_reg_id = self.x_partner_id.x_business_registration_id or ''
-            self.x_vat = f"{vat} / {business_reg_id}".strip(" /")
+            self.x_vat = self.x_partner_id.x_business_registration_id
             self.x_identity_number = self.x_partner_id.x_identity_number
             self.x_industry_id = self.x_partner_id.x_industry_id
             self.x_service_contract = self.x_partner_id.x_service_contract
