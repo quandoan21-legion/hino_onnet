@@ -1,5 +1,10 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+from lxml import etree
+import json
+
+
+
 
 class SaleDetail(models.Model):
     _name = 'sale.detail'
@@ -34,6 +39,7 @@ class SaleDetail(models.Model):
         store=True,
         invisible=True
     )
+    x_check = fields.Boolean(string="Check", default=False)
     # def action_cancel(self):
     #     """ Khi nhấn button 'Hủy', cập nhật số lượng chốt thành số lượng hoàn thành """
     #     for record in self:
@@ -68,3 +74,27 @@ class SaleDetail(models.Model):
     def _compute_identification_number(self):
         for record in self:
             record.x_identification_number = record.x_identification_card.x_identity_number if record.x_identification_card else False
+
+    def fields_view_get(self, view_id=None, view_type='tree', toolbar=False, submenu=False):
+        """Dynamically hide x_customer_type and x_state columns without removing them."""
+        result = super(SaleDetail, self).fields_view_get(
+            view_id=view_id,
+            view_type=view_type,
+            toolbar=toolbar,
+            submenu=submenu
+        )
+
+        if view_type in ['tree', 'list']:
+            doc = etree.fromstring(result['arch'])
+
+            # Add 'invisible' attribute to x_customer_type
+            for field in doc.xpath("//field[@name='x_customer_type']"):
+                field.set('column_invisible', '1')
+
+            # Add 'invisible' attribute to x_state
+            for field in doc.xpath("//field[@name='x_state']"):
+                field.set('column_invisible', '1')
+
+            result['arch'] = etree.tostring(doc, encoding='unicode')
+
+        return result
