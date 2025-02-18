@@ -44,7 +44,6 @@
                             <field name="x_reason"/>
                             <field name="x_old_customer"/>
                             <field name="x_customer_type"/>
-                            <field name="x_state" readonly="1"/>
                             <field name="x_request_date"/>
                             <field name="x_expected_sale_date"/>
                             <field name="x_expected_to_sign_contract"/>

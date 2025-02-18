@@ -10,7 +10,7 @@ class SaleRequest(models.Model):
     # x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch', required=True, readonly=True, tracking=True, default=lambda self: self.env.company)
     x_customer_id = fields.Many2one('res.partner', string='Customer', required=False, tracking=True)
     x_customer_name = fields.Char(string='Customer Name', required=True, tracking=True)
-    x_lead_code_id = fields.Many2one('crm.lead', string='Lead Code', tracking=True, readonly=True)
+    x_lead_code_id = fields.Many2one('crm.lead', string='Lead Code', tracking=True)
     x_customer_address = fields.Char(string='Customer Address', required=False, tracking=True)
     x_province_id  = fields.Many2one('res.country.state', string='Province', required=True, tracking=True)
     x_customer_region = fields.Many2one('sale.area', string='Customer Region', tracking=True, readonly=True, store=True, compute='_compute_customer_region_id')

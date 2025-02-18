@@ -203,9 +203,25 @@ class CustomLeadMethods(models.Model):
         self.write({'x_status': 'cancelled'})
 
     def action_view_third_party_registration(self):
+        _logger.info(f"Partner ID: {self.x_partner_id and self.x_partner_id.id or False}")
+        _logger.info(f"Partner Name: {self.x_partner_name or 'TRỐNG'}")
+        _logger.info(f"Contact Address: {self.x_contact_address_complete or 'TRỐNG'}")
+        _logger.info(f"State ID: {self.x_state_id and self.x_state_id.id or False}")
+        _logger.info(f"Identity Number: {self.x_identity_number or 'TRỐNG'}")
+        _logger.info(f"VAT: {self.x_vat or 'TRỐNG'}")
+        _logger.info(f"Lead ID: {self.id or 'TRỐNG'}")
         return {
             'type': 'ir.actions.act_window',
             'name': 'sale.request.tree',
             'view_mode': 'form',
             'res_model': 'sale.request',
+            'context' : {
+                'default_x_customer_id': self.x_partner_id.id if self.x_partner_id else False,
+                'default_x_customer_name': self.x_partner_name if self.x_partner_name else '',
+                'default_x_customer_address': self.x_contact_address_complete if self.x_contact_address_complete else '',
+                'default_x_province_id': self.x_state_id.id if self.x_state_id else False,
+                'default_x_identification_id': self.x_identity_number,
+                'default_x_business_registration_id': self.x_vat,
+                'default_x_lead_code_id': self.id,
+            }
         }
