@@ -205,7 +205,7 @@ class CustomLeadMethods(models.Model):
     def action_view_third_party_registration(self):
         return {
             'type': 'ir.actions.act_window',
-            'name': '3rd Party/Body Maker Registration',
-            'view_mode': 'tree,form',
-            'res_model': 'third.party.registration',
+            'name': 'sale.request.tree',
+            'view_mode': 'form',
+            'res_model': 'sale.request',
         }

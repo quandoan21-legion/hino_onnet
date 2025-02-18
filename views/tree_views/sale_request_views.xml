@@ -5,7 +5,7 @@
         <field name="name">sale.request.tree</field>
         <field name="model">sale.request</field>
         <field name="arch" type="xml">
-            <tree string="Sale Requests">
+            <tree string="Sale Requests" create="false">
                 <field name="x_request_code"/>
                 <!-- <field name="x_request_dealer_id"/> -->
                 <field name="x_request_date"/>
