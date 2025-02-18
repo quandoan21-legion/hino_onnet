@@ -47,7 +47,7 @@ class CustomLead(models.Model):
     x_estimated_time_of_bid_opening = fields.Date(string='Estimated time of bid opening', tracking=True)
     x_area = fields.Char(string='Area', tracking=True)
     x_service_contract = fields.Boolean(string='Service Contact', tracking=True, require=True)
-    x_activity_area = fields.Char(string='Activity Area', tracking=True, require=True)
+    x_activity_area = fields.Many2one('sale.area',string='Activity Area', tracking=True, require=True)
     x_dealer_id = fields.Many2one('res.users', string='Dealer', readonly=True, default=lambda self: self.env.user)
     x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch', default=lambda self: self.env.company, tracking=True, require=True, readonly=True)
     x_sale_person_id = fields.Many2one('hr.employee', string='Sales Person', domain=[('job_id.name', '=', 'Sales staff')], tracking=True, require=True)

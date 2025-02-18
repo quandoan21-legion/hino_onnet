@@ -13,13 +13,6 @@ class SaleRequestMethods(models.Model):
     def _generate_request_code(self):
         return self.env['ir.sequence'].next_by_code('sale.request.sequence') or '/'
 
-    @api.model
-    def get_view(self, view_id=None, view_type='form', **options):
-        res = super().get_view(view_id, view_type, **options)
-        if view_type == 'tree' and 'arch' in res:
-            res['arch'] = res['arch'].replace('<tree>', '<tree create="false">')
-        return res
-
     @api.depends('x_province_id')
     def _compute_customer_region(self):
         for record in self:
@@ -27,42 +20,6 @@ class SaleRequestMethods(models.Model):
                 record.customer_region = self.env['sale.area'].search([
                     ('province_ids', 'in', record.province_id.id)
                 ], limit=1)
-
-    @api.onchange('x_customer_id')
-    def _onchange_customer_id(self):
-        if self.x_customer_id:
-            self.x_customer_name = self.x_customer_id.name
-            self.x_customer_address = self.x_customer_id.street
-            self.x_province_id = self.x_customer_id.state_id
-            self.x_lead_code_id = self.env['crm.lead'].search([
-                ('partner_id', '=', self.x_customer_id.id)
-            ], order="create_date desc", limit=1)
-            self.x_identification_id = self.x_customer_id.x_identity_number or False
-            self.x_business_registration_id = self.x_customer_id.x_business_registration_id or False
-            if self.env.context.get('default_is_potential_form') and self.x_lead_code_id:
-                self.x_customer_id.readonly = True
-
-            self.x_old_customer = bool(self.x_customer_id)
-
-    @api.depends('x_customer_id', 'x_identification_id', 'x_business_registration_id')
-    def _compute_old_customer(self):
-        for record in self:
-            record.x_old_customer = False
-            if record.x_customer_id and self.env['res.partner'].search([
-                ('id', '=', record.x_customer_id.id)
-            ], limit=1):
-                record.x_old_customer = True
-
-    @api.onchange('x_customer_type', 'x_province_id')
-    def _check_region(self):
-        if self.x_customer_type in ['third_party', 'box_packer'] and not self.x_province_id:
-            return {'warning': {'title': 'Warning', 'message': 'Province must be set for this customer type'}}
-
-    @api.constrains('x_expected_sale_date')
-    def _check_expected_sale_date(self):
-        for record in self:
-            if record.x_expected_sale_date and record.x_expected_sale_date < fields.Date.today():
-                raise ValidationError('Expected sale date cannot be in the past')
 
     @api.constrains('x_attach_file', 'x_attach_filename')
     def _check_file_type(self):
@@ -99,8 +56,7 @@ class SaleRequestMethods(models.Model):
             # 'user_id': self.x_hmv_approver_id.id,
             'date_deadline': fields.Date.today() + timedelta(days=2)  # Set 2-day deadline
         })
-        
-        
+
         msg = f"""
             Request submitted for approval
             Submitted by: {self.env.user.name}
