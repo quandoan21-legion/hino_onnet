@@ -16,12 +16,14 @@ class CustomLeadMethods(models.Model):
             self.x_website = self.x_partner_id.website
             self.phone = self.x_partner_id.phone
             self.email_from = self.x_partner_id.email
+            self.x_customer_type = self.x_partner_id.x_customer_type
             vat = self.x_partner_id.vat or ''
             business_reg_id = self.x_partner_id.x_business_registration_id or ''
             self.x_vat = f"{vat} / {business_reg_id}".strip(" /")
             self.x_identity_number = self.x_partner_id.x_identity_number
             self.x_industry_id = self.x_partner_id.x_industry_id
             self.x_service_contract = self.x_partner_id.x_service_contract
+            self.x_request_sale_3rd_barrels_id = self.x_partner_id.x_register_sale_3rd_id
             self.x_activity_area = self.x_partner_id.x_activity_area
             self.x_state_id = self.x_partner_id.x_state_id
             self.x_dealer_id = self.x_partner_id.x_dealer_id
@@ -116,6 +118,7 @@ class CustomLeadMethods(models.Model):
                 'x_business_registration_id': vals.get('x_vat'),
                 'x_identity_number': vals.get('x_identity_number'),
                 'x_industry_id': vals.get('x_industry_id'),
+                'x_register_sale_3rd_id': vals.get('x_request_sale_3rd_barrels_id'),
                 'x_contact_address': vals.get('x_contact_address_complete'),
                 'company_type': 'company' if vals.get('x_customer_status') == 'company' else 'person',
                 'x_state_id': vals.get('x_state_id'),
@@ -181,9 +184,6 @@ class CustomLeadMethods(models.Model):
         self.write({'x_status': 'in progress'})
 
 
-    def action_proposal(self):
-        self.write({'x_status': 'in progress'})
-
 
     def action_cancel_lead(self):
         reason = self.env.context.get('cancel_reason')
@@ -191,3 +191,10 @@ class CustomLeadMethods(models.Model):
             raise ValidationError("A reason for cancellation is required.")
         self.write({'x_status': 'cancelled'})
 
+    def action_view_third_party_registration(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': '3rd Party/Body Maker Registration',
+            'view_mode': 'tree,form',
+            'res_model': 'third.party.registration',
+        }

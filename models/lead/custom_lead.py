@@ -41,7 +41,7 @@ class CustomLead(models.Model):
     x_vat = fields.Char(string='Business Registration ID (Tax code)', tracking=True)
     x_identity_number = fields.Char(string='Identity Number', tracking=True)
     x_industry_id = fields.Many2one('res.partner.industry', string='Industry', require=True)
-    # x_request_sale_3rd_barrels_id = fields.Many2one('res.request.sale.3rd.barrels', string='Đề nghị bán lấn vùng/Bên thứ 3/Nhà đóng thùng', readonly=True)
+    x_request_sale_3rd_barrels_id = fields.Many2one('third.party.registration', string='Proposal to sell in Encroaching area/Third party/Body maker', readonly=True, domain="[('partner_id', '=', x_partner_id)]")
     x_purchase_type = fields.Selection(
         [('online_shopping', 'Online Shopping'), ('bidding', 'Bidding'), ('other', 'Other')],
         string='Purchase type', tracking=True, require=True
