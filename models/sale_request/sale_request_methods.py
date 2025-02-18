@@ -20,16 +20,8 @@ class SaleRequestMethods(models.Model):
                 record.customer_region = self.env['sale.area'].search([
                     ('province_ids', 'in', record.province_id.id)
                 ], limit=1)
-
-    @api.constrains('x_attach_file', 'x_attach_filename')
-    def _check_file_type(self):
-        for record in self:
-            if record.x_attach_file and not record.x_attach_filename.lower().endswith('.pdf'):
-                raise ValidationError('Only PDF files are allowed')
             
     def action_submit(self):
-        self.ensure_one()
-        self._check_region()
         vals = {'x_state': 'pending', 'x_request_date': fields.Date.today()}
         tracking_values = []
         for field, value in vals.items():
