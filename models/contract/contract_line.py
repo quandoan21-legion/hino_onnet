@@ -1,14 +1,15 @@
-from email.policy import default
-
-from Demos.win32cred_demo import domain
-
 from odoo import models, fields, api
 
 class CRMContractLine(models.Model):
     _name = 'crm.contract.line'
     _description = ""
 
-    category = fields.Number(
+    contract_id = fields.Many2one(
+        'crm.contract',
+        string="Contract",
+        ondelete="cascade",
+    )
+    category = fields.Integer(
         string="Category",
     )
     end_customer_id = fields.Many2one(
@@ -82,7 +83,7 @@ class CRMContractLine(models.Model):
         'sale.order',
         string="Retail coupon",
     )
-    retail_day = fields.date(
+    retail_day = fields.Date(
         string="Retail day",
     )
     note = fields.Text(
@@ -95,4 +96,4 @@ class CRMContractLine(models.Model):
         ('in_progress','In Progress'),
         ('cancel','Cancel'),
         ('done','Done'),
-    ],string="status", default="in_progress", tracking=True)
+    ],string="Status", default="in_progress", tracking=True)

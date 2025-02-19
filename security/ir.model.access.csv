@@ -28,4 +28,5 @@ access_third_party_registration_reject_wizard,hino_onnet.third.party.registratio
 access_res_partner,hino_onnet.res_partner,model_res_partner,base.group_user,1,1,1,1
 access_hino_onnet_body_type, hino_onnet.sale.body.type,model_hino_body_type,,1,1,1,1
 access_crm_contract,hino_onnet.crm.contract,model_crm_contract,base.group_user,1,1,1,1
+access_crm_contract_line,hino_onnet.crm.contract.line,model_crm_contract_line,base.group_user,1,1,1,1
 access_crm_lead_report,hino_onnet.crm.lead.report,model_crm_lead_report,base.group_user,1,1,1,1

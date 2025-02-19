@@ -1,11 +1,14 @@
-from email.policy import default
-
 from odoo import models, fields
 
 class CRMContract(models.Model):
     _name = 'crm.contract'
     _description = "Create, track and manage dealer and customer contracts"
 
+    contract_line_ids = fields.One2many(
+        'crm.contract.line',
+        'contract_id',
+        string="Contract Line",
+    )
     status = fields.Selection([
         ('draft', 'Draft'),
         ('in_progress','In Progress'),
@@ -38,7 +41,7 @@ class CRMContract(models.Model):
         string="Customer class",
         tracking=True,
     )
-    attachment_ids = fields.Many2one(
+    attachment_ids = fields.Many2many(
         'ir.attachment',
         string="Attach",
         tracking=True,
@@ -52,11 +55,6 @@ class CRMContract(models.Model):
         string="Sign week",
         tracking=True,
     )
-    # dealer_id = fields.Many2one(
-    #     'dealer.group',
-    #     string="Dealer",
-    #     readonly=True,
-    # )
     dealer_branch_id = fields.Many2one(
         'res.company',
         string="Dealer branch",
