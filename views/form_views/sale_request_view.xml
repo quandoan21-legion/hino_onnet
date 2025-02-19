@@ -19,6 +19,7 @@
                             invisible="x_state not in ('draft')"/>
                     <field name="x_state" widget="statusbar"
                            statusbar_visible="draft,pending,approved,rejected,partial_sale,completed,cancelled"/>
+
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -88,8 +89,9 @@ column_invisible="1"
         </field>
                         </page>
                         <page string="Approval History">
-                            <field name="approval_history_ids" readonly="1">
+                            <field name="approval_history_ids" readonly="1" >
                                 <tree>
+
                                     <field name="x_confirmer_id"/>
                                     <field name="x_department_id"/>
                                     <field name="x_position_id"/>
