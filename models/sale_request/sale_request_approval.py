@@ -17,7 +17,6 @@ class SalesRequestApproval(models.Model):
 
     @api.model
     def _get_current_employee(self):
-        """Lấy nhân viên hiện tại dựa trên tài khoản đang đăng nhập"""
         return self.env['hr.employee'].search([('user_id', '=', self.env.user.id)], limit=1)
 
     # @api.multi
