@@ -58,16 +58,28 @@ class SaleRequestMethods(models.Model):
         self.message_post(body=msg, tracking_value_ids=tracking_values)
 
     def action_approve(self):
-        self.ensure_one()
-        vals = {'x_state': 'approved', 'x_approve_date': fields.Date.today()}
-        self.write(vals)
-        msg = f"""
-            Request approved
-            Approved by: {self.env.user.name}
-            Status: Pending -> Approved
-            Date: {fields.Date.today()}
-        """
-        self.message_post(body=msg)
+        if not self:
+            raise ValidationError("No record found for approval.")
+        if not self.exists():
+            raise ValidationError("The request must be saved before approval.")
+        if not self.id:
+            raise ValidationError("The request must be saved before approval.")
+
+        employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        if not employee:
+            raise ValidationError("You must be an employee to approve this request.")
+
+        self.env['sales.request.approval'].create({
+            'x_request_id': self.id,
+            'x_confirmer_id': employee.id,
+            'x_department_id': employee.department_id.id,
+            'x_position_id': employee.job_id.id,
+            'x_state_from': 'pending',
+            'x_state_to': 'approved',
+            'x_confirm_date': fields.Date.today(),
+            'x_reason': self.x_reason or 'Auto-approved',
+        })
+        self.x_state = 'approved'
 
     def action_refuse(self):
         return {
