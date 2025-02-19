@@ -13,12 +13,12 @@ class SaleRequest(models.Model):
     x_lead_code_id = fields.Many2one('crm.lead', string='Lead Code', tracking=True)
     x_customer_address = fields.Char(string='Customer Address', required=False, tracking=True)
     x_province_id  = fields.Many2one('res.country.state', string='Province', required=True, tracking=True)
-    x_customer_region = fields.Many2one('sale.area', string='Customer Region', tracking=True, readonly=True, store=True, compute='_compute_customer_region_id')
+    x_customer_region = fields.Many2one('sale.area', string='Customer Region', tracking=True, readonly=True, store=True,)
     x_identification_id = fields.Char(string='Identification', required=True, tracking=True)
     x_business_registration_id = fields.Char(string='Business Registration', required=True, tracking=True)
     x_request_content_id = fields.Many2one('cross.region.suggest', string='Request Content', required=True, tracking=True)
     x_reason = fields.Char(string='Reason',tracking=True)
-    x_old_customer =  fields.Boolean(string='Old Customer', store=True, tracking=True, compute="_compute_old_customer")
+    x_old_customer =  fields.Boolean(string='Old Customer', store=True, tracking=True, readonly=True, compute='_compute_old_customer')
     x_customer_type = fields.Selection([
         ('out_of_area', 'Customer Out Of Area'),
         ('third_party', 'Third Party Customer'),

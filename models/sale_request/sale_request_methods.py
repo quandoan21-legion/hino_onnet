@@ -13,61 +13,34 @@ class SaleRequestMethods(models.Model):
     def _generate_request_code(self):
         return self.env['ir.sequence'].next_by_code('sale.request.sequence') or '/'
 
-    @api.depends('x_province_id')
-    def _compute_customer_region(self):
+    @api.depends('x_customer_id')
+    def _compute_old_customer(self):
         for record in self:
-            if record.province_id:
-                record.customer_region = self.env['sale.area'].search([
-                    ('province_ids', 'in', record.province_id.id)
-                ], limit=1)
-            
-    def action_submit(self):
-        vals = {'x_state': 'pending', 'x_request_date': fields.Date.today()}
-        tracking_values = []
-        for field, value in vals.items():
-            old_value = self[field]
-            if old_value != value:
-                field_record = self.env['ir.model.fields'].search([
-                    ('model', '=', self._name),
-                    ('name', '=', field)
-                ], limit=1)
-                if field_record:
-                    tracking_values.append((0, 0, {
-                        'field_id': field_record.id,
-                        'old_value_char': str(old_value) if isinstance(old_value, (str, bool, int, float)) else None,
-                        'new_value_char': str(value) if isinstance(value, (str, bool, int, float)) else None,
-                    }))
-        self.write(vals)
-        
-        self.env['mail.activity'].create({
-            'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
-            'note': f'Please review request {self.x_request_code} submitted by {self.env.user.name}',
-            'res_id': self.id,
-            'res_model_id': self.env['ir.model'].search([('model', '=', self._name)], limit=1).id,
-            'summary': f'Review Request {self.x_request_code}',
-            # 'user_id': self.x_hmv_approver_id.id,
-            'date_deadline': fields.Date.today() + timedelta(days=2)  # Set 2-day deadline
-        })
+            record.x_old_customer = bool(
+                record.x_customer_id and
+                self.env['res.partner'].search_count([('id', '=', record.x_customer_id.id)]) > 0
+            )
 
-        msg = f"""
-            Request submitted for approval
-            Submitted by: {self.env.user.name}
-            Status: Draft -> Pending
-            Date: {fields.Date.today()}
-        """
-        self.message_post(body=msg, tracking_value_ids=tracking_values)
+    def action_submit(self):
+        for record in self:
+            if record.x_customer_type in ["third_party", "box_packer"]:
+                if not self.env['sale.region'].check_region(record.x_dealer_id, record.x_city_id):
+                    missing_info = any(not line.customer_id for line in record.sale_detail_ids)
+                    if missing_info:
+                        raise UserError("OUT-OF-AREA SALE: PLEASE COMPLETE THE END CUSTOMER INFORMATION.")
+
+            old_state = record.x_state
+
+            vals = {
+                'x_state': 'pending',
+                'x_request_date': fields.Date.today()
+            }
+            record.write(vals)
 
     def action_approve(self):
         self.ensure_one()
         vals = {'x_state': 'approved', 'x_approve_date': fields.Date.today()}
         self.write(vals)
-        msg = f"""
-            Request approved
-            Approved by: {self.env.user.name}
-            Status: Pending -> Approved
-            Date: {fields.Date.today()}
-        """
-        self.message_post(body=msg)
 
     def action_refuse(self):
         return {
