@@ -43,7 +43,7 @@
                                 <field name="x_service_contract" readonly="x_status not in ('draft')"/>
                                 <field name="x_activity_area" readonly="x_status not in ('draft')"/>
                                 <field name="x_request_sale_3rd_barrels_id" readonly="x_status not in ('draft')"/>
-                                <!--                                <field name="x_dealer_id" />-->
+                                <field name="x_dealer_id" readonly="1"/>
                                 <field name="x_dealer_branch_id" readonly="x_status not in ('draft')"/>
                                 <field name="x_sale_person_id" readonly="x_status not in ('draft')"/>
                                 <field name="x_approaching_channel_id" readonly="x_status not in ('draft')"/>
