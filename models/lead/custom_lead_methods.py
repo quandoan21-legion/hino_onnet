@@ -30,7 +30,6 @@ class CustomLeadMethods(models.Model):
             self.x_service_contract = self.x_partner_id.x_service_contract
             self.x_request_sale_3rd_barrels_id = self.x_partner_id.x_register_sale_3rd_id
             self.x_activity_area = self.x_partner_id.x_activity_area
-            self.x_state_id = self.x_partner_id.x_state_id
             self.x_dealer_id = self.x_partner_id.x_dealer_id
             self.x_partner_rank_id = self.x_partner_id.x_currently_rank_id
             self.x_customer_status = 'company' if self.x_partner_id.company_type == 'company' else 'person'
@@ -64,9 +63,6 @@ class CustomLeadMethods(models.Model):
     def action_mark_failed(self):
         self.write({'x_status': 'failed'})
 
-    def action_create_customer(self):
-        self.write({'x_status': 'in progress'})
-
     def action_proposal(self):
         self.write({'x_status': 'in progress'})
 
@@ -78,15 +74,12 @@ class CustomLeadMethods(models.Model):
 
     @api.model
     def create(self, vals):
-        print("+++++++++++++++++++++++++++++++++++++++++++++++=")
         # Get the fiscal year suffix (last 2 digits of current fiscal year)
         fiscal_year = self.env['account.fiscal.year'].search(
             [], limit=1, order='date_from desc')
 
         if not fiscal_year:
             fiscal_year_suffix = str(datetime.now().year)[2:]
-            print("Fiscal year not found, using current year suffix: " +
-                  fiscal_year_suffix)
         else:
             fiscal_year_suffix = str(fiscal_year.name)[2:]
 
@@ -194,6 +187,8 @@ class CustomLeadMethods(models.Model):
         self.write({'x_status': 'failed'})
 
     def action_create_customer(self):
+        if self.x_dealer_branch_id.state_id != self.x_state_id:
+            raise ValidationError("The customer state does not match with your Company State")
         self.write({'x_status': 'in progress'})
 
     def action_cancel_lead(self):

@@ -67,7 +67,7 @@ class CustomLead(models.Model):
     x_activity_area = fields.Char(
         string='Activity Area', tracking=True, require=True)
     x_dealer_id = fields.Many2one(
-        'res.users', string='Dealer', readonly=True, default=lambda self: self.env.user)
+        'res.company', string='Dealer', readonly=True)
     x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch',
                                          default=lambda self: self.env.user.company_id, tracking=True, require=True, readonly=True)
     x_sale_person_id = fields.Many2one('hr.employee', string='Sales Person', domain=[
