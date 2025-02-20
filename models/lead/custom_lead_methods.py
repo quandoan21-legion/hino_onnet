@@ -8,6 +8,14 @@ from odoo.exceptions import ValidationError
 class CustomLeadMethods(models.Model):
     _inherit = 'crm.lead'
 
+    @api.model
+    def create(self, vals):
+        if self._validate_customer_state(vals):
+            vals['name'] = self._generate_pc_number()
+            vals['x_partner_id'] = self._get_or_create_partner(vals)
+            return super(CustomLeadMethods, self).create(vals)
+        raise ValidationError("The customer state does not match with your Company State")
+
     @api.onchange('x_partner_id')
     def _onchange_x_partner_id(self):
         if self.x_partner_id:
@@ -72,93 +80,65 @@ class CustomLeadMethods(models.Model):
             raise ValidationError("A reason for cancellation is required.")
         self.write({'x_status': 'cancelled'})
 
-    @api.model
-    def create(self, vals):
-        # Get the fiscal year suffix (last 2 digits of current fiscal year)
-        fiscal_year = self.env['account.fiscal.year'].search(
-            [], limit=1, order='date_from desc')
+    def _generate_pc_number(self):
+        fiscal_year_suffix = self._get_fiscal_year_suffix()
+        new_number = self._get_new_sequence_number()
+        return "PC" + fiscal_year_suffix + new_number
 
+    def _get_fiscal_year_suffix(self):
+        fiscal_year = self.env['account.fiscal.year'].search([], limit=1, order='date_from desc')
         if not fiscal_year:
-            fiscal_year_suffix = str(datetime.now().year)[2:]
-        else:
-            fiscal_year_suffix = str(fiscal_year.name)[2:]
+            return str(datetime.now().year)[2:]
+        return str(fiscal_year.name)[2:]
 
-        # Get the last record of crm.lead and extract the last 4 digits of the 'name' field
+    def _get_new_sequence_number(self):
         last_lead = self.env['crm.lead'].search([], order='id desc', limit=1)
         if last_lead and last_lead.name:
-            # Extract the last 4 digits from the 'name' field
             last_number = last_lead.name[-4:]
             try:
-                # Increment by 1 and pad with zeros
-                new_number = str(int(last_number) + 1).zfill(4)
+                return str(int(last_number) + 1).zfill(4)
             except ValueError:
-                new_number = '0001'  # Default value if last 4 digits cannot be converted
-        else:
-            # If no previous lead exists, start with '0001'
-            new_number = '0001'
+                return '0001'
+        return '0001'
 
-        # Combine the fiscal year suffix and the new sequence number to form the name
-        pc_number = "PC" + fiscal_year_suffix + new_number
-        # Set the name in the values dictionary
-        vals['name'] = pc_number
+    def _get_or_create_partner(self, vals):
+        domain = self._build_partner_search_domain(vals)
+        existing_partner = self.env['res.partner'].search(domain, limit=1) if domain else None
+        if existing_partner:
+            return existing_partner.id
+        return self._create_new_partner(vals).id
 
+    def _build_partner_search_domain(self, vals):
         domain = []
-
         if vals.get('x_vat'):
             domain.append(('x_business_registration_id', '=', vals['x_vat']))
         if vals.get('x_identity_number'):
-            domain.append(('x_identity_number', '=',
-                           vals['x_identity_number']))
+            domain.append(('x_identity_number', '=', vals['x_identity_number']))
+        return domain
 
-        existing_partner = None
-        if domain:
-            existing_partner = self.env['res.partner'].search(domain, limit=1)
+    def _create_new_partner(self, vals):
+        partner_vals = {
+            'name': vals.get('x_partner_name', 'Unnamed Customer'),
+            'x_name': vals.get('x_partner_name'),
+            'phone': vals.get('phone'),
+            'email': vals.get('email_from'),
+            'vat': vals.get('x_vat'),
+            'website': vals.get('x_website'),
+            'x_business_registration_id': vals.get('x_vat'),
+            'x_identity_number': vals.get('x_identity_number'),
+            'x_industry_id': vals.get('x_industry_id'),
+            'x_register_sale_3rd_id': vals.get('x_request_sale_3rd_barrels_id'),
+            'x_contact_address': vals.get('x_contact_address_complete'),
+            'company_type': 'company' if vals.get('x_customer_status') == 'company' else 'person',
+            'x_state_id': vals.get('x_state_id'),
+            'x_dealer_id': vals.get('x_dealer_id'),
+            'x_dealer_branch_id': vals.get('x_dealer_branch_id'),
+            'x_activity_area': vals.get('x_activity_area'),
+            'x_service_contract': vals.get('x_service_contract'),
+            'x_currently_rank_id': vals.get('x_partner_rank_id'),
+        }
+        return self.env['res.partner'].create(partner_vals)
 
-        if existing_partner:
-            vals['x_partner_id'] = existing_partner.id
-        else:
-            partner_vals = {
-                'name': vals.get('x_partner_name', 'Unnamed Customer'),
-                'x_name': vals.get('x_partner_name'),
-                'phone': vals.get('phone'),
-                'email': vals.get('email_from'),
-                'vat': vals.get('x_vat'),
-                'website': vals.get('x_website'),
-                'x_business_registration_id': vals.get('x_vat'),
-                'x_identity_number': vals.get('x_identity_number'),
-                'x_industry_id': vals.get('x_industry_id'),
-                'x_register_sale_3rd_id': vals.get('x_request_sale_3rd_barrels_id'),
-                'x_contact_address': vals.get('x_contact_address_complete'),
-                'company_type': 'company' if vals.get('x_customer_status') == 'company' else 'person',
-                'x_state_id': vals.get('x_state_id'),
-                'x_dealer_id': vals.get('x_dealer_id'),
-                'x_dealer_branch_id': vals.get('x_dealer_branch_id'),
-                'x_activity_area': vals.get('x_activity_area'),
-                'x_service_contract': vals.get('x_service_contract'),
-                'x_currently_rank_id': vals.get('x_partner_rank_id'),
-            }
-
-            new_partner = self.env['res.partner'].create(partner_vals)
-            vals['x_partner_id'] = new_partner.id
-
-        return super(CustomLeadMethods, self).create(vals)
-
-    @api.depends('x_partner_id')
-    def _compute_customer_name(self):
-        for record in self:
-            record.x_partner_name = record.x_partner_id.name if record.x_partner_id else ''
-
-    # @api.depends('x_customer_id')
-    # def _compute_customer_real_id(self):
-    #     for record in self:
-    #         record.x_customer_real_id = str(record.x_customer_id.id) if record.x_customer_id else ''
-    #         record.x_customer_name = record.x_customer_id.name if record.x_customer_id else ''
-
-    # @api.onchange('partner_id')
-    # def _onchange_partner_id(self):
-    #     if self.partner_id:
-    #         self.x_identity_number = self.partner_id.identity_number
-    #         self.x_vat = self.partner_id.vat_number:
 
     @api.constrains('x_customer_status', 'x_identity_number', 'x_vat')
     def _check_customer_status_requirements(self):
@@ -178,19 +158,26 @@ class CustomLeadMethods(models.Model):
                     raise models.ValidationError(
                         "The Identity number must contain from 9 to 13 digits.")
 
-    @api.onchange('state')
-    def _onchange_state(self):
-        if self.state != 'draft':
-            self.salesperson_id = False
+    # @api.onchange('state')
+    # def _onchange_state(self):
+    #     if self.state != 'draft':
+    #         self.salesperson_id = False
 
     def action_mark_failed(self):
         self.write({'x_status': 'failed'})
 
+
     def action_create_customer(self):
-        if self.x_dealer_branch_id.state_id != self.x_state_id:
-            raise ValidationError("The customer state does not match with your Company State")
+        self._validate_customer_state()
         self.write({'x_status': 'in progress'})
 
+    def _validate_customer_state(self, vals):
+        dealer_branch_id = vals.get('x_dealer_branch_id')
+        if dealer_branch_id:
+            dealer_branch = self.env['res.company'].browse(dealer_branch_id)
+            if dealer_branch.state_id.id != vals.get('x_state_id'):
+                return False
+        return True
     def action_cancel_lead(self):
         reason = self.env.context.get('cancel_reason')
         if not reason:
