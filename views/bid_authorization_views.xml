@@ -72,6 +72,17 @@
             </field>
         </record>
 
+        <record id="view_crm_lead_bid_button" model="ir.ui.view">
+            <field name="name">crm.lead.form.bid.button</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="view_form_custom_lead"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header/button[@name='action_view_third_party_registration']" position="after">
+                    <button name="action_view_bid_authorization" string="Create Bid Authorization" type="object" invisible="x_purchase_type != 'bidding'"/>
+                </xpath>
+            </field>
+        </record>
+
         <!-- Define the action -->
 
         <record id="action_bid_authorization_cancel" model="ir.actions.act_window">
