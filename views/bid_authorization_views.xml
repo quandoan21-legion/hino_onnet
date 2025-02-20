@@ -72,6 +72,19 @@
             </field>
         </record>
 
+        <record id="view_bid_authorization_tree" model="ir.ui.view">
+            <field name="name">bid.authorization.tree</field>
+            <field name="model">bid.authorization</field>
+            <field name="arch" type="xml">
+                <tree string="Bid Authorization">
+                    <field name="bid_package_name"/>
+                    <field name="investor_name"/>
+                    <field name="dealer_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="view_crm_lead_bid_button" model="ir.ui.view">
             <field name="name">crm.lead.form.bid.button</field>
             <field name="model">crm.lead</field>
@@ -96,7 +109,7 @@
         <record id="action_bid_authorization" model="ir.actions.act_window">
             <field name="name">Bid Authorization</field>
             <field name="res_model">bid.authorization</field>
-            <field name="view_mode">form</field>
+            <field name="view_mode">tree,form</field>
         </record>
 
         <!-- Create the menu item under Sales -->
