@@ -72,6 +72,8 @@
         'views/menu/sale_area_menu_items.xml',
         'views/menu/customer_rank_menu_items.xml',
         'views/menu/main_menu_items.xml',
+
+        'views/bid_authorization_views.xml',
     ],
 
     'demo': [

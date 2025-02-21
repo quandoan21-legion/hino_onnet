@@ -6,13 +6,9 @@
             <field name="arch" type="xml">
                 <form string="Bid Authorization" readonly="state!='draft'">
                     <header>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,pending,approved,win,lose"/>
-                        <button name="action_submit" type="object" string="Submit"/>
-                        <button name="action_cancel" type="object" string="Cancel" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,approved,cancel" />
                         <button name="action_approved" type="object" string="Approve" />
-                        <button name="action_rejected" type="object" string="Reject" />
-                        <button name="action_win" type="object" string="Win bid" />
-                        <button name="action_lose" type="object" string="Lose bid" />
+                        <button name="action_cancel" type="object" string="Cancel" />
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -20,39 +16,39 @@
                                 <field name="request_code" readonly="1"/>
                             </h1>
                         </div>
-                        <group>
+                        <group>     
                             <group>
-                                <field name="dealer_id"/>
-                                <field name="bid_package_name"/>
-                                <field name="area"/>
-                                <field name="project_name"/>
+                                <field name="dealer_id" readonly="state!='draft'"/>
+                                <field name="bid_package_name" readonly="state!='draft'"/>
+                                <field name="area" readonly="state!='draft'"/>
+                                <field name="project_name" readonly="state!='draft'"/>
                             </group>
                             <group>
-                                <field name="request_date"/>
-                                <field name="approved_date"/>
-                                <field name="bid_opening_time"/>
-                                <field name="note"/>
-                                <field name="authorization_letter_approve"/>
+                                <field name="request_date" readonly="state!='draft'"/>
+                                <field name="approved_date" readonly="state!='draft'"/>
+                                <field name="bid_opening_time" readonly="state!='draft'"/>
+                                <field name="note" readonly="state!='draft'"/>
+                                <field name="authorization_letter_approve" readonly="state!='draft'"/>
                             </group>
                         </group>
                         <group string="Investor Information">
                             <group>
-                                <field name="investor_name"/>
+                                <field name="investor_name" readonly="state!='draft'"/>
                             </group>
                             <group>
-                                <field name="investor_address"/>
+                                <field name="investor_address" readonly="state!='draft'"/>
                             </group>
                         </group>
                         <group string="Other Information">
                             <group>
-                                <field name="special_request"/>
-                                <field name="date_of_authorization"/>
+                                <field name="special_request" readonly="state!='draft'"/>
+                                <field name="date_of_authorization" readonly="state!='draft'"/>
                             </group>
                             <group>
-                                <field name="send_authorization_to"/>
-                                <field name="attached_notice_file"/>
+                                <field name="send_authorization_to" readonly="state!='draft'"/>
+                                <field name="attached_notice_file" readonly="state!='draft'"/>
                             </group>
-                        </group>
+                        </group>                        
                         <notebook>
                             <page string="Product Details">
                             </page>
@@ -88,10 +84,10 @@
         <record id="view_crm_lead_bid_button" model="ir.ui.view">
             <field name="name">crm.lead.form.bid.button</field>
             <field name="model">crm.lead</field>
-            <field name="inherit_id" ref="view_form_custom_lead"/>
+            <field name="inherit_id" ref="hino_onnet.view_form_custom_lead"/>
             <field name="arch" type="xml">
                 <xpath expr="//header/button[@name='action_view_third_party_registration']" position="after">
-                    <button name="action_view_bid_authorization" string="Create Bid Authorization" type="object" invisible="x_purchase_type != 'bidding'" />
+                    <button name="action_view_bid_authorization" string="Create Bid Authorization" type="object" invisible="x_purchase_type != 'bidding'"/>
                 </xpath>
             </field>
         </record>

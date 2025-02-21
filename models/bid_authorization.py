@@ -2,14 +2,8 @@ from odoo import models, fields, api, _
 
 BID_AUTHORIZATION_STATE = [
     ('draft', 'Draft'),
-    ('pending', 'Pending'),
     ('approved', 'Approved'),
-    ('rejected', 'Rejected'),
     ('cancel', 'Cancel'),
-    ('win', 'Win'),
-    ('lose', 'Lose'),
-    ('signed', 'Signed'),
-    ('completed', 'Completed'),
 ]
 
 class BidAuthorization(models.Model):
@@ -41,36 +35,13 @@ class BidAuthorization(models.Model):
     # lead_code_id = fields.Many2one('crm.lead', string='Lead Code', required=True)
 
     bid_authorization_approve_history_ids = fields.One2many('bid.authorization.approve.history', 'bid_authorization_id', string='Bid Authorization Line')
-    def action_submit(self):
-        for record in self:
-            # if record.create_uid == self.env.user:
-            #     record.state = 'draft'
-            record.state = 'pending'
+
 
     def action_approved(self):
         for record in self:
             # if record.create_uid == self.env.user:
             #     record.state = 'pending'
             record.state = 'approved'
-
-    def action_rejected(self):
-        for record in self:
-            # if record.create_uid == self.env.user:
-            #     record.state = 'pending'
-            original_state = record.state
-            record.state = 'rejected'
-            return {
-                'type': 'ir.actions.act_window',
-                'name': 'Provide Reason',
-                'res_model': 'bid.authorization.approve.history',
-                'view_mode': 'form',
-                'target': 'new',
-                'context': {'default_reason': record.note, 
-                            'default_bid_authorization_id': record.id,
-                            'default_state_from': original_state,
-                            'default_state_to': record.state,
-                            'default_confirm_date': fields.Date.today()},            
-            }
     
     def action_cancel(self):
         for record in self:
@@ -89,21 +60,6 @@ class BidAuthorization(models.Model):
                             'default_confirm_date': fields.Date.today()},
             }
     
-    def action_win(self):
-        for record in self:
-            record.state = 'win' 
-
-    def action_lose(self):
-        for record in self:
-            record.state = 'lose'
-
-    def action_signed(self):
-        for record in self:
-            record.state = 'signed'     
-
-    def action_completed(self): 
-        for record in self:
-            record.state = 'completed'
     
     @api.model_create_multi
     def create(self, vals_list):
