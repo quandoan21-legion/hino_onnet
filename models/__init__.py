@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from .lead import custom_lead, custom_lead_methods, crm_lead_bid_button
+from .lead import custom_lead, custom_lead_methods
 from .crm_lead_vehicle_interest_line  import tab_custom_lead, tab_custom_lead_methods
 from .sale_area import  sale_area, sale_area_methods
 from .sale_area_detail_line import sale_area_detail, sale_area_detail_methods
@@ -16,4 +16,3 @@ from . import owned_team_car_line, approach_channel, customer_follow_up
 from .third_party_registration import third_party_registration, third_party_registration_approval, res_partner
 from .crm_request_upgrade_customer_rank import request_upgrade_customer_rank, approve_history
 from .product import custom_product
-from .  import bid_authorization, bid_authorization_approve_history
