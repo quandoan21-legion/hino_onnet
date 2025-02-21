@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <tree string="Sale Requests" create="false">
                 <field name="x_request_code"/>
-                <!-- <field name="x_request_dealer_id"/> -->
+                 <field name="x_request_dealer_id"/>
                 <field name="x_request_date"/>
                 <field name="x_customer_type"/>
                 <field name="x_state"/>

@@ -6,8 +6,8 @@ class SaleRequest(models.Model):
     _order = 'x_request_date desc, x_request_code desc'
     
     x_request_code = fields.Char(string="Request Code", readonly=True, copy=False, default=lambda self: self._generate_request_code())
-    # x_request_dealer_id  = fields.Many2one('res.partner', string='Dealer', required=True, readonly=True, tracking=True, domain="[('is_dealer', '=', True)]")
-    # x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch', required=True, readonly=True, tracking=True, default=lambda self: self.env.company)
+    x_request_dealer_id  = fields.Many2one('res.company', string='Dealer', required=True, readonly=True, tracking=True, domain="[('is_dealer', '=', True)]")
+    x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch', required=True, readonly=True, tracking=True, default=lambda self: self.env.company)
     x_customer_id = fields.Many2one('res.partner', string='Customer', required=False, tracking=True)
     x_customer_name = fields.Char(string='Customer Name', required=True, tracking=True)
     x_lead_code_id = fields.Many2one('crm.lead', string='Lead Code', tracking=True)

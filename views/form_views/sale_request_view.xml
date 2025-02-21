@@ -29,8 +29,8 @@
                     </div>
                     <group>
                         <group>
-                            <!-- <field name="x_request_dealer_id"/> -->
-                            <!-- <field name="x_dealer_branch_id"/> -->
+                             <field name="x_request_dealer_id"/>
+                             <field name="x_dealer_branch_id"/>
                             <field name="x_customer_id"/>
                             <field name="x_customer_name"/>
                             <field name="x_lead_code_id"/>
