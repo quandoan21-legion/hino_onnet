@@ -168,7 +168,7 @@ class CustomLeadMethods(models.Model):
 
 
     def action_create_customer(self):
-        self._validate_customer_state()
+        self._check_customer_state()
         self.write({'x_status': 'in progress'})
 
     def _validate_customer_state(self, vals):
@@ -191,3 +191,23 @@ class CustomLeadMethods(models.Model):
             'view_mode': 'tree,form',
             'res_model': 'third.party.registration',
         }
+
+    @api.constrains('x_state_id', 'x_dealer_branch_id')
+    def _check_customer_state(self):
+        for record in self:
+            if record.x_dealer_branch_id and record.x_dealer_branch_id.state_id:
+                company_state = record.x_dealer_branch_id.state_id
+                if company_state.id != record.x_state_id.id:
+                    raise ValidationError("The selected state must match the state of the Dealer Branch Company.")
+
+    @api.constrains('x_partner_id')
+    def _check_unique_x_partner_id(self):
+        for record in self:
+            if record.x_partner_id:
+                existing_lead = self.search([
+                    ('x_partner_id', '=', record.x_partner_id.id),
+                    ('id', '!=', record.id)  # Exclude the current record
+                ], limit=1)
+
+                if existing_lead:
+                    raise ValidationError("This customer is already assigned to another lead!")
