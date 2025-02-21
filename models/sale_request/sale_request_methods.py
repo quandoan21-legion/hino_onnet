@@ -13,6 +13,17 @@ class SaleRequestMethods(models.Model):
     def _generate_request_code(self):
         return self.env['ir.sequence'].next_by_code('sale.request.sequence') or '/'
 
+    @api.onchange('x_customer_id')
+    def _onchange_x_customer_id(self):
+        if self.x_customer_id:
+            self.x_customer_name = self.x_customer_id.name
+            self.x_customer_address = self.x_customer_id.street
+            self.x_province_id = self.x_customer_id.state_id.id
+        else:
+            self.x_customer_name = ''
+            self.x_customer_address = ''
+            self.x_province_id = False
+
     @api.depends('x_customer_id')
     def _compute_old_customer(self):
         for record in self:
@@ -21,6 +32,11 @@ class SaleRequestMethods(models.Model):
                 self.env['res.partner'].search_count([('id', '=', record.x_customer_id.id)]) > 0
             )
 
+
+    @api.depends('x_lead_code_id')
+    def _compute_readonly_customer(self):
+        for record in self:
+            record.x_customer_id.readonly = bool(record.x_lead_code_id)
     def action_submit(self):
         for record in self:
             if record.x_customer_type in ["third_party", "box_packer"]:
@@ -33,7 +49,6 @@ class SaleRequestMethods(models.Model):
 
             vals = {
                 'x_state': 'pending',
-                'x_request_date': fields.Date.today()
             }
             record.write(vals)
 
@@ -60,6 +75,7 @@ class SaleRequestMethods(models.Model):
             'x_reason': self.x_reason or 'Auto-approved',
         })
         self.x_state = 'approved'
+        self.x_approve_date = fields.Date.today()
 
     def action_refuse(self):
         return {

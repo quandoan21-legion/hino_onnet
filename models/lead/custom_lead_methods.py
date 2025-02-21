@@ -5,8 +5,8 @@ from odoo import models, api
 from odoo.exceptions import ValidationError
 import logging
 
-# Khởi tạo logger
 _logger = logging.getLogger(__name__)
+
 class CustomLeadMethods(models.Model):
     _inherit = 'crm.lead'
 
@@ -188,7 +188,7 @@ class CustomLeadMethods(models.Model):
 
     def action_view_third_party_registration(self):
 
-        _logger.info(f"Sale Area: {self.x_activity_area}")
+        _logger.info("🚀 x_activity_area.id: %s", self.x_activity_area.id)
 
         return {
             'type': 'ir.actions.act_window',
@@ -197,6 +197,8 @@ class CustomLeadMethods(models.Model):
             'res_model': 'sale.request',
             'context' : {
                 'default_x_customer_id': self.x_partner_id.id,
+                'default_x_x_dealer_id': self.x_dealer_id.id,
+                'default_x_dealer_branch_id': self.x_dealer_branch_id.id,
                 'default_x_customer_name': self.x_partner_name,
                 'default_x_customer_address': self.x_contact_address_complete,
                 'default_x_province_id': self.x_state_id.id,
