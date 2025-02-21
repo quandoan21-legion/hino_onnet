@@ -96,7 +96,7 @@
                                         <field name="x_function"/>
                                         <field name="x_phone_number"/>
                                     </tree>
-                                    <form string="Contact Person">
+                                q    <form string="Contact Person">
                                         <sheet>
                                             <group>
                                                 <field name="partner_id"/>
