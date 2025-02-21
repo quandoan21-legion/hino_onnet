@@ -34,7 +34,7 @@
         'data/partner_sequence.xml',
         'data/sale_request_sequence.xml',
         'data/body_type_sequence.xml',
-        'data/bid_authorization_sequence.xml',
+        'data/bid_authorization_sequence.xml', 
 
         'views/inherit_views/product_template_views.xml',
         'views/inherit_views/res_partner_views.xml',
