@@ -10,7 +10,7 @@
                     <header>
                         <field name="x_status" invisible="1"/>
                         <button name="action_mark_failed" string="Reject Order" type="object" invisible="x_status != 'draft'" class="oe_highlight"/>
-                        <button name="action_create_customer" string="Create Customer" type="object" invisible="x_status != 'draft'" class="oe_highlight"/>
+                        <button name="action_create_customer" string="Create Customer" type="object" invisible="x_status != 'draft' or  x_partner_id" class="oe_highlight"/>
                         <button name="action_mark_failed" string="Failed" type="object" invisible="x_status != 'in progress'"/>
                         <button name="action_view_third_party_registration" string="Propose in Encroaching area/Third party/Body maker" type="object" invisible="x_customer_type == 'third_party'"/>
                         <field name="x_status" widget="statusbar" statusbar_visible="draft,contract signed,in progress,completed,failed,cancelled"/>
@@ -96,7 +96,7 @@
                                         <field name="x_function"/>
                                         <field name="x_phone_number"/>
                                     </tree>
-                                    <form string="Contact Person">
+                                q    <form string="Contact Person">
                                         <sheet>
                                             <group>
                                                 <field name="partner_id"/>
