@@ -3,9 +3,6 @@ from datetime import datetime
 
 from odoo import models, api
 from odoo.exceptions import ValidationError
-import logging
-
-_logger = logging.getLogger(__name__)
 
 class CustomLeadMethods(models.Model):
     _inherit = 'crm.lead'
@@ -187,9 +184,6 @@ class CustomLeadMethods(models.Model):
         self.write({'x_status': 'cancelled'})
 
     def action_view_third_party_registration(self):
-
-        _logger.info("🚀 x_activity_area.id: %s", self.x_activity_area.id)
-
         return {
             'type': 'ir.actions.act_window',
             'name': 'sale.request.tree',
