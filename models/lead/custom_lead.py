@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields, api,exceptions
 
 
 class CustomLead(models.Model):
@@ -93,12 +93,13 @@ class CustomLead(models.Model):
         ('cancelled', 'Cancelled'),
     ], string='Status', default='draft', tracking=True)
 
+
     @api.depends('x_status')
     def _compute_readonly_fields(self):
         for record in self:
             record.x_readonly_fields = record.x_status != 'draft'
 
-    _sql_constraints = [
-    ('unique_x_partner_id', 'UNIQUE(x_partner_id)', 'This customer already exists in another lead!')
-    ]
+    # _sql_constraints = [
+    # ('unique_x_partner_id', 'UNIQUE(x_partner_id)', 'This customer already exists in another lead!')
+    # ]
 
