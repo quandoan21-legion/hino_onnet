@@ -12,8 +12,8 @@ class CustomLeadMethods(models.Model):
     def create(self, vals):
         if self._validate_customer_state(vals):
             vals['name'] = self._generate_pc_number()
-            if not vals.get('x_partner_id'):  # Only create a new partner if x_partner_id is not provided
-                vals['x_partner_id'] = self._get_or_create_partner(vals)
+            # if not vals.get('x_partner_id'):  # Only create a new partner if x_partner_id is not provided
+            #     vals['x_partner_id'] = self._get_or_create_partner(vals)
             return super(CustomLeadMethods, self).create(vals)
         raise ValidationError("The customer state does not match with your Company State")
     # def write(self, vals):
@@ -179,6 +179,27 @@ class CustomLeadMethods(models.Model):
 
     def action_create_customer(self):
         self._check_customer_state()
+        for record in self:
+            if not record.x_partner_id:  # Check if x_partner_id is missing
+                vals = {
+                    'x_partner_name': record.x_partner_name,
+                    'phone': record.phone,
+                    'email_from': record.email_from,
+                    'x_vat': record.x_vat,
+                    'x_website': record.x_website,
+                    'x_identity_number': record.x_identity_number,
+                    'x_industry_id': record.x_industry_id,
+                    'x_request_sale_3rd_barrels_id': record.x_request_sale_3rd_barrels_id,
+                    'x_contact_address_complete': record.x_contact_address_complete,
+                    'x_customer_status': record.x_customer_status,
+                    'x_state_id': record.x_state_id.id if record.x_state_id else False,
+                    'x_dealer_id': record.x_dealer_id.id if record.x_dealer_id else False,
+                    'x_dealer_branch_id': record.x_dealer_branch_id.id if record.x_dealer_branch_id else False,
+                    'x_activity_area': record.x_activity_area,
+                    'x_service_contract': record.x_service_contract,
+                    'x_partner_rank_id': record.x_partner_rank_id.id if record.x_partner_rank_id else False,
+                }
+                record.x_partner_id = record._get_or_create_partner(vals)
         self.write({'x_status': 'in progress'})
 
     def _validate_customer_state(self, vals):
