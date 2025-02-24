@@ -74,6 +74,12 @@ class BidAuthorization(models.Model):
                 vals['request_code'] = self.env['ir.sequence'].next_by_code('bid.authorization') or _("New")
         return super().create(vals_list)
     
+    def unlink(self):
+        for record in self:
+            related_approve_history = self.env['bid.authorization.approve.history'].search([('bid_authorization_id', '=', record.id)])
+            related_approve_history.unlink()
+        return super().unlink()
+    
     # @api.model
     # def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
     #     res = super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
