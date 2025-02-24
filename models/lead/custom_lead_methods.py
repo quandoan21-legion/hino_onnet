@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 
-from odoo import models, api, exceptions
+from odoo import models, api
 from odoo.exceptions import ValidationError
 
 
@@ -154,9 +154,8 @@ class CustomLeadMethods(models.Model):
             'x_service_contract': vals.get('x_service_contract'),
             'x_currently_rank_id': vals.get('x_partner_rank_id'),
         }
-        partner = self.env['res.partner'].create(partner_vals)
-        partner.write({'x_lead_id': vals.get('id')})
-        return partner
+        return self.env['res.partner'].create(partner_vals)
+
 
     @api.constrains('x_customer_status', 'x_identity_number', 'x_vat')
     def _check_customer_status_requirements(self):
@@ -190,6 +189,7 @@ class CustomLeadMethods(models.Model):
         for record in self:
             if not record.x_partner_id:  # Check if x_partner_id is missing
                 vals = {
+                    'x_lead_id': record.id,
                     'x_partner_name': record.x_partner_name,
                     'phone': record.phone,
                     'email_from': record.email_from,
