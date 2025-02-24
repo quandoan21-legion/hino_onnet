@@ -42,6 +42,7 @@ class BidAuthorization(models.Model):
             # if record.create_uid == self.env.user:
             #     record.state = 'pending'
             record.state = 'approved'
+            record.approved_date = fields.Date.today()
     
     def action_cancel(self):
         for record in self:
