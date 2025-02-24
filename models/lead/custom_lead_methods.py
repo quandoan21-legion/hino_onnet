@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 
-from odoo import models, api
+from odoo import models, api, exceptions
 from odoo.exceptions import ValidationError
 
 
@@ -190,6 +190,7 @@ class CustomLeadMethods(models.Model):
         for record in self:
             if not record.x_partner_id:  # Check if x_partner_id is missing
                 vals = {
+
                     'x_lead_id': record.id,
                     'x_partner_name': record.x_partner_name,
                     'phone': record.phone,
@@ -238,8 +239,10 @@ class CustomLeadMethods(models.Model):
             if record.x_dealer_branch_id and record.x_dealer_branch_id.state_id:
                 company_state = record.x_dealer_branch_id.state_id
                 if company_state.id != record.x_state_id.id:
+
                     raise ValidationError(
                         "The selected state must match the state of the Dealer Branch Company.")
+
 
     # @api.constrains('x_partner_id')
     # def _check_unique_x_partner_id(self):
