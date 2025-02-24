@@ -53,7 +53,7 @@
                             <page string="Product Details">
                             </page>
                             <page string="Approve History">
-                                <field name="bid_authorization_approve_history_ids" nolabel="1" widget="one2many_list">
+                                <field name="bid_authorization_approve_history_ids" nolabel="1" widget="one2many_list" readonly="1">
                                     <tree string="Approve History" editable="bottom">
                                         <field name="state_from"/>
                                         <field name="state_to"/>
