@@ -46,7 +46,6 @@ class ResPartner(models.Model):
 
     x_number_of_vehicles = fields.Integer(string='Number of Vehicles')
     x_hino_vehicle = fields.Integer(string='Hino Vehicle')
-    x_lead_id = fields.Integer(string="lead id")
     x_number_repair_order = fields.Integer(string='Number of Repair Order')
     x_cumulative_points = fields.Integer(string='Cumulative Points')
     x_register_sale_3rd_id = fields.Many2one(
@@ -55,10 +54,19 @@ class ResPartner(models.Model):
         'bank.line', 'x_partner_id', string='Bank Lines')
     x_contact_line_ids = fields.One2many(
         'contact.line', 'x_partner_id', string='Contact Lines')
+    x_lead_id = fields.Integer(string="lead id")
     x_owned_car_line_ids = fields.One2many(
-        'owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines')
+        'owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines', compute='_compute_owned_car_line_ids')
     x_vehicle_images = fields.Binary(attachment=True)
 
+    @api.depends('x_lead_id')
+    def _compute_owned_car_line_ids(self):
+        for partner in self:
+            if partner.x_lead_id:
+                partner.x_owned_car_line_ids = self.env['owned.team.car.line'].search(
+                    [('lead_id', '=', partner.x_lead_id)])
+            else:
+                partner.x_owned_car_line_ids = self.env['owned.team.car.line']
     @api.constrains('phone')
     def _check_phone_unique(self):
         for record in self:

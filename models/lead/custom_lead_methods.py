@@ -135,6 +135,7 @@ class CustomLeadMethods(models.Model):
 
     def _create_new_partner(self, vals):
         partner_vals = {
+            'x_lead_id': vals.get('x_lead_id', 'Lead Id'),
             'name': vals.get('x_partner_name', 'Unnamed Customer'),
             'x_name': vals.get('x_partner_name'),
             'phone': vals.get('phone'),
