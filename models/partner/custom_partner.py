@@ -2,44 +2,61 @@ import re
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
+
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    x_potential_count = fields.Integer(string="Lead") # x_potential_count = fields.Integer(compute="_compute_potential_count", string="Potential") - Logic
-    x_contract_count = fields.Integer(string="Contract") # x_contract_count = fields.Integer(compute="_compute_contract_count", string="Contracts") - Logic
-    x_vehicle_management_count = fields.Integer(string="Vehicle Management") # x_vehicle_management_count = fields.Integer(compute="_compute_vehicle_management_count", string="Vehicle Management") - Logic
+    # x_potential_count = fields.Integer(compute="_compute_potential_count", string="Potential") - Logic
+    x_potential_count = fields.Integer(string="Lead")
+    # x_contract_count = fields.Integer(compute="_compute_contract_count", string="Contracts") - Logic
+    x_contract_count = fields.Integer(string="Contract")
+    # x_vehicle_management_count = fields.Integer(compute="_compute_vehicle_management_count", string="Vehicle Management") - Logic
+    x_vehicle_management_count = fields.Integer(string="Vehicle Management")
     company_type = fields.Selection(
-            selection_add=[('internal_hmv', 'Internal HMV')],
-        )
-    x_dealer_id = fields.Char(string='Dealer', readonly=True) # liên quan đến dealer.group - chưa có giải thích cụ thể
-    x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch', default=lambda self: self.env.company, tracking=True, readonly=True)
+        selection_add=[('internal_hmv', 'Internal HMV')],
+    )
+    # liên quan đến dealer.group - chưa có giải thích cụ thể
+    x_dealer_id = fields.Char(string='Dealer', readonly=True)
+    x_dealer_branch_id = fields.Many2one(
+        'res.company', string='Dealer Branch', default=lambda self: self.env.company, tracking=True, readonly=True)
     x_customer_type = fields.Selection(
-        [('last_customer', 'Last Customer'), ('third_party', 'Third Party'), ('body_maker', 'Body Maker')],
+        [('last_customer', 'Last Customer'), ('third_party',
+                                              'Third Party'), ('body_maker', 'Body Maker')],
         string='Customer Type', default='last_customer', tracking=True
     )
     x_name = fields.Char(string='Name', tracking=True)
     x_contact_address = fields.Char(string="Address", store=True)
     x_function = fields.Char(string='Function')
-    x_customer_code = fields.Char(string='Customer Code', tracking=True, readonly=True, copy=False)
+    x_customer_code = fields.Char(
+        string='Customer Code', tracking=True, readonly=True, copy=False)
     x_district = fields.Char(string='District')
     x_state_id = fields.Many2one('res.country.state', string="State/Province")
-    x_field_sale_id = fields.Many2one('sale.area',string='Field Sale')
-    x_currently_rank_id = fields.Many2one('customer.rank', string='Currently Rank')
-    x_business_registration_id = fields.Char(string='Business Registration ID', help='Business Registration ID')
-    x_identity_number = fields.Char(string='Identity Number', help='National or Personal Identity Number')
-    x_industry_id = fields.Many2one('res.partner.industry', string='Industry', tracking=True)
+    x_field_sale_id = fields.Many2one('sale.area', string='Field Sale')
+    x_currently_rank_id = fields.Many2one(
+        'customer.rank', string='Currently Rank')
+    x_business_registration_id = fields.Char(
+        string='Business Registration ID', help='Business Registration ID')
+    x_identity_number = fields.Char(
+        string='Identity Number', help='National or Personal Identity Number')
+    x_industry_id = fields.Many2one(
+        'res.partner.industry', string='Industry', tracking=True)
     x_activity_area = fields.Char(string='Activity Area', tracking=True)
-    x_service_contract = fields.Boolean(string='Service Contact', tracking=True)
+    x_service_contract = fields.Boolean(
+        string='Service Contact', tracking=True)
 
     x_number_of_vehicles = fields.Integer(string='Number of Vehicles')
     x_hino_vehicle = fields.Integer(string='Hino Vehicle')
 
     x_number_repair_order = fields.Integer(string='Number of Repair Order')
     x_cumulative_points = fields.Integer(string='Cumulative Points')
-    x_register_sale_3rd_id = fields.Many2one('third.party.registration', string='Register Sale 3rd')
-    x_bank_line_ids = fields.One2many('bank.line', 'x_partner_id', string='Bank Lines')
-    x_contact_line_ids = fields.One2many('contact.line', 'x_partner_id', string='Contact Lines')
-    x_owned_car_line_ids = fields.One2many('owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines')
+    x_register_sale_3rd_id = fields.Many2one(
+        'third.party.registration', string='Register Sale 3rd')
+    x_bank_line_ids = fields.One2many(
+        'bank.line', 'x_partner_id', string='Bank Lines')
+    x_contact_line_ids = fields.One2many(
+        'contact.line', 'x_partner_id', string='Contact Lines')
+    x_owned_car_line_ids = fields.One2many(
+        'owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines')
     x_vehicle_images = fields.Binary(attachment=True)
 
     @api.constrains('phone')
@@ -56,7 +73,8 @@ class ResPartner(models.Model):
     @api.model
     def create(self, vals):
         if not vals.get('x_customer_code'):
-            vals['x_customer_code'] = self.env['ir.sequence'].next_by_code('res.partner.cus_number')
+            vals['x_customer_code'] = self.env['ir.sequence'].next_by_code(
+                'res.partner.cus_number')
         return super().create(vals)
 
     @api.depends('is_company')
@@ -77,23 +95,25 @@ class ResPartner(models.Model):
         if self.company_type == 'internal_hmv':
             return
         self.is_company = (self.company_type == 'company')
-    
 
     @api.constrains('x_business_registration_id')
     def _check_business_registration_id(self):
         for record in self:
             if record.x_business_registration_id:
                 existing = self.search([
-                    ('x_business_registration_id', '=', record.x_business_registration_id),
+                    ('x_business_registration_id', '=',
+                     record.x_business_registration_id),
                     ('id', '!=', record.id)
                 ])
                 if existing:
-                    raise ValidationError("Business Registration ID must be unique.")
-        
+                    raise ValidationError(
+                        "Business Registration ID must be unique.")
+
             if record.x_business_registration_id:
                 if not re.fullmatch(r'^\d{1,10}$', record.x_business_registration_id):
-                    raise ValidationError("Business Registration ID must contain only numbers and be at most 10 digits long.")
-    
+                    raise ValidationError(
+                        "Business Registration ID must contain only numbers and be at most 10 digits long.")
+
     @api.constrains('x_identity_number')
     def _check_identity_number(self):
         for record in self:
@@ -103,19 +123,23 @@ class ResPartner(models.Model):
                     ('id', '!=', record.id)
                 ])
                 if existing:
-                    raise ValidationError("The Identity number must be unique.")
+                    raise ValidationError(
+                        "The Identity number must be unique.")
 
             if record.x_identity_number:
                 if not re.match(r'^\d{9,12}$', record.x_identity_number):
-                    raise ValidationError("The Identity number must contain from 9 to 12 digits.")
-    
+                    raise ValidationError(
+                        "The Identity number must contain from 9 to 12 digits.")
+
     @api.constrains('phone', 'mobile')
     def _check_phone_number_format(self):
         for record in self:
             if record.phone and not re.fullmatch(r'0\d{1,9}', record.phone):
-                raise ValidationError("Phone number must not more than 10 digits and start with 0.")
+                raise ValidationError(
+                    "Phone number must not more than 10 digits and start with 0.")
             if record.mobile and not re.fullmatch(r'0\d{1,9}', record.mobile):
-                raise ValidationError("Mobile number must not more than 10 digits and start with 0.")
+                raise ValidationError(
+                    "Mobile number must not more than 10 digits and start with 0.")
 
     # @api.constrains('x_business_registration_id', 'x_customer_type', 'x_register_sale_3rd_id', 'x_identity_number')
     # def _check_required_fields(self):

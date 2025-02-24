@@ -14,7 +14,8 @@ class CustomLeadMethods(models.Model):
             vals['name'] = self._generate_pc_number()
             vals['x_partner_id'] = self._get_or_create_partner(vals)
             return super(CustomLeadMethods, self).create(vals)
-        raise ValidationError("The customer state does not match with your Company State")
+        raise ValidationError(
+            "The customer state does not match with your Company State")
 
     @api.onchange('x_partner_id')
     def _onchange_x_partner_id(self):
@@ -86,7 +87,8 @@ class CustomLeadMethods(models.Model):
         return "PC" + fiscal_year_suffix + new_number
 
     def _get_fiscal_year_suffix(self):
-        fiscal_year = self.env['account.fiscal.year'].search([], limit=1, order='date_from desc')
+        fiscal_year = self.env['account.fiscal.year'].search(
+            [], limit=1, order='date_from desc')
         if not fiscal_year:
             return str(datetime.now().year)[2:]
         return str(fiscal_year.name)[2:]
@@ -103,7 +105,8 @@ class CustomLeadMethods(models.Model):
 
     def _get_or_create_partner(self, vals):
         domain = self._build_partner_search_domain(vals)
-        existing_partner = self.env['res.partner'].search(domain, limit=1) if domain else None
+        existing_partner = self.env['res.partner'].search(
+            domain, limit=1) if domain else None
         if existing_partner:
             return existing_partner.id
         return self._create_new_partner(vals).id
@@ -113,7 +116,8 @@ class CustomLeadMethods(models.Model):
         if vals.get('x_vat'):
             domain.append(('x_business_registration_id', '=', vals['x_vat']))
         if vals.get('x_identity_number'):
-            domain.append(('x_identity_number', '=', vals['x_identity_number']))
+            domain.append(('x_identity_number', '=',
+                           vals['x_identity_number']))
         return domain
 
     def _create_new_partner(self, vals):
@@ -137,8 +141,9 @@ class CustomLeadMethods(models.Model):
             'x_service_contract': vals.get('x_service_contract'),
             'x_currently_rank_id': vals.get('x_partner_rank_id'),
         }
-        return self.env['res.partner'].create(partner_vals)
-
+        partner = self.env['res.partner'].create(partner_vals)
+        partner.write({'x_lead_id': vals.get('id')})
+        return
 
     @api.constrains('x_customer_status', 'x_identity_number', 'x_vat')
     def _check_customer_status_requirements(self):
@@ -166,7 +171,6 @@ class CustomLeadMethods(models.Model):
     def action_mark_failed(self):
         self.write({'x_status': 'failed'})
 
-
     def action_create_customer(self):
         self._check_customer_state()
         self.write({'x_status': 'in progress'})
@@ -178,6 +182,7 @@ class CustomLeadMethods(models.Model):
             if dealer_branch.state_id.id != vals.get('x_state_id'):
                 return False
         return True
+
     def action_cancel_lead(self):
         reason = self.env.context.get('cancel_reason')
         if not reason:
@@ -198,7 +203,8 @@ class CustomLeadMethods(models.Model):
             if record.x_dealer_branch_id and record.x_dealer_branch_id.state_id:
                 company_state = record.x_dealer_branch_id.state_id
                 if company_state.id != record.x_state_id.id:
-                    raise ValidationError("The selected state must match the state of the Dealer Branch Company.")
+                    raise ValidationError(
+                        "The selected state must match the state of the Dealer Branch Company.")
 
     @api.constrains('x_partner_id')
     def _check_unique_x_partner_id(self):
@@ -210,4 +216,5 @@ class CustomLeadMethods(models.Model):
                 ], limit=1)
 
                 if existing_lead:
-                    raise ValidationError("This customer is already assigned to another lead!")
+                    raise ValidationError(
+                        "This customer is already assigned to another lead!")
