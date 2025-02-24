@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 
-from odoo import models, api
+from odoo import models, api, exceptions
 from odoo.exceptions import ValidationError
 
 
@@ -15,7 +15,12 @@ class CustomLeadMethods(models.Model):
             vals['x_partner_id'] = self._get_or_create_partner(vals)
             return super(CustomLeadMethods, self).create(vals)
         raise ValidationError("The customer state does not match with your Company State")
-
+    # def write(self, vals):
+    #     """ Prevent manual saving when status is not 'draft' """
+    #     for record in self:
+    #         if vals.get('x_partner_id'):
+    #             raise exceptions.UserError("You cannot modify this lead ")
+    #     return super(CustomLeadMethods, self).write(vals)
     @api.onchange('x_partner_id')
     def _onchange_x_partner_id(self):
         if self.x_partner_id:
