@@ -170,7 +170,7 @@
                                         <field name="x_model_name" />
                                         <field name="x_brand_name" />
                                         <field name="x_quantity" />
-                                        <field name="x_is_hino_vehicle" invisible="1" />
+
                                     </tree>
                                 </field>
                             </page>
@@ -180,7 +180,7 @@
                                         <field name="x_model_id" />
                                         <field name="x_brand_name" />
                                         <field name="x_hino_quantity" />
-                                        <field name="x_is_hino_vehicle" invisible="1" />
+
                                     </tree>
                                 </field>
                             </page>

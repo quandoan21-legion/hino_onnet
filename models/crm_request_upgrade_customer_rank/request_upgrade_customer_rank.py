@@ -59,11 +59,30 @@ class CustomerRankUpgrade(models.Model):
     x_owned_team_car_ids = fields.One2many(
         'owned.team.car.line', 'customer_rank_upgrade_id', string="Owned Vehicle List"
     )
+    x_owned_team_car_hino_ids = fields.One2many(
+        'owned.team.car.line', 'customer_rank_upgrade_id',
+        string='Hino Vehicles', compute='_compute_x_owned_team_car_hino_ids', store=False
+    )
+
+    x_owned_team_car_other_ids = fields.One2many(
+        'owned.team.car.line', 'customer_rank_upgrade_id',
+        string='Other Vehicles', compute='_compute_x_owned_team_car_other_ids', store=False
+    )
 
     model_ids_hino = fields.Many2many('product.product', string='Hino Model IDs', compute='_compute_hino_model_ids',
                                       store=False)
     model_ids_hino_names = fields.Many2many('product.product', string='Hino Model Names',
                                             compute='_compute_hino_model_names', store=False)
+
+    @api.depends('x_owned_team_car_ids')
+    def _compute_x_owned_team_car_hino_ids(self):
+        for record in self:
+            record.x_owned_team_car_hino_ids = record.x_owned_team_car_ids.filtered(lambda c: c.x_is_hino_vehicle)
+
+    @api.depends('x_owned_team_car_ids')
+    def _compute_x_owned_team_car_other_ids(self):
+        for record in self:
+            record.x_owned_team_car_other_ids = record.x_owned_team_car_ids.filtered(lambda c: not c.x_is_hino_vehicle)
 
     def _get_status_display_name(self, status):
         return STATUS_SELECTION.get(status, status)
@@ -192,8 +211,8 @@ class CustomerRankUpgrade(models.Model):
                 record.x_owned_team_car_ids = [(4, car.id) for car in cars]
 
             # Recalculate vehicle-related values
-        record._compute_quantity_of_hino()
-        record._compute_total_quantity()
+        # record._compute_quantity_of_hino()
+        # record._compute_total_quantity()
 
     def action_submit(self):
         self.write({'status': 'pending'})
