@@ -6,7 +6,7 @@
             <field name="model">crm.lead</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <form edit="false">
+                <form >
                     <header>
 
                         <field name="x_status" invisible="1"/>
