@@ -39,10 +39,15 @@ class BidAuthorization(models.Model):
 
     def action_approved(self):
         for record in self:
-            # if record.create_uid == self.env.user:
-            #     record.state = 'pending'
+            original_state = record.state
             record.state = 'approved'
             record.approved_date = fields.Date.today()
+            approve_history = self.env['bid.authorization.approve.history'].create({
+                'state_from': original_state,
+                'state_to': record.state,
+                'confirm_date': fields.Date.today(),
+                'bid_authorization_id': record.id,
+            })
     
     def action_cancel(self):
         for record in self:
