@@ -1,4 +1,5 @@
 import re
+
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
@@ -44,8 +45,8 @@ class ResPartner(models.Model):
     x_service_contract = fields.Boolean(
         string='Service Contact', tracking=True)
 
-    x_number_of_vehicles = fields.Integer(string='Number of Vehicles')
-    x_hino_vehicle = fields.Integer(string='Hino Vehicle')
+    x_number_of_vehicles = fields.Integer(string='Number of Vehicles', compute='_compute_number_of_vehicles')
+    x_hino_vehicle = fields.Integer(string='Hino Vehicle', compute='_compute_number_of_vehicles')
     x_number_repair_order = fields.Integer(string='Number of Repair Order')
     x_cumulative_points = fields.Integer(string='Cumulative Points')
     x_register_sale_3rd_id = fields.Many2one(
@@ -58,6 +59,24 @@ class ResPartner(models.Model):
     x_owned_car_line_ids = fields.One2many(
         'owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines', compute='_compute_owned_car_line_ids')
     x_vehicle_images = fields.Binary(attachment=True)
+
+    @api.depends('x_number_of_vehicles', 'x_hino_vehicle')
+    def _compute_number_of_vehicles(self):
+        for record in self:
+            if record.x_lead_id:
+                record.x_number_of_vehicles = self.env['owned.team.car.line'].read_group(
+                    [('lead_id', '=', record.x_lead_id)],
+                    ['x_quantity:sum'],
+                    []
+                )[0]['x_quantity']
+                record.x_hino_vehicle = self.env['owned.team.car.line'].read_group(
+                    [('lead_id', '=', record.x_lead_id), ('x_is_hino_vehicle', '=', True)],
+                    ['x_quantity:sum'],
+                    []
+                )[0]['x_quantity']
+            else:
+                record.x_number_of_vehicles = 0
+                record.x_hino_vehicle = 0
 
     @api.depends('x_lead_id')
     def _compute_owned_car_line_ids(self):
