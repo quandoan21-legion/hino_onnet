@@ -54,7 +54,7 @@ class SaleRequestMethods(models.Model):
             ], limit=1)
 
             if not sale_region:
-                raise UserError(_("No sales region found for the dealer."))
+                raise UserError(_("No sales region found for the dealer"))
 
             allowed_areas = sale_region.x_field_sale_ids.ids
 
