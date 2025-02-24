@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 
-from odoo import models, api
+from odoo import models, api, exceptions
 from odoo.exceptions import ValidationError
 
 
@@ -171,6 +171,7 @@ class CustomLeadMethods(models.Model):
     def action_mark_failed(self):
         self.write({'x_status': 'failed'})
 
+
     def action_create_customer(self):
         self._check_customer_state()
         self.write({'x_status': 'in progress'})
@@ -182,7 +183,6 @@ class CustomLeadMethods(models.Model):
             if dealer_branch.state_id.id != vals.get('x_state_id'):
                 return False
         return True
-
     def action_cancel_lead(self):
         reason = self.env.context.get('cancel_reason')
         if not reason:
