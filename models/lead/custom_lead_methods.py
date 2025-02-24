@@ -16,6 +16,17 @@ class CustomLeadMethods(models.Model):
             return super(CustomLeadMethods, self).create(vals)
         raise ValidationError("The customer state does not match with your Company State")
 
+    @api.onchange('x_dealer_branch_id')
+    def _onchange_dealer_branch_id(self):
+        if self.x_dealer_branch_id and self.x_dealer_branch_id.parent_id:
+            self.x_dealer_id = self.x_dealer_branch_id.parent_id
+        else:
+            self.x_dealer_id = False
+
+    @api.depends('x_dealer_branch_id')
+    def _compute_dealer_id(self):
+        for record in self:
+            record.x_dealer_id = record.x_dealer_branch_id.parent_id if record.x_dealer_branch_id else False
     # @api.model
     # def create(self, vals):
     #     if self._validate_customer_state(vals):
@@ -227,7 +238,7 @@ class CustomLeadMethods(models.Model):
             'res_model': 'sale.request',
             'context' : {
                 'default_x_customer_id': self.x_partner_id.id,
-                'default_x_x_dealer_id': self.x_dealer_id.id,
+                'default_x_request_dealer_id': self.x_dealer_id.id,
                 'default_x_dealer_branch_id': self.x_dealer_branch_id.id,
                 'default_x_customer_name': self.x_partner_name,
                 'default_x_customer_address': self.x_contact_address_complete,

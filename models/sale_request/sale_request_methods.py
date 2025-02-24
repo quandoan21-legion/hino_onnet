@@ -1,7 +1,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError
-from datetime import timedelta
+from datetime import timedelta, date
 class SaleRequestMethods(models.Model):
     _inherit = 'sale.request'
 
@@ -13,6 +13,18 @@ class SaleRequestMethods(models.Model):
 
     def _generate_request_code(self):
         return self.env['ir.sequence'].next_by_code('sale.request.sequence') or '/'
+
+    @api.onchange('x_dealer_branch_id')
+    def _onchange_dealer_branch_id(self):
+        if self.x_dealer_branch_id and self.x_dealer_branch_id.parent_id:
+            self.x_request_dealer_id = self.x_dealer_branch_id.parent_id
+        else:
+            self.x_request_dealer_id = False
+
+    @api.depends('x_dealer_branch_id')
+    def _compute_request_dealer_id(self):
+        for record in self:
+            record.x_request_dealer_id = record.x_dealer_branch_id.parent_id if record.x_dealer_branch_id else False
 
     @api.onchange('x_customer_id')
     def _onchange_x_customer_id(self):
@@ -43,6 +55,23 @@ class SaleRequestMethods(models.Model):
             ('dealer_id', '=', dealer_id),
             ('city_id', '=', city_id),
         ], limit=1))
+
+    @api.constrains('x_expected_sale_date', 'x_expected_to_sign_contract')
+    def _check_expected_dates(self):
+        for record in self:
+            today = date.today()
+
+            if record.x_expected_sale_date and record.x_expected_sale_date < today:
+                raise ValidationError("Expected Sale Date must be greater than or equal to the current date.")
+
+            if record.x_expected_to_sign_contract and record.x_expected_to_sign_contract < today:
+                raise ValidationError(
+                    "Expected to Sign Contract Date must be greater than or equal to the current date.")
+
+            if (record.x_expected_sale_date and record.x_expected_to_sign_contract and
+                    record.x_expected_to_sign_contract < record.x_expected_sale_date):
+                raise ValidationError(
+                    "Expected to Sign Contract Date must be greater than or equal to the Expected Sale Date.")
 
     def action_submit(self):
         for record in self:

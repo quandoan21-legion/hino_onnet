@@ -67,9 +67,20 @@ class CustomLead(models.Model):
     x_activity_area = fields.Many2one('sale.area',
         string='Activity Area', tracking=True, require=True)
     x_dealer_id = fields.Many2one(
-        'res.company', string='Dealer', readonly=True)
-    x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch',
-                                         default=lambda self: self.env.user.company_id, tracking=True, require=True, readonly=True)
+        'res.company',
+        string='Dealer',
+        readonly=True,
+        compute="_compute_dealer_id",
+        store=True
+    )
+    x_dealer_branch_id = fields.Many2one(
+        'res.company',
+        string='Dealer Branch',
+        default=lambda self: self.env.user.company_id,
+        tracking=True,
+        required=True,
+        domain="[('parent_id', '!=', False)]"
+    )
     x_sale_person_id = fields.Many2one('hr.employee', string='Sales Person', domain=[
                                        ('job_id.name', '=', 'Sales staff')], tracking=True, require=True)
     x_approaching_channel_id = fields.Many2one(
