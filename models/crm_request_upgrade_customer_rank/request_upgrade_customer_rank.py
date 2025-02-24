@@ -307,3 +307,19 @@ class CustomerRankUpgrade(models.Model):
         })
 
         return True
+
+    @api.model
+    def create(self, vals):
+        record = super().create(vals)
+        record._update_partner_rank()
+        return record
+
+    def write(self, vals):
+        res = super().write(vals)
+        self._update_partner_rank()
+        return res
+
+    def _update_partner_rank(self):
+        for record in self:
+            if record.status == 'approved' and record.x_partner_id:
+                record.x_partner_id.x_currently_rank_id = record.x_rank_upgrade_id

@@ -41,6 +41,25 @@ class ResPartner(models.Model):
     x_contact_line_ids = fields.One2many('contact.line', 'x_partner_id', string='Contact Lines')
     x_owned_car_line_ids = fields.One2many('owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines')
     x_vehicle_images = fields.Binary(attachment=True)
+    x_hino_vehicles = fields.One2many(
+        'owned.team.car.line', 'x_partner_id',
+        string='Hino Vehicles', compute='_compute_x_hino_vehicles', store=False
+    )
+
+    x_other_vehicles = fields.One2many(
+        'owned.team.car.line', 'x_partner_id',
+        string='Other Vehicles', compute='_compute_x_other_vehicles', store=False
+    )
+
+    @api.depends('x_owned_car_line_ids')
+    def _compute_x_hino_vehicles(self):
+        for record in self:
+            record.x_hino_vehicles = record.x_owned_car_line_ids.filtered(lambda c: c.x_is_hino_vehicle)
+
+    @api.depends('x_owned_car_line_ids')
+    def _compute_x_other_vehicles(self):
+        for record in self:
+            record.x_other_vehicles = record.x_owned_car_line_ids.filtered(lambda c: not c.x_is_hino_vehicle)
 
     @api.constrains('phone')
     def _check_phone_unique(self):
