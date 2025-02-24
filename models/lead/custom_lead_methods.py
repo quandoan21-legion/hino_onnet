@@ -12,11 +12,16 @@ class CustomLeadMethods(models.Model):
     def create(self, vals):
         if self._validate_customer_state(vals):
             vals['name'] = self._generate_pc_number()
-            vals['x_partner_id'] = self._get_or_create_partner(vals)
+            if not vals.get('x_partner_id'):  # Only create a new partner if x_partner_id is not provided
+                vals['x_partner_id'] = self._get_or_create_partner(vals)
             return super(CustomLeadMethods, self).create(vals)
-        raise ValidationError(
-            "The customer state does not match with your Company State")
-
+        raise ValidationError("The customer state does not match with your Company State")
+    # def write(self, vals):
+    #     """ Prevent manual saving when status is not 'draft' """
+    #     for record in self:
+    #         if vals.get('x_partner_id'):
+    #             raise exceptions.UserError("You cannot modify this lead ")
+    #     return super(CustomLeadMethods, self).write(vals)
     @api.onchange('x_partner_id')
     def _onchange_x_partner_id(self):
         if self.x_partner_id:
@@ -203,18 +208,17 @@ class CustomLeadMethods(models.Model):
             if record.x_dealer_branch_id and record.x_dealer_branch_id.state_id:
                 company_state = record.x_dealer_branch_id.state_id
                 if company_state.id != record.x_state_id.id:
-                    raise ValidationError(
-                        "The selected state must match the state of the Dealer Branch Company.")
+                    raise ValidationError("The selected state must match the state of the Dealer Branch Company.")
 
-    @api.constrains('x_partner_id')
-    def _check_unique_x_partner_id(self):
-        for record in self:
-            if record.x_partner_id:
-                existing_lead = self.search([
-                    ('x_partner_id', '=', record.x_partner_id.id),
-                    ('id', '!=', record.id)  # Exclude the current record
-                ], limit=1)
-
-                if existing_lead:
-                    raise ValidationError(
-                        "This customer is already assigned to another lead!")
+    # @api.constrains('x_partner_id')
+    # def _check_unique_x_partner_id(self):
+    #     for record in self:
+    #         if record.x_partner_id:
+    #             existing_lead = self.search([
+    #                 ('x_partner_id', '=', record.x_partner_id.id),
+    #                 ('id', '!=', record.id)  # Exclude the current record
+    #             ], limit=1)
+    #
+    #             if existing_lead:
+    #                 raise ValidationError("This customer is already assigned to another lead!")
+    #

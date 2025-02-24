@@ -99,7 +99,7 @@ class CustomLead(models.Model):
         for record in self:
             record.x_readonly_fields = record.x_status != 'draft'
 
-    _sql_constraints = [
-    ('unique_x_partner_id', 'UNIQUE(x_partner_id)', 'This customer already exists in another lead!')
-    ]
+    # _sql_constraints = [
+    # ('unique_x_partner_id', 'UNIQUE(x_partner_id)', 'This customer already exists in another lead!')
+    # ]
 
