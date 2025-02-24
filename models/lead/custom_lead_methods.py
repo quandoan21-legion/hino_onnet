@@ -16,6 +16,14 @@ class CustomLeadMethods(models.Model):
             #     vals['x_partner_id'] = self._get_or_create_partner(vals)
             return super(CustomLeadMethods, self).create(vals)
         raise ValidationError("The customer state does not match with your Company State")
+
+    # @api.model
+    # def create(self, vals):
+    #     if self._validate_customer_state(vals):
+    #         vals['name'] = self._generate_pc_number()
+    #         vals['x_partner_id'] = self._get_or_create_partner(vals)
+    #         return super(CustomLeadMethods, self).create(vals)
+    #     raise ValidationError("The customer state does not match with your Company State")
     # def write(self, vals):
     #     """ Prevent manual saving when status is not 'draft' """
     #     for record in self:
@@ -92,8 +100,7 @@ class CustomLeadMethods(models.Model):
         return "PC" + fiscal_year_suffix + new_number
 
     def _get_fiscal_year_suffix(self):
-        fiscal_year = self.env['account.fiscal.year'].search(
-            [], limit=1, order='date_from desc')
+        fiscal_year = self.env['account.fiscal.year'].search([], limit=1, order='date_from desc')
         if not fiscal_year:
             return str(datetime.now().year)[2:]
         return str(fiscal_year.name)[2:]
@@ -115,6 +122,7 @@ class CustomLeadMethods(models.Model):
         if existing_partner:
             return existing_partner.id
         return self._create_new_partner(vals).id
+
 
     def _build_partner_search_domain(self, vals):
         domain = []
@@ -229,7 +237,8 @@ class CustomLeadMethods(models.Model):
             if record.x_dealer_branch_id and record.x_dealer_branch_id.state_id:
                 company_state = record.x_dealer_branch_id.state_id
                 if company_state.id != record.x_state_id.id:
-                    raise ValidationError("The selected state must match the state of the Dealer Branch Company.")
+                    raise ValidationError(
+                        "The selected state must match the state of the Dealer Branch Company.")
 
     # @api.constrains('x_partner_id')
     # def _check_unique_x_partner_id(self):
