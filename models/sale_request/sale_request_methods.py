@@ -1,5 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 from datetime import timedelta
 class SaleRequestMethods(models.Model):
     _inherit = 'sale.request'
@@ -32,25 +33,40 @@ class SaleRequestMethods(models.Model):
                 self.env['res.partner'].search_count([('id', '=', record.x_customer_id.id)]) > 0
             )
 
-
     @api.depends('x_lead_code_id')
     def _compute_readonly_customer(self):
         for record in self:
             record.x_customer_id.readonly = bool(record.x_lead_code_id)
+
+    def check_region(self, dealer_id, city_id):
+        return bool(self.env['sale.area'].search([
+            ('dealer_id', '=', dealer_id),
+            ('city_id', '=', city_id),
+        ], limit=1))
+
     def action_submit(self):
         for record in self:
-            if record.x_customer_type in ["third_party", "box_packer"]:
-                if not self.env['sale.region'].check_region(record.x_dealer_id, record.x_city_id):
-                    missing_info = any(not line.customer_id for line in record.sale_detail_ids)
-                    if missing_info:
-                        raise UserError("OUT-OF-AREA SALE: PLEASE COMPLETE THE END CUSTOMER INFORMATION.")
+            if record.x_state != 'draft':
+                raise UserError(_("The request form is not in Draft state!"))
 
-            old_state = record.x_state
+            sale_region = self.env['sale.region'].search([
+                ('x_dealer_branch_id', '=', record.x_dealer_branch_id.id)
+            ], limit=1)
 
-            vals = {
-                'x_state': 'pending',
-            }
-            record.write(vals)
+            if not sale_region:
+                raise UserError(_("No sales region found for the dealer."))
+
+            allowed_areas = sale_region.x_field_sale_ids.ids
+
+            if record.x_customer_type in ['third_party', 'builder']:
+                if record.x_province_id.id not in allowed_areas:
+                    missing_customers = record.sale_detail_ids.filtered(lambda d: not d.x_customers_use_id)
+
+                    if missing_customers:
+                        raise UserError(_("OUT-OF-REGION SALE, PLEASE PROVIDE COMPLETE END CUSTOMER INFORMATION."))
+
+            record.x_state = 'pending'
+
 
     def action_approve(self):
         if not self:
