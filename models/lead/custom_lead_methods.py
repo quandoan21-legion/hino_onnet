@@ -156,7 +156,7 @@ class CustomLeadMethods(models.Model):
         }
         partner = self.env['res.partner'].create(partner_vals)
         partner.write({'x_lead_id': vals.get('id')})
-        return
+        return partner
 
     @api.constrains('x_customer_status', 'x_identity_number', 'x_vat')
     def _check_customer_status_requirements(self):
