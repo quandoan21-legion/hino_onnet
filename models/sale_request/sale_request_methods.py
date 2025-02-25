@@ -96,8 +96,9 @@ class SaleRequestMethods(models.Model):
 
             record.x_state = 'pending'
 
-
     def action_approve(self):
+        self.ensure_one()
+
         if not self:
             raise ValidationError("No record found for approval.")
         if not self.exists():
@@ -109,6 +110,14 @@ class SaleRequestMethods(models.Model):
         if not employee:
             raise ValidationError("You must be an employee to approve this request.")
 
+        if self.x_customer_id:
+            allowed_dealers = self.x_customer_id.x_allow_dealer_id
+
+            if self.x_request_dealer_id and self.x_request_dealer_id not in allowed_dealers:
+                self.x_customer_id.write({
+                    'x_allow_dealer_id': [(4, self.x_request_dealer_id.id)]
+                })
+
         self.env['sales.request.approval'].create({
             'x_request_id': self.id,
             'x_confirmer_id': employee.id,
@@ -119,6 +128,7 @@ class SaleRequestMethods(models.Model):
             'x_confirm_date': fields.Date.today(),
             'x_reason': self.x_reason or 'Auto-approved',
         })
+
         self.x_state = 'approved'
         self.x_approve_date = fields.Date.today()
 
