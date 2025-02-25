@@ -1,9 +1,8 @@
 import re
 from datetime import datetime
 
-from odoo import models, api, exceptions
+from odoo import models, fields, api, exceptions
 from odoo.exceptions import ValidationError
-
 
 class CustomLeadMethods(models.Model):
     _inherit = 'crm.lead'
@@ -17,6 +16,17 @@ class CustomLeadMethods(models.Model):
             return super(CustomLeadMethods, self).create(vals)
         raise ValidationError("The customer state does not match with your Company State")
 
+    @api.onchange('x_dealer_branch_id')
+    def _onchange_dealer_branch_id(self):
+        if self.x_dealer_branch_id and self.x_dealer_branch_id.parent_id:
+            self.x_dealer_id = self.x_dealer_branch_id.parent_id
+        else:
+            self.x_dealer_id = False
+
+    @api.depends('x_dealer_branch_id')
+    def _compute_dealer_id(self):
+        for record in self:
+            record.x_dealer_id = record.x_dealer_branch_id.parent_id if record.x_dealer_branch_id else False
     # @api.model
     # def create(self, vals):
     #     if self._validate_customer_state(vals):
@@ -228,9 +238,22 @@ class CustomLeadMethods(models.Model):
     def action_view_third_party_registration(self):
         return {
             'type': 'ir.actions.act_window',
-            'name': '3rd Party/Body Maker Registration',
-            'view_mode': 'tree,form',
-            'res_model': 'third.party.registration',
+            'name': 'sale.request.tree',
+            'view_mode': 'form',
+            'res_model': 'sale.request',
+            'context' : {
+                'default_x_customer_id': self.x_partner_id.id,
+                'default_x_request_dealer_id': self.x_dealer_id.id,
+                'default_x_dealer_branch_id': self.x_dealer_branch_id.id,
+                'default_x_customer_name': self.x_partner_name,
+                'default_x_customer_address': self.x_contact_address_complete,
+                'default_x_province_id': self.x_state_id.id,
+                'default_x_identification_id': self.x_identity_number,
+                'default_x_business_registration_id': self.x_vat,
+                'default_x_lead_code_id': self.id,
+                'default_x_customer_region': self.x_activity_area.id,
+                'default_x_request_date': fields.Date.context_today(self),
+            }
         }
 
     @api.constrains('x_state_id', 'x_dealer_branch_id')

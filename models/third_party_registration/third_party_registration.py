@@ -20,7 +20,7 @@ class ThirdPartyRegistration(models.Model):
     x_name = fields.Char(string='3rd Unit Register/Packaging House', required=True)
     x_registration_code = fields.Char(string='Registration Code', readonly=True, copy=False, tracking=True)
     x_customer_id = fields.Many2one('res.partner', string='Customer Name', required=True, tracking=True)
-    x_customer_code = fields.Char(related='x_customer_id.x_customer_code', string='Customer Code', readonly=True)
+    x_customer_code = fields.Char(related='x_customer_id.x_customer_code', string='Customer Code', readonly=True, store=True)
     x_representative_id = fields.Many2one('res.partner', string='Representative', required=True, tracking=True)
     x_phone = fields.Char(
         related='x_customer_id.phone',  # Relate to customer's phone
