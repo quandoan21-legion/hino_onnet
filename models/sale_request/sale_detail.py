@@ -4,8 +4,6 @@ from lxml import etree
 import json
 
 
-
-
 class SaleDetail(models.Model):
     _name = 'sale.detail'
     _description = 'Chi tiết bán hàng'

@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 
-from odoo import models, api, exceptions
+from odoo import models, fields, api, exceptions
 from odoo.exceptions import ValidationError
 
 class CustomLeadMethods(models.Model):
@@ -247,6 +247,7 @@ class CustomLeadMethods(models.Model):
                 'default_x_business_registration_id': self.x_vat,
                 'default_x_lead_code_id': self.id,
                 'default_x_customer_region': self.x_activity_area.id,
+                'default_x_request_date': fields.Date.context_today(self),
             }
         }
 
