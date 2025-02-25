@@ -127,7 +127,8 @@ class CustomLeadMethods(models.Model):
 
     def _get_or_create_partner(self, vals):
         domain = self._build_partner_search_domain(vals)
-        existing_partner = self.env['res.partner'].search(domain, limit=1) if domain else None
+        existing_partner = self.env['res.partner'].search(
+            domain, limit=1) if domain else None
         if existing_partner:
             return existing_partner.id
         return self._create_new_partner(vals).id
@@ -138,11 +139,13 @@ class CustomLeadMethods(models.Model):
         if vals.get('x_vat'):
             domain.append(('x_business_registration_id', '=', vals['x_vat']))
         if vals.get('x_identity_number'):
-            domain.append(('x_identity_number', '=', vals['x_identity_number']))
+            domain.append(('x_identity_number', '=',
+                           vals['x_identity_number']))
         return domain
 
     def _create_new_partner(self, vals):
         partner_vals = {
+            'x_lead_id': vals.get('x_lead_id', 'Lead Id'),
             'name': vals.get('x_partner_name', 'Unnamed Customer'),
             'x_name': vals.get('x_partner_name'),
             'phone': vals.get('phone'),
@@ -197,6 +200,8 @@ class CustomLeadMethods(models.Model):
         for record in self:
             if not record.x_partner_id:  # Check if x_partner_id is missing
                 vals = {
+
+                    'x_lead_id': record.id,
                     'x_partner_name': record.x_partner_name,
                     'phone': record.phone,
                     'email_from': record.email_from,
@@ -257,7 +262,10 @@ class CustomLeadMethods(models.Model):
             if record.x_dealer_branch_id and record.x_dealer_branch_id.state_id:
                 company_state = record.x_dealer_branch_id.state_id
                 if company_state.id != record.x_state_id.id:
-                    raise ValidationError("The selected state must match the state of the Dealer Branch Company.")
+
+                    raise ValidationError(
+                        "The selected state must match the state of the Dealer Branch Company.")
+
 
     # @api.constrains('x_partner_id')
     # def _check_unique_x_partner_id(self):
