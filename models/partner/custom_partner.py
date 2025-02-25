@@ -33,7 +33,7 @@ class ResPartner(models.Model):
 
     x_number_of_vehicles = fields.Integer(string='Number of Vehicles')
     x_hino_vehicle = fields.Integer(string='Hino Vehicle')
-
+    x_allow_dealer_id = fields.Many2many('res.company', string="Dealers allowed to sale with this customer", readonly=1)
     x_number_repair_order = fields.Integer(string='Number of Repair Order')
     x_cumulative_points = fields.Integer(string='Cumulative Points')
     x_register_sale_3rd_id = fields.Many2one('third.party.registration', string='Register Sale 3rd')
