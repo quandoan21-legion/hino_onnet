@@ -14,18 +14,18 @@ class CustomLeadLine(models.Model):
     x_brand_name = fields.Char(string='Brand Name')
     x_is_hino_vehicle = fields.Boolean(
         string='Is Hino Vehicle',
-        related='x_model_id.x_is_hino',
+
         store=True,
-        readonly=True
+
     )
     x_brand_car = fields.Char(string='Car Firm Name')
     customer_rank_upgrade_id = fields.Many2one('customer.rank.upgrade', string='Potential customer')
 
-    @api.depends('x_model_id')
-    def _compute_x_is_hino_vehicle(self):
-        """Tự động lấy giá trị x_is_hino từ product.product"""
-        for record in self:
-            record.x_is_hino_vehicle = record.x_model_id.x_is_hino if record.x_model_id else False
+    # @api.depends('x_model_id')
+    # def _compute_x_is_hino_vehicle(self):
+    #     """Tự động lấy giá trị x_is_hino từ product.product"""
+    #     for record in self:
+    #         record.x_is_hino_vehicle = record.x_model_id.x_is_hino if record.x_model_id else False
 
     def create(self, vals_list):
         for vals in vals_list:

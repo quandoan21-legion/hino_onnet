@@ -6,8 +6,9 @@
             <field name="model">crm.lead</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <form>
+                <form >
                     <header>
+
                         <field name="x_status" invisible="1"/>
                         <button name="action_mark_failed" string="Reject Order" type="object" invisible="x_status != 'draft'" class="oe_highlight"/>
                         <button name="action_create_customer" string="Create Customer" type="object" invisible="x_status != 'draft'" class="oe_highlight"/>

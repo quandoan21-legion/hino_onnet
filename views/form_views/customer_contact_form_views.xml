@@ -4,7 +4,7 @@
         <record id="view_form_custom_customer" model="ir.ui.view">
             <field name="name">res.partner.form</field>
             <field name="model">res.partner</field>
-            <field name="priority">20</field>
+
             <field name="arch" type="xml">
                 <form>
                     <header>
@@ -165,10 +165,11 @@
                                 </group>
                             </page>
                             <page string="Owned Vehicle Fleet">
-                                <field name="x_owned_car_line_ids">
+                                <field name="x_owned_car_line_ids" >
                                     <tree editable="bottom">
-                                        <field name="x_model_name" />
                                         <field name="x_brand_name" />
+                                        <field name="x_is_hino_vehicle" />
+                                        <field name="x_model_name" />
                                         <field name="x_quantity" />
 
                                     </tree>

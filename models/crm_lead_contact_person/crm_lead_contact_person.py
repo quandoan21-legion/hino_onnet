@@ -20,20 +20,20 @@ class CrmLeadContactPerson(models.Model):
                                  string="Phone number",
                                  help="Customer's phone number")
 
-    def _compute_contact_info(self):
-        for record in self:
-            if record.partner_id:
-                record.x_name = record.partner_id.id.name
-                record.x_email = record.partner_id.email
-                record.x_function = record.partner_id.function
-                record.x_phone_number = record.partner_id.phone
+    # def _compute_contact_info(self):
+    #     for record in self:
+    #         if record.partner_id:
+    #             record.x_name = record.partner_id.id.name
+    #             record.x_email = record.partner_id.email
+    #             record.x_function = record.partner_id.function
+    #             record.x_phone_number = record.partner_id.phone
 
-
-    @api.model
-    def create(self, vals_list):
-        for val in vals_list:
-            lead = self.env["crm.lead"].browse(vals_list.get("lead_id"))
-            if lead and lead.x_status != 'draft':
-                ValidationError("You can't create a new Contact due to this lead status is not DRAFT"
-                                )
-            super(CrmLeadContactPerson, self).create(vals_list)
+    #
+    # @api.model
+    # def create(self, vals_list):
+    #     for val in vals_list:
+    #         lead = self.env["crm.lead"].browse(vals_list.get("lead_id"))
+    #         if lead and lead.x_status != 'draft':
+    #             ValidationError("You can't create a new Contact due to this lead status is not DRAFT"
+    #                             )
+    #         super(CrmLeadContactPerson, self).create(vals_list)
