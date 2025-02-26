@@ -73,7 +73,12 @@
         'views/menu/customer_rank_menu_items.xml',
         'views/menu/main_menu_items.xml',
     ],
-
+#     'assets': {
+#     'web.assets_backend': [
+# 'web._assets_primary_variables',
+#         'hino_onnet/static/src/css/hide_columns.css',
+#     ],
+# },
     'demo': [
         'demo/demo.xml',
     ],

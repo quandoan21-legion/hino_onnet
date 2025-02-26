@@ -3,15 +3,15 @@ from odoo import models, fields
 
 class SaleRegion(models.Model):
     _name = 'sale.region'
-    
+
     # x_agency_id = fields.Many2one(
-    #     'dealer.group', 
-    #     string='Dealer', 
-    #     required=True, 
-    #     readonly=True, 
+    #     'dealer.group',
+    #     string='Dealer',
+    #     required=True,
+    #     readonly=True,
     #     help="Automatically fetches the dealer name based on the selected dealer branch."
     # )
-    
+
     x_dealer_branch_id = fields.Many2one(
         'res.company', 
         string='Dealer Branch', 

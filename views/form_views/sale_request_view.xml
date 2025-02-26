@@ -19,6 +19,7 @@
                             invisible="x_state not in ('draft')"/>
                     <field name="x_state" widget="statusbar"
                            statusbar_visible="draft,pending,approved,rejected,partial_sale,completed,cancelled"/>
+
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -28,9 +29,9 @@
                     </div>
                     <group>
                         <group>
-                            <!-- <field name="x_request_dealer_id"/> -->
-                            <!-- <field name="x_dealer_branch_id"/> -->
-                            <field name="x_customer_id"/>
+                            <field name="x_request_dealer_id"/>
+                            <field name="x_dealer_branch_id"/>
+                            <field name="x_customer_id" />
                             <field name="x_customer_name"/>
                             <field name="x_lead_code_id"/>
                             <field name="x_customer_address"/>
@@ -44,7 +45,6 @@
                             <field name="x_reason"/>
                             <field name="x_old_customer"/>
                             <field name="x_customer_type"/>
-                            <field name="x_state" readonly="1"/>
                             <field name="x_request_date"/>
                             <field name="x_expected_sale_date"/>
                             <field name="x_expected_to_sign_contract"/>
@@ -53,28 +53,45 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Sale details">
-                            <!--                            <field name="sale_detail_ids">-->
-                            <!--                                <tree editable="bottom">-->
-                            <!--                                    <field name="x_number"/>-->
-                            <!--                                    <field name="x_customers_use_id"/>-->
-                            <!--                                    <field name="x_customers_name"/>-->
-                            <!--                                    <field name="x_identification_card"/>-->
-                            <!--                                    <field name="x_specific_address"/>-->
-                            <!--                                    <field name="x_province_id"/>-->
-                            <!--                                    <field name="x_product_id"/>-->
-                            <!--                                    <field name="x_bin_type_id"/>-->
-                            <!--                                    <field name="x_quantity"/>-->
-                            <!--                                    <field name="x_quantity_finalize"/>-->
-                            <!--                                    <field name="x_quantity_done"/>-->
-                            <!--                                    <field name="x_note"/>-->
-                            <!--                                    <field name="x_attach_file"/>-->
-                            <!--                                </tree>-->
-                            <!--                            </field>-->
+ <page string="Sale details">
+        <field name="sale_detail_ids">
+            <tree editable="bottom">
+                <field name="x_number"/>
+                <field name="x_customers_use_id" invisible="x_customer_type in ('out_of_area')"/>
+                <field name="x_customers_name"
+    attrs="{'column_invisible': [('x_customer_type', '=', 'out_of_area')]}"
+
+                />
+
+                <field name="x_identification_card"/>
+                <field name="x_specific_address"/>
+                <field name="x_province_id"/>
+                <field name="x_product_id"/>
+                <field name="x_bin_type_id"/>
+                <field name="x_quantity"/>
+                <field name="x_quantity_finalize"/>
+<!--                <field name="x_quantity_done"/>-->
+                <field name="x_note"/>
+                <field name="x_attach_file"/>
+                  <field name="x_customer_type"
+column_invisible="1"
+                />
+                <field name="x_state" column_invisible="1" />
+                <field name="x_check" column_invisible="1" />
+                    <button name="action_cancel" type="object" string="Hủy" class="btn-primary"/>
+                    <button name="action_delete_line" type="object" string="Xóa dòng sản phẩm"
+                        class="btn-danger"
+                            invisible="x_state in ('draft')"
+
+                    />
+            </tree>
+
+        </field>
                         </page>
                         <page string="Approval History">
-                            <field name="approval_history_ids" readonly="1">
+                            <field name="approval_history_ids" readonly="1" >
                                 <tree>
+
                                     <field name="x_confirmer_id"/>
                                     <field name="x_department_id"/>
                                     <field name="x_position_id"/>
@@ -87,11 +104,6 @@
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_chatter" position="inside">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread"/>
-                </div>
             </form>
         </field>
     </record>
