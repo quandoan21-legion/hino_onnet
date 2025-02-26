@@ -1,52 +1,39 @@
 import re
-
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
-
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    # x_potential_count = fields.Integer(compute="_compute_potential_count", string="Potential") - Logic
-    x_potential_count = fields.Integer(string="Lead")
-    # x_contract_count = fields.Integer(compute="_compute_contract_count", string="Contracts") - Logic
-    x_contract_count = fields.Integer(string="Contract")
-    # x_vehicle_management_count = fields.Integer(compute="_compute_vehicle_management_count", string="Vehicle Management") - Logic
-    x_vehicle_management_count = fields.Integer(string="Vehicle Management")
+    x_potential_count = fields.Integer(string="Lead") # x_potential_count = fields.Integer(compute="_compute_potential_count", string="Potential") - Logic
+    x_contract_count = fields.Integer(string="Contract") # x_contract_count = fields.Integer(compute="_compute_contract_count", string="Contracts") - Logic
+    x_vehicle_management_count = fields.Integer(string="Vehicle Management") # x_vehicle_management_count = fields.Integer(compute="_compute_vehicle_management_count", string="Vehicle Management") - Logic
     company_type = fields.Selection(
-        selection_add=[('internal_hmv', 'Internal HMV')],
-    )
-    # liên quan đến dealer.group - chưa có giải thích cụ thể
-    x_dealer_id = fields.Char(string='Dealer', readonly=True)
-    x_dealer_branch_id = fields.Many2one(
-        'res.company', string='Dealer Branch', default=lambda self: self.env.company, tracking=True, readonly=True)
+            selection_add=[('internal_hmv', 'Internal HMV')],
+        )
+    x_dealer_id = fields.Char(string='Dealer', readonly=True) # liên quan đến dealer.group - chưa có giải thích cụ thể
+    x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch', default=lambda self: self.env.company, tracking=True, readonly=True)
     x_customer_type = fields.Selection(
-        [('last_customer', 'Last Customer'), ('third_party',
-                                              'Third Party'), ('body_maker', 'Body Maker')],
+        [('last_customer', 'Last Customer'), ('third_party', 'Third Party'), ('body_maker', 'Body Maker')],
         string='Customer Type', default='last_customer', tracking=True
     )
     x_name = fields.Char(string='Name', tracking=True)
     x_contact_address = fields.Char(string="Address", store=True)
     x_function = fields.Char(string='Function')
-    x_customer_code = fields.Char(
-        string='Customer Code', tracking=True, readonly=True, copy=False)
+    x_customer_code = fields.Char(string='Customer Code', tracking=True, readonly=True, copy=False)
     x_district = fields.Char(string='District')
     x_state_id = fields.Many2one('res.country.state', string="State/Province")
-    x_field_sale_id = fields.Many2one('sale.area', string='Field Sale')
-    x_currently_rank_id = fields.Many2one(
-        'customer.rank', string='Currently Rank')
-    x_business_registration_id = fields.Char(
-        string='Business Registration ID', help='Business Registration ID')
-    x_identity_number = fields.Char(
-        string='Identity Number', help='National or Personal Identity Number')
-    x_industry_id = fields.Many2one(
-        'res.partner.industry', string='Industry', tracking=True)
+    x_field_sale_id = fields.Many2one('sale.area',string='Field Sale')
+    x_currently_rank_id = fields.Many2one('customer.rank', string='Currently Rank')
+    x_business_registration_id = fields.Char(string='Business Registration ID', help='Business Registration ID')
+    x_identity_number = fields.Char(string='Identity Number', help='National or Personal Identity Number')
+    x_industry_id = fields.Many2one('res.partner.industry', string='Industry', tracking=True)
     x_activity_area = fields.Char(string='Activity Area', tracking=True)
-    x_service_contract = fields.Boolean(
-        string='Service Contact', tracking=True)
+    x_service_contract = fields.Boolean(string='Service Contact', tracking=True)
 
-    x_number_of_vehicles = fields.Integer(string='Number of Vehicles', compute='_compute_number_of_vehicles')
-    x_hino_vehicle = fields.Integer(string='Hino Vehicle', compute='_compute_number_of_vehicles')
+    x_number_of_vehicles = fields.Integer(string='Number of Vehicles')
+    x_hino_vehicle = fields.Integer(string='Hino Vehicle')
+    x_allow_dealer_id = fields.Many2many('res.company', string="Dealers allowed to sale with this customer", readonly=1)
     x_number_repair_order = fields.Integer(string='Number of Repair Order')
     x_cumulative_points = fields.Integer(string='Cumulative Points')
     x_register_sale_3rd_id = fields.Many2one(
@@ -59,25 +46,6 @@ class ResPartner(models.Model):
     x_owned_car_line_ids = fields.One2many(
         'owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines', compute='_compute_owned_car_line_ids')
     x_vehicle_images = fields.Binary(attachment=True)
-    x_hino_vehicles = fields.One2many(
-        'owned.team.car.line', 'x_partner_id',
-        string='Hino Vehicles', compute='_compute_x_hino_vehicles', store=False
-    )
-
-    x_other_vehicles = fields.One2many(
-        'owned.team.car.line', 'x_partner_id',
-        string='Other Vehicles', compute='_compute_x_other_vehicles', store=False
-    )
-
-    @api.depends('x_owned_car_line_ids')
-    def _compute_x_hino_vehicles(self):
-        for record in self:
-            record.x_hino_vehicles = record.x_owned_car_line_ids.filtered(lambda c: c.x_is_hino_vehicle)
-
-    @api.depends('x_owned_car_line_ids')
-    def _compute_x_other_vehicles(self):
-        for record in self:
-            record.x_other_vehicles = record.x_owned_car_line_ids.filtered(lambda c: not c.x_is_hino_vehicle)
 
     @api.depends('x_number_of_vehicles', 'x_hino_vehicle')
     def _compute_number_of_vehicles(self):
@@ -141,6 +109,7 @@ class ResPartner(models.Model):
         if self.company_type == 'internal_hmv':
             return
         self.is_company = (self.company_type == 'company')
+    
 
     @api.constrains('x_business_registration_id')
     def _check_business_registration_id(self):

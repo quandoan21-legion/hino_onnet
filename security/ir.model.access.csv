@@ -13,6 +13,11 @@ access_bank_line,hino_onnet.bank.line,model_bank_line,base.group_user,1,1,1,1
 access_contact_line,hino_onnet.contact.line,model_contact_line,base.group_user,1,1,1,1
 access_hino_onnet_customer_follow_up, hino_onnet.crm.follow.up,model_crm_follow_up,,1,1,1,1
 access_hino_onnet_vehicle_interest_line,hino_onnet.crm.lead.vehicle.interest_line,model_crm_lead_vehicle_interest_line,,1,1,1,1
+access_hino_onnet_sale_request,hino_onnet.sale.request,model_sale_request,base.group_user,1,1,1,1
+access_sale_request_refuse_wizard,sale.request.refuse.wizard,model_sale_request_refuse_wizard,base.group_user,1,1,1,0
+access_sale_request_cancel_wizard,sale.request.cancel.wizard,model_sale_request_cancel_wizard,base.group_user,1,1,1,0
+access_sale_request_refuse_wizard,sale.request.refuse.wizard,model_sale_request_refuse_wizard,,1,1,1,0
+access_hino_onnet_sales_request_approval,hino_onnet.sales.request.approval,model_sales_request_approval,base.group_user,1,1,1,1
 access_hino_onnet_lead_contact_person,hino_onnet.crm.lead.contact.person,model_crm_lead_contact_person,,1,1,1,1
 access_approach_channel,hino_onnet.approach.channel,model_approach_channel,base.group_user,1,1,1,1
 access_hino_onnet_customer_follow_up, hino_onnet.crm.follow.up,model_crm_follow_up,,1,1,1,1
@@ -27,4 +32,6 @@ access_third_party_registration_approval,hino_onnet.third.party.registration.app
 access_third_party_registration_reject_wizard,hino_onnet.third.party.registration.reject.wizard,model_third_party_registration_reject_wizard,base.group_user,1,1,1,1
 access_res_partner,hino_onnet.res_partner,model_res_partner,base.group_user,1,1,1,1
 access_hino_onnet_body_type, hino_onnet.sale.body.type,model_hino_body_type,,1,1,1,1
+access_sale_detail_all,sale.detail all access,model_sale_detail,,1,1,1,1
+access_sale_detail_user,sale.detail.user,model_sale_detail,base.group_user,1,1,1,1
 access_crm_lead_report,hino_onnet.crm.lead.report,model_crm_lead_report,base.group_user,1,1,1,1

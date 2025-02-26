@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View for Sale Request -->
+    <record id="view_sale_request_tree" model="ir.ui.view">
+        <field name="name">sale.request.tree</field>
+        <field name="model">sale.request</field>
+        <field name="arch" type="xml">
+            <tree string="Sale Requests" create="false">
+                <field name="x_request_code"/>
+                 <field name="x_request_dealer_id"/>
+                <field name="x_request_date"/>
+                <field name="x_customer_type"/>
+                <field name="x_state"/>
+            </tree>
+        </field>
+    </record>
+    <!-- Action to open the tree view -->
+    <record id="action_sale_request" model="ir.actions.act_window">
+        <field name="name">Sale Requests</field>
+        <field name="res_model">sale.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first sale request</p>
+        </field>
+    </record>
+
+
+</odoo>

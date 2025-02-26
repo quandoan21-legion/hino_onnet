@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View for Sale Request -->
+    <record id="view_sale_request_form" model="ir.ui.view">
+        <field name="name">sale.request.form</field>
+        <field name="model">sale.request</field>
+        <field name="arch" type="xml">
+            <form string="Sale Request">
+                <header>
+                    <button name="action_submit" string="Submit" class="oe_highlight" type="object"
+                            invisible="x_state not in ('draft')"/>
+                    <button name="action_approve" string="Approve" class="oe_highlight" type="object"
+                            invisible="x_state not in ('pending')"/>
+                    <button name="action_refuse" string="Refuse" class="oe_highlight" type="object"
+                            invisible="x_state not in ('pending')"/>
+                    <button name="action_cancel" string="Cancel" class="oe_highlight" type="object"
+                            invisible="x_state not in ('draft')"/>
+                    <button name="action_send_mail" string="Send Mail" class="oe_highlight" type="object"
+                            invisible="x_state not in ('draft')"/>
+                    <field name="x_state" widget="statusbar"
+                           statusbar_visible="draft,pending,approved,rejected,partial_sale,completed,cancelled"/>
+
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="x_request_code"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="x_request_dealer_id"/>
+                            <field name="x_dealer_branch_id"/>
+                            <field name="x_customer_id" />
+                            <field name="x_customer_name"/>
+                            <field name="x_lead_code_id"/>
+                            <field name="x_customer_address"/>
+                            <field name="x_province_id"/>
+                            <field name="x_customer_region"/>
+                            <field name="x_identification_id"/>
+                            <field name="x_business_registration_id"/>
+                        </group>
+                        <group>
+                            <field name="x_request_content_id"/>
+                            <field name="x_reason"/>
+                            <field name="x_old_customer"/>
+                            <field name="x_customer_type"/>
+                            <field name="x_request_date"/>
+                            <field name="x_expected_sale_date"/>
+                            <field name="x_expected_to_sign_contract"/>
+                            <field name="x_approve_date" readonly="1"/>
+                            <field name="x_attach_file" filename="x_attach_filename"/>
+                        </group>
+                    </group>
+                    <notebook>
+ <page string="Sale details">
+        <field name="sale_detail_ids">
+            <tree editable="bottom">
+                <field name="x_number"/>
+                <field name="x_customers_use_id" invisible="x_customer_type in ('out_of_area')"/>
+                <field name="x_customers_name"
+    attrs="{'column_invisible': [('x_customer_type', '=', 'out_of_area')]}"
+
+                />
+
+                <field name="x_identification_card"/>
+                <field name="x_specific_address"/>
+                <field name="x_province_id"/>
+                <field name="x_product_id"/>
+                <field name="x_bin_type_id"/>
+                <field name="x_quantity"/>
+                <field name="x_quantity_finalize"/>
+<!--                <field name="x_quantity_done"/>-->
+                <field name="x_note"/>
+                <field name="x_attach_file"/>
+                  <field name="x_customer_type"
+column_invisible="1"
+                />
+                <field name="x_state" column_invisible="1" />
+                <field name="x_check" column_invisible="1" />
+                    <button name="action_cancel" type="object" string="Hủy" class="btn-primary"/>
+                    <button name="action_delete_line" type="object" string="Xóa dòng sản phẩm"
+                        class="btn-danger"
+                            invisible="x_state in ('draft')"
+
+                    />
+            </tree>
+
+        </field>
+                        </page>
+                        <page string="Approval History">
+                            <field name="approval_history_ids" readonly="1" >
+                                <tree>
+
+                                    <field name="x_confirmer_id"/>
+                                    <field name="x_department_id"/>
+                                    <field name="x_position_id"/>
+                                    <field name="x_state_from"/>
+                                    <field name="x_state_to"/>
+                                    <field name="x_confirm_date"/>
+                                    <field name="x_reason"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,16 @@
+/* Hide columns with the class 'hide-column' */
+.hide-column {
+    display: none !important;
+}
+
+/* Optional: Hide column headers in tree views */
+.o_list_view thead th[data-name="x_customer_type"],
+.o_list_view thead th[data-name="x_state"] {
+    display: none !important;
+}
+
+/* Hide specific columns in tree views */
+.o_list_view tbody td[data-name="x_customer_type"],
+.o_list_view tbody td[data-name="x_state"] {
+    display: none !important;
+}
