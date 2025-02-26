@@ -1,4 +1,4 @@
-from odoo import models, fields, api,exceptions
+from odoo import models, fields, api
 
 
 class CustomLead(models.Model):
@@ -65,7 +65,7 @@ class CustomLead(models.Model):
     x_service_contract = fields.Boolean(
         string='Service Contact', tracking=True, require=True)
     x_activity_area = fields.Many2one('sale.area',
-        string='Activity Area', tracking=True, require=True)
+                                      string='Activity Area', tracking=True, require=True)
     x_dealer_id = fields.Many2one(
         'res.company',
         string='Dealer',
@@ -104,7 +104,6 @@ class CustomLead(models.Model):
         ('cancelled', 'Cancelled'),
     ], string='Status', default='draft', tracking=True)
 
-
     @api.depends('x_status')
     def _compute_readonly_fields(self):
         for record in self:
@@ -113,4 +112,3 @@ class CustomLead(models.Model):
     # _sql_constraints = [
     # ('unique_x_partner_id', 'UNIQUE(x_partner_id)', 'This customer already exists in another lead!')
     # ]
-
