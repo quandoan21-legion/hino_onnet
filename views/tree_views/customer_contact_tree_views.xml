@@ -22,7 +22,7 @@
                 <field name="website" optional="hide"/>
                 <field name="phone" optional="show"/>
                 <field name="mobile" optional="hide"/>
-                <field name="x_industry_id" optional="hide"/>
+<!--                <field name="x_industry_id" optional="hide"/>-->
                 <field name="x_activity_area" optional="hide"/>
             </tree>
         </field>

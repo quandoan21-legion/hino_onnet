@@ -27,7 +27,7 @@ class ResPartner(models.Model):
     x_currently_rank_id = fields.Many2one('customer.rank', string='Currently Rank')
     x_business_registration_id = fields.Char(string='Business Registration ID', help='Business Registration ID')
     x_identity_number = fields.Char(string='Identity Number', help='National or Personal Identity Number')
-    x_industry_id = fields.Many2one('res.partner.industry', string='Industry', tracking=True)
+    # x_industry_id = fields.Many2one('res.partner.industry', string='Industry', tracking=True)
     x_activity_area = fields.Char(string='Activity Area', tracking=True)
     x_service_contract = fields.Boolean(string='Service Contact', tracking=True)
 
@@ -46,7 +46,9 @@ class ResPartner(models.Model):
     x_owned_car_line_ids = fields.One2many(
         'owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines', compute='_compute_owned_car_line_ids')
     x_vehicle_images = fields.Binary(attachment=True)
-
+    # x_owned_car_line_ids = fields.One2many(
+    #     'owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines'
+    # )
     @api.depends('x_number_of_vehicles', 'x_hino_vehicle')
     def _compute_number_of_vehicles(self):
         for record in self:
