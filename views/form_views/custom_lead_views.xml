@@ -18,7 +18,7 @@
                             invisible="x_status != 'in progress'" />
                         <button name="action_view_third_party_registration"
                             string="Propose in Encroaching area/Third party/Body maker"
-                            type="object" invisible="x_customer_type == 'third_party'" />
+                            type="object" invisible="x_request_sale_3rd_barrels_id" />
                         <field name="x_status" widget="statusbar"
                             statusbar_visible="draft,contract signed,in progress,completed,failed,cancelled" />
                     </header>
@@ -77,7 +77,7 @@
                                     readonly="x_status not in ('draft')" />
                             </group>
                         </group>
-                                                <group invisible="x_purchase_type != 'bidding'"
+                        <group invisible="x_purchase_type != 'bidding'"
                             readonly="x_status not in ('draft')">
                             <group>
                                 <field name="x_bidding_package" readonly="x_status not in ('draft')" />
