@@ -16,45 +16,49 @@
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="contract_code" nolabel="1"/>
+                            <field name="contract_code" nolabel="1" readonly="True"/>
                         </h1>
                     </div>
                     <group>
                         <group>
-                            <field name="customer_id"/>
-                            <field name="lead_code_id"/>
-                            <field name="address"/>
+                            <field name="customer_id" readonly="True"/>
+                            <field name="lead_code_id" readonly="True"/>
+                            <field name="address" readonly="True"/>
                             <field name="customer_class_id"/>
-                            <field name="attachment_ids" widget="many2many_binary" class="oe_inline"/>
+                            <field name="attachment_ids"
+                                   widget="many2many_binary"
+                                   class="oe_inline"
+                                   readonly="x_readonly_fields"/>
+<!--                            <field name="project_id"/>-->
                         </group>
                         <group>
-                            <field name="sign_day"/>
-                            <field name="sign_week"/>
-                            <field name="dealer_branch_id"/>
-                            <field name="salesperson_id"/>
-                            <field name="purchase_type"/>
+                            <field name="sign_day" readonly="x_readonly_fields"/>
+                            <field name="sign_week" readonly="x_readonly_fields"/>
+                            <field name="dealer_branch_id" readonly="True"/>
+                            <field name="salesperson_id" readonly="x_readonly_fields"/>
+                            <field name="purchase_type" readonly="True"/>
                         </group>
                     </group>
                     <field name="contract_line_ids" mode="tree,form">
                         <tree>
                             <field name="category"/>
-    <!--                                <field name="end_customer_id "/>-->
+                            <field name="end_customer_id"/>
                             <field name="address"/>
                             <field name="province_city_id"/>
-                            <field name="model_id"/>
-                            <field name="barrel_type_id"/>
+<!--                            <field name="model_id"/>-->
+<!--                            <field name="barrel_type_id"/>-->
                             <field name="deposit_status"/>
                             <field name="supply_status"/>
-                            <field name="vin_expected_to_be_allocated_id"/>
-                            <field name="engine_number_id"/>
+<!--                            <field name="vin_expected_to_be_allocated_id"/>-->
+<!--                            <field name="engine_number_id"/>-->
                             <field name="barrel_state"/>
                             <field name="barrel_voucher_state"/>
                             <field name="vta_number"/>
-                            <field name="payment_method_id"/>
-                            <field name="bank_id"/>
+<!--                            <field name="payment_method_id"/>-->
+<!--                            <field name="bank_id"/>-->
                             <field name="payment_status"/>
                             <field name="expected_month_retail_sales"/>
-                            <field name="retail_coupon"/>
+<!--                            <field name="retail_coupon"/>-->
                             <field name="retail_day"/>
                             <field name="note"/>
                             <field name="cancellation_reason"/>
