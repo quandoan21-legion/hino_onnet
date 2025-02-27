@@ -104,6 +104,7 @@ class CustomLead(models.Model):
         ('cancelled', 'Cancelled'),
     ], string='Status', default='draft', tracking=True)
 
+    car_line_ids = fields.One2many('owned.team.car.line', 'lead_id', string="Owned Cars")
     @api.depends('x_status')
     def _compute_readonly_fields(self):
         for record in self:
@@ -112,3 +113,8 @@ class CustomLead(models.Model):
     # _sql_constraints = [
     # ('unique_x_partner_id', 'UNIQUE(x_partner_id)', 'This customer already exists in another lead!')
     # ]
+    def _sync_car_lines(self):
+        """Sync lead car lines with related partners"""
+        for lead in self:
+            if lead.partner_id:
+                lead.partner_id._sync_owned_car_lines()

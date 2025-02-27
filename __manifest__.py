@@ -72,6 +72,7 @@
         'views/menu/sale_area_menu_items.xml',
         'views/menu/customer_rank_menu_items.xml',
         'views/menu/main_menu_items.xml',
+        'views/action/CheckCarContact.xml'
     ],
 #     'assets': {
 #     'web.assets_backend': [

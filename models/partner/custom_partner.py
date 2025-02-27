@@ -49,6 +49,11 @@ class ResPartner(models.Model):
     # x_owned_car_line_ids = fields.One2many(
     #     'owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines'
     # )
+    car_line_ids = fields.One2many(
+        'owned.team.car.line', 'partner_id',
+        string='Owned Car Lines',
+
+    )
     @api.depends('x_number_of_vehicles', 'x_hino_vehicle')
     def _compute_number_of_vehicles(self):
         for record in self:
@@ -234,3 +239,22 @@ class ResPartner(models.Model):
             'view_mode': 'form',
             'res_model': 'customer.rank.upgrade',
         }
+
+    @api.onchange('car_line_ids')
+    def _onchange_car_line_ids(self):
+        """Synchronize x_owned_car_line_ids with car_line_ids when modified"""
+        for partner in self:
+            partner.x_owned_car_line_ids = partner.car_line_ids
+
+    @api.onchange('x_owned_car_line_ids')
+    def _onchange_x_owned_car_line_ids(self):
+        """Ensure car_line_ids matches x_owned_car_line_ids when modified"""
+        for partner in self:
+            partner.car_line_ids = partner.x_owned_car_line_ids
+
+    def _sync_owned_car_lines(self):
+        """Ensure partner car lines match with related leads"""
+        for partner in self:
+            lead_lines = self.env['owned.team.car.line'].search([('lead_id.partner_id', '=', partner.id)])
+            partner.x_owned_car_line_ids = [(6, 0, lead_lines.ids)]
+            partner.car_line_ids = [(6, 0, lead_lines.ids)]

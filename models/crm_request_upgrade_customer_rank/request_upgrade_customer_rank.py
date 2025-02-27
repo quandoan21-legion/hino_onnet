@@ -63,6 +63,29 @@ class CustomerRankUpgrade(models.Model):
         compute='_compute_x_owned_team_car_ids',
         store=True
     )
+    x_owned_car_line_ids = fields.One2many(
+        'owned.team.car.line', 'x_partner_id',
+        string='Owned Vehicle List',
+        compute='_compute_x_owned_car_line_ids',
+        store=True
+    )
+
+    @api.depends('x_partner_id')
+    def _compute_x_owned_car_line_ids(self):
+        for record in self:
+            if record.x_partner_id:
+                record.x_owned_car_line_ids = record.x_partner_id.x_owned_car_line_ids
+                record.x_owned_team_car_ids = record.x_partner_id.x_owned_car_line_ids
+            else:
+                record.x_owned_car_line_ids = [(5, 0, 0)]
+                record.x_owned_team_car_ids = [(5, 0, 0)]
+    @api.depends('x_partner_id')
+    def _compute_x_owned_car_line_ids(self):
+        for record in self:
+            if record.x_partner_id:
+                record.x_owned_car_line_ids = record.x_partner_id.x_owned_car_line_ids
+            else:
+                record.x_owned_car_line_ids = [(5, 0, 0)]
 
     @api.depends('x_partner_id')
     def _compute_x_owned_team_car_ids(self):
