@@ -1,6 +1,7 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
+
 class SaleRegionValidation(models.AbstractModel):
     _inherit = 'sale.region'
 

@@ -1,6 +1,7 @@
+import logging
+
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
-import logging
 
 # Initialize logger
 _logger = logging.getLogger(__name__)
@@ -19,7 +20,7 @@ class ThirdPartyRegistration(models.Model):
     x_name = fields.Char(string='3rd Unit Register/Packaging House', required=True)
     x_registration_code = fields.Char(string='Registration Code', readonly=True, copy=False, tracking=True)
     x_customer_id = fields.Many2one('res.partner', string='Customer Name', required=True, tracking=True)
-    x_customer_code = fields.Char(related='x_customer_id.x_customer_code', string='Customer Code', readonly=True)
+    x_customer_code = fields.Char(related='x_customer_id.x_customer_code', string='Customer Code', readonly=True, store=True)
     x_representative_id = fields.Many2one('res.partner', string='Representative', required=True, tracking=True)
     x_phone = fields.Char(
         related='x_customer_id.phone',  # Relate to customer's phone
@@ -28,7 +29,7 @@ class ThirdPartyRegistration(models.Model):
         readonly=False,  # Allow editing
         tracking=True
     )
-    x_business_field_id = fields.Many2one('res.partner.industry', string='Business Field', tracking=True)
+    x_business_field_id = fields.Many2one('res.partner.industry', string='Industry', tracking=True)
     x_registration_type = fields.Selection([
         ('last_customer', 'Last Customer'),
         ('third_party', 'Third Party'),
@@ -89,6 +90,7 @@ class ThirdPartyRegistration(models.Model):
     def _onchange_customer_id(self):
         if self.x_customer_id and self.x_customer_id.phone:
             self.x_phone = self.x_customer_id.phone
+            self.x_business_field_id = self.x_customer_id.x_industry_id
 
     def action_submit(self):
         """Submit registration for approval"""
@@ -217,5 +219,5 @@ class ThirdPartyRegistration(models.Model):
             existing_registration = record.env['third.party.registration'].search(registration_domain, limit=1)
             if existing_registration:
                 raise ValidationError(
-                    f'Phone number already exists in registration: {existing_registration.x_name}'
+                    f'User has already create a registration. \nCreated Registration Form Code: {existing_registration.x_registration_code}'
                 )

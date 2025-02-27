@@ -33,15 +33,46 @@ class ResPartner(models.Model):
 
     x_number_of_vehicles = fields.Integer(string='Number of Vehicles')
     x_hino_vehicle = fields.Integer(string='Hino Vehicle')
-
+    x_allow_dealer_id = fields.Many2many('res.company', string="Dealers allowed to sale with this customer", readonly=1)
     x_number_repair_order = fields.Integer(string='Number of Repair Order')
     x_cumulative_points = fields.Integer(string='Cumulative Points')
-    x_register_sale_3rd_id = fields.Many2one('third.party.registration', string='Register Sale 3rd')
-    x_bank_line_ids = fields.One2many('bank.line', 'x_partner_id', string='Bank Lines')
-    x_contact_line_ids = fields.One2many('contact.line', 'x_partner_id', string='Contact Lines')
-    x_owned_car_line_ids = fields.One2many('owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines')
+    x_register_sale_3rd_id = fields.Many2one(
+        'third.party.registration', string='Register Sale 3rd')
+    x_bank_line_ids = fields.One2many(
+        'bank.line', 'x_partner_id', string='Bank Lines')
+    x_contact_line_ids = fields.One2many(
+        'contact.line', 'x_partner_id', string='Contact Lines')
+    x_lead_id = fields.Integer(string="lead id")
+    x_owned_car_line_ids = fields.One2many(
+        'owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines', compute='_compute_owned_car_line_ids')
     x_vehicle_images = fields.Binary(attachment=True)
 
+    @api.depends('x_number_of_vehicles', 'x_hino_vehicle')
+    def _compute_number_of_vehicles(self):
+        for record in self:
+            if record.x_lead_id:
+                record.x_number_of_vehicles = self.env['owned.team.car.line'].read_group(
+                    [('lead_id', '=', record.x_lead_id)],
+                    ['x_quantity:sum'],
+                    []
+                )[0]['x_quantity']
+                record.x_hino_vehicle = self.env['owned.team.car.line'].read_group(
+                    [('lead_id', '=', record.x_lead_id), ('x_is_hino_vehicle', '=', True)],
+                    ['x_quantity:sum'],
+                    []
+                )[0]['x_quantity']
+            else:
+                record.x_number_of_vehicles = 0
+                record.x_hino_vehicle = 0
+
+    @api.depends('x_lead_id')
+    def _compute_owned_car_line_ids(self):
+        for partner in self:
+            if partner.x_lead_id:
+                partner.x_owned_car_line_ids = self.env['owned.team.car.line'].search(
+                    [('lead_id', '=', partner.x_lead_id)])
+            else:
+                partner.x_owned_car_line_ids = self.env['owned.team.car.line']
     @api.constrains('phone')
     def _check_phone_unique(self):
         for record in self:
@@ -56,7 +87,8 @@ class ResPartner(models.Model):
     @api.model
     def create(self, vals):
         if not vals.get('x_customer_code'):
-            vals['x_customer_code'] = self.env['ir.sequence'].next_by_code('res.partner.cus_number')
+            vals['x_customer_code'] = self.env['ir.sequence'].next_by_code(
+                'res.partner.cus_number')
         return super().create(vals)
 
     @api.depends('is_company')
@@ -84,16 +116,19 @@ class ResPartner(models.Model):
         for record in self:
             if record.x_business_registration_id:
                 existing = self.search([
-                    ('x_business_registration_id', '=', record.x_business_registration_id),
+                    ('x_business_registration_id', '=',
+                     record.x_business_registration_id),
                     ('id', '!=', record.id)
                 ])
                 if existing:
-                    raise ValidationError("Business Registration ID must be unique.")
-        
+                    raise ValidationError(
+                        "Business Registration ID must be unique.")
+
             if record.x_business_registration_id:
-                if not re.fullmatch(r'\d{1,9}', record.x_business_registration_id):
-                    raise ValidationError("Business Registration ID must contain only numbers and be at most 10 digits long.")
-    
+                if not re.fullmatch(r'^\d{1,10}$', record.x_business_registration_id):
+                    raise ValidationError(
+                        "Business Registration ID must contain only numbers and be at most 10 digits long.")
+
     @api.constrains('x_identity_number')
     def _check_identity_number(self):
         for record in self:
@@ -103,35 +138,39 @@ class ResPartner(models.Model):
                     ('id', '!=', record.id)
                 ])
                 if existing:
-                    raise ValidationError("The Identity number must be unique.")
+                    raise ValidationError(
+                        "The Identity number must be unique.")
 
             if record.x_identity_number:
                 if not re.match(r'^\d{9,12}$', record.x_identity_number):
-                    raise ValidationError("The Identity number must contain from 9 to 12 digits.")
-    
+                    raise ValidationError(
+                        "The Identity number must contain from 9 to 12 digits.")
+
     @api.constrains('phone', 'mobile')
     def _check_phone_number_format(self):
         for record in self:
             if record.phone and not re.fullmatch(r'0\d{1,9}', record.phone):
-                raise ValidationError("Phone number must not more than 10 digits and start with 0.")
+                raise ValidationError(
+                    "Phone number must not more than 10 digits and start with 0.")
             if record.mobile and not re.fullmatch(r'0\d{1,9}', record.mobile):
-                raise ValidationError("Mobile number must not more than 10 digits and start with 0.")
+                raise ValidationError(
+                    "Mobile number must not more than 10 digits and start with 0.")
 
-    @api.constrains('x_business_registration_id', 'x_customer_type', 'x_register_sale_3rd_id', 'x_identity_number')
-    def _check_required_fields(self):
-        for record in self:
-            if record.company_type == 'internal_hmv':
-                continue  
-            if not record.is_company and not record.x_identity_number:
-                raise ValidationError("Identity Number is required for individuals. Please enter a valid Identity Number.")
-            if record.is_company and not record.x_business_registration_id:
-                raise ValidationError("Business Registration ID is required for companies. Please enter a valid Business Registration ID.")
-            if record.x_customer_type == 'third_party' and not record.x_register_sale_3rd_id:
-                raise ValidationError("Register Sale 3rd is required for Third Party customers. Please enter a valid Register Sale 3rd ID.")
-    
+    # @api.constrains('x_business_registration_id', 'x_customer_type', 'x_register_sale_3rd_id', 'x_identity_number')
+    # def _check_required_fields(self):
+    #     for record in self:
+    #         if record.company_type == 'internal_hmv':
+    #             continue
+    #         if not record.is_company and not record.x_identity_number:
+    #             raise ValidationError("Identity Number is required for individuals. Please enter a valid Identity Number.")
+    #         if record.is_company and not record.x_business_registration_id:
+    #             raise ValidationError("Business Registration ID is required for companies. Please enter a valid Business Registration ID.")
+    #         if record.x_customer_type == 'third_party' and not record.x_register_sale_3rd_id:
+    #             raise ValidationError("Register Sale 3rd is required for Third Party customers. Please enter a valid Register Sale 3rd ID.")
+
     # def _compute_potential_count(self):
     #     for record in self:
-    #         record.x_potential_count = self.env['crm.lead'].search_count([('x_partner_id', '=', record.id)]) 
+    #         record.x_potential_count = self.env['crm.lead'].search_count([('x_partner_id', '=', record.id)])
 
     # def _compute_contract_count(self):
     #     for record in self:
@@ -149,6 +188,7 @@ class ResPartner(models.Model):
             'res_model': 'crm.lead',
             'domain': [('x_partner_id', '=', self.id)],
             'context': {'default_x_partner_id': self.id},
+            'views': [(self.env.ref('hino_onnet.customlead_view_tree').id, 'tree'), (False, 'form')],
         }
 
     def action_view_contracts(self):
