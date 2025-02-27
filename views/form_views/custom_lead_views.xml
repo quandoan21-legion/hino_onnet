@@ -13,7 +13,7 @@
                         <button name="action_mark_failed" string="Reject Order" type="object"
                             invisible="x_status != 'draft'" class="oe_highlight" />
                         <button name="action_create_customer" string="Create Customer" type="object"
-                            invisible="x_status != 'draft'" class="oe_highlight" />
+                            invisible="x_partner_id" class="oe_highlight" />
                         <button name="action_mark_failed" string="Failed" type="object"
                             invisible="x_status != 'in progress'" />
                         <button name="action_view_third_party_registration"
@@ -77,7 +77,7 @@
                                     readonly="x_status not in ('draft')" />
                             </group>
                         </group>
-                        <group invisible="x_purchase_type != 'bidding'"
+                                                <group invisible="x_purchase_type != 'bidding'"
                             readonly="x_status not in ('draft')">
                             <group>
                                 <field name="x_bidding_package" readonly="x_status not in ('draft')" />
