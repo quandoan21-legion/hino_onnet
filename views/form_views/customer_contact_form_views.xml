@@ -10,7 +10,7 @@
                     <header>
                         <button name="action_upgrade_client" string="Upgrade Client" type="object"
                             class="oe_highlight" />
-                        <field name="x_owned_car_line_ids"/>
+<!--                        <field name="x_owned_car_line_ids"/>-->
                     </header>
                     <sheet>
                         <field name="avatar_128" invisible="1" />
