@@ -49,9 +49,17 @@ class CRMContract(models.Model):
     ) # this field need condition, or else manual insert
     sign_day = fields.Date(
         string="Sign day",
+        # this field need logic to get sign day from this week or last week
     )
     sign_week = fields.Integer(
         string="Sign week",
+        # this field need logic to auto get sign week
+    )
+    # dealer_id in problem
+    dealer_id = fields.Many2one(
+        'res.company',
+        string="Dealer",
+        compute="_compute_dealer_id"
     )
     dealer_branch_id = fields.Many2one(
         'res.company',
@@ -68,6 +76,9 @@ class CRMContract(models.Model):
 
     @api.model
     def create(self, vals):
+        """
+        create contract code sequence base on fiscal year, if not, use this year
+        """
         # Get the current fiscal year
         fiscal_year = self.env['account.fiscal.year'].search([], order="date_from desc", limit=1)
         year_suffix = fiscal_year.name[-2:] if fiscal_year else datetime.today().year % 100
@@ -79,9 +90,25 @@ class CRMContract(models.Model):
 
     @api.constrains('sign_day')
     def _check_sign_day(self):
+        """
+        logic for sign day here
+        """
         return None
 
-    @api.depends('status')
-    def _compute_readonly_fields(self):
+    def action_cancel_contract(self):
+        """
+        logic for cancel button
+        """
+        self.write({'status': 'cancelled'})
+
+    def sales_info(self):
+        """
+        placeholder for button sales infomation
+        :return:
+        """
+        return None
+
+    @api.depends('dealer_branch_id')
+    def _compute_dealer_id(self):
         for record in self:
-            record.x_readonly_fields = record.x_status != 'draft'
+            record.dealer_id = record.dealer_branch_id.parent_id if record.dealer_branch_id else False

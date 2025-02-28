@@ -8,8 +8,15 @@
             <field name="arch" type="xml">
                 <form>
                 <header>
-                    <button string="Retail information"/>
-                    <button string="Cancel"/>
+                    <button name="sales_info"
+                            string="Sales information"
+                            type="object"
+                            class="oe_highlight"/>
+                    <button name="action_cancel_contract"
+                            type="object"
+                            invisible="status != 'draft'"
+                            string="Cancel"
+                            class="oe_highlight" />
                     <field name="status" widget="statusbar"
                            statusbar_visible="draft,in_progress,completed,cancelled"/>
                 </header>
@@ -28,41 +35,43 @@
                             <field name="attachment_ids"
                                    widget="many2many_binary"
                                    class="oe_inline"
-                                   readonly="x_readonly_fields"/>
+                                   readonly="status != 'draft'"/>
 <!--                            <field name="project_id"/>-->
                         </group>
                         <group>
-                            <field name="sign_day" readonly="x_readonly_fields"/>
-                            <field name="sign_week" readonly="x_readonly_fields"/>
+                            <field name="sign_day" readonly="status != 'draft'"/>
+                            <field name="sign_week" readonly="status != 'draft'"/>
+                            <field name="dealer_id" readonly="True"/>
                             <field name="dealer_branch_id" readonly="True"/>
-                            <field name="salesperson_id" readonly="x_readonly_fields"/>
+                            <field name="salesperson_id" readonly="status != 'draft'"/>
                             <field name="purchase_type" readonly="True"/>
                         </group>
                     </group>
                     <field name="contract_line_ids" mode="tree,form">
                         <tree>
-                            <field name="category"/>
-                            <field name="end_customer_id"/>
-                            <field name="address"/>
-                            <field name="province_city_id"/>
+                            <field name="line_category" readonly="True"/>
+                            <field name="line_end_customer_id" readonly="line_status != 'in_progress'"/>
+                            <field name="line_address" readonly="line_status != 'in_progress'"/>
+                            <field name="line_province_city_id" readonly="line_status != 'in_progress'"/>
+                            <field name="line_third_party_offer_ids" readonly="line_status != 'in_progress'"/>
 <!--                            <field name="model_id"/>-->
 <!--                            <field name="barrel_type_id"/>-->
-                            <field name="deposit_status"/>
-                            <field name="supply_status"/>
+                            <field name="line_deposit_status" readonly="line_status != 'in_progress'"/>
+                            <field name="line_supply_status" readonly="line_status != 'in_progress'"/>
 <!--                            <field name="vin_expected_to_be_allocated_id"/>-->
 <!--                            <field name="engine_number_id"/>-->
-                            <field name="barrel_state"/>
-                            <field name="barrel_voucher_state"/>
-                            <field name="vta_number"/>
+                            <field name="line_barrel_state" readonly="line_status != 'in_progress'"/>
+                            <field name="line_barrel_voucher_state" readonly="line_status != 'in_progress'"/>
+                            <field name="line_vta_number" readonly="line_status != 'in_progress'"/>
 <!--                            <field name="payment_method_id"/>-->
 <!--                            <field name="bank_id"/>-->
-                            <field name="payment_status"/>
-                            <field name="expected_month_retail_sales"/>
+                            <field name="line_payment_status" readonly="line_status != 'in_progress'"/>
+                            <field name="line_expected_month_retail_sales"/>
 <!--                            <field name="retail_coupon"/>-->
-                            <field name="retail_day"/>
-                            <field name="note"/>
-                            <field name="cancellation_reason"/>
-                            <field name="status"/>
+                            <field name="line_retail_day" readonly="line_status != 'in_progress'"/>
+                            <field name="line_note" readonly="line_status != 'in_progress'"/>
+                            <field name="line_cancellation_reason" readonly="line_status != 'in_progress'"/>
+                            <field name="line_status"/>
                         </tree>
                     </field>
                 </sheet>

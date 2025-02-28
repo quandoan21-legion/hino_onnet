@@ -47,7 +47,7 @@ class CustomLead(models.Model):
     x_request_sale_3rd_barrels_id = fields.Many2one('third.party.registration',
                                                     string='Proposal to sell in Encroaching area/Third party/Body maker',
                                                     readonly=True,
-                                                    domain="[('x_customer_id', '=', x_partner_id), ('x_state', '=', 'approved')]")
+                                                        domain="[('x_customer_id', '=', x_partner_id), ('x_state', '=', 'approved')]")
     # domain="[('x_state', '=', 'approved')]")
 
     x_purchase_type = fields.Selection(

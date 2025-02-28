@@ -2,7 +2,7 @@ import re
 from datetime import datetime
 
 from odoo import models, fields, api, exceptions
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 class CustomLeadMethods(models.Model):
     _inherit = 'crm.lead'
@@ -279,3 +279,52 @@ class CustomLeadMethods(models.Model):
     #             if existing_lead:
     #                 raise ValidationError("This customer is already assigned to another lead!")
     #
+    def _prepare_contract_values(self):
+        """Prepare values for crm.contract"""
+        self.ensure_one()
+        return {
+            'customer_id': self.x_partner_id.id,
+            'lead_code_id': self.id,
+            'address': self.x_contact_address_complete,
+            'customer_class_id': self.x_partner_rank_id.id,
+            'purchase_type': self.x_purchase_type,
+            'salesperson_id': self.x_sale_person_id.id,
+            'dealer_id': self.x_dealer_id.id,
+            'dealer_branch_id': self.x_dealer_branch_id.id,
+        }
+    def _prepare_contract_line_values(self, contract):
+        """Prepare values for crm.contract.line"""
+        contract_lines = []
+        vehicle_interest = self.env['crm.lead.vehicle.interest.line'].search([('lead_id','=',self.id)])
+        for vehicle in vehicle_interest:
+            for _ in range(vehicle.x_quantity):
+                contract_lines.append({
+                    'contract_id':contract.id,
+                    'line_end_customer_id':vehicle.x_partner_code.id,
+                    'line_model_id':vehicle.x_model_id.id,
+                })
+            contract_lines.append({
+                'line_address':self.x_contact_address_complete,
+                'line_province_city_id':self.x_state_id.id,
+            })
+    def action_create_contract(self):
+        """Create contract and change X_status to contract_signed"""
+        contract_obj = self.env['crm.contract']
+        contract_line_obj = self.env['crm.contract.line']
+
+        for lead in self:
+            if not lead.x_partner_id:
+                raise UserError("Need customer to create contact")
+
+        #create crm.contract record
+        contract_vals = lead._prepare_contract_values()
+        contract = contract_obj.create(contract_vals)
+
+        #create crm.contract.line record
+        contract_line_vals = lead._prepare_contract_line_values(contract)
+        contract_line_obj.create(contract_line_vals)
+
+        # Update lead status
+        self.write({'x_status': 'contract signed'})
+
+        return True
