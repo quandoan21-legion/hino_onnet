@@ -52,10 +52,10 @@ class CustomLeadMethods(models.Model):
             business_reg_id = self.x_partner_id.x_business_registration_id or ''
             self.x_vat = self.x_partner_id.x_business_registration_id
             self.x_identity_number = self.x_partner_id.x_identity_number
-            self.x_industry_id = self.x_partner_id.x_industry_id
+            self.x_industry_id = self.x_partner_id.x_industry_id.id if self.x_partner_id.x_industry_id else False
             self.x_service_contract = self.x_partner_id.x_service_contract
             self.x_request_sale_3rd_barrels_id = self.x_partner_id.x_register_sale_3rd_id
-            self.x_activity_area = self.x_partner_id.x_activity_area
+            self.x_activity_area = self.x_partner_id.x_activity_area.id if self.x_partner_id.x_activity_area else False
             self.x_dealer_id = self.x_partner_id.x_dealer_id
             self.x_partner_rank_id = self.x_partner_id.x_currently_rank_id
             self.x_customer_status = 'company' if self.x_partner_id.company_type == 'company' else 'person'
@@ -148,7 +148,7 @@ class CustomLeadMethods(models.Model):
             'website': vals.get('x_website'),
             'x_business_registration_id': vals.get('x_vat'),
             'x_identity_number': vals.get('x_identity_number'),
-            'x_industry_id': vals.get('x_industry_id'),
+            'x_industry_id': vals.get('x_industry_id') if vals.get('x_industry_id') else False,  # FIXED
             'x_register_sale_3rd_id': vals.get('x_request_sale_3rd_barrels_id'),
             'x_contact_address': vals.get('x_contact_address_complete'),
             'company_type': 'company' if vals.get('x_customer_status') == 'company' else 'person',
@@ -186,11 +186,9 @@ class CustomLeadMethods(models.Model):
 
 
     def action_create_customer(self):
-        self._check_customer_state()
         for record in self:
-            if not record.x_partner_id:  # Check if x_partner_id is missing
+            if not record.x_partner_id:
                 vals = {
-
                     'x_lead_id': record.id,
                     'x_partner_name': record.x_partner_name,
                     'phone': record.phone,
@@ -198,7 +196,7 @@ class CustomLeadMethods(models.Model):
                     'x_vat': record.x_vat,
                     'x_website': record.x_website,
                     'x_identity_number': record.x_identity_number,
-                    'x_industry_id': record.x_industry_id,
+                    'x_industry_id': record.x_industry_id.id if record.x_industry_id else False,
                     'x_request_sale_3rd_barrels_id': record.x_request_sale_3rd_barrels_id,
                     'x_contact_address_complete': record.x_contact_address_complete,
                     'x_customer_status': record.x_customer_status,
@@ -209,7 +207,12 @@ class CustomLeadMethods(models.Model):
                     'x_service_contract': record.x_service_contract,
                     'x_partner_rank_id': record.x_partner_rank_id.id if record.x_partner_rank_id else False,
                 }
+                
+                if not self._validate_customer_state(vals):
+                    raise ValidationError("The customer state does not match with your Company State")
+
                 record.x_partner_id = record._get_or_create_partner(vals)
+
         self.write({'x_status': 'in progress'})
 
     def _validate_customer_state(self, vals):
