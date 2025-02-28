@@ -186,11 +186,9 @@ class CustomLeadMethods(models.Model):
 
 
     def action_create_customer(self):
-        self._check_customer_state()
         for record in self:
-            if not record.x_partner_id:  # Check if x_partner_id is missing
+            if not record.x_partner_id:
                 vals = {
-
                     'x_lead_id': record.id,
                     'x_partner_name': record.x_partner_name,
                     'phone': record.phone,
@@ -209,7 +207,12 @@ class CustomLeadMethods(models.Model):
                     'x_service_contract': record.x_service_contract,
                     'x_partner_rank_id': record.x_partner_rank_id.id if record.x_partner_rank_id else False,
                 }
+                
+                if not self._validate_customer_state(vals):
+                    raise ValidationError("The customer state does not match with your Company State")
+
                 record.x_partner_id = record._get_or_create_partner(vals)
+
         self.write({'x_status': 'in progress'})
 
     def _validate_customer_state(self, vals):
