@@ -50,6 +50,7 @@ class CustomLead(models.Model):
                                                     domain="[('x_customer_id', '=', x_partner_id), ('x_state', '=', 'approved')]")
     # domain="[('x_state', '=', 'approved')]")
 
+    x_bidding_package = fields.Char(string='Bidding Package', tracking=True)
     x_purchase_type = fields.Selection(
         [('online_shopping', 'Online Shopping'),
          ('bidding', 'Bidding'), ('other', 'Other')],
@@ -61,7 +62,6 @@ class CustomLead(models.Model):
     x_estimated_time_of_bid_opening = fields.Date(
         string='Estimated time of bid opening', tracking=True)
     x_area = fields.Char(string='Area', tracking=True)
-    x_bidding_package = fields.Char(string='Bidding Package', tracking=True)
     x_service_contract = fields.Boolean(
         string='Service Contact', tracking=True, require=True)
     x_activity_area = fields.Many2one('sale.area',
