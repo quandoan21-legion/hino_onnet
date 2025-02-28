@@ -32,8 +32,8 @@ class BidAuthorization(models.Model):
     attached_notice_file = fields.Binary(string='Attached Notice File')
 
     dealer_id = fields.Many2one('res.company', string='Dealer', required=True)
-    # lead_code_id = fields.Many2one('crm.lead', string='Lead Code', required=True)
-
+    lead_code_id = fields.Many2one('crm.lead', string='Lead Code')
+    vehicle_interest_ids = fields.Many2many('crm.lead.vehicle.interest.line', string='Vehicle Interest')
     bid_authorization_approve_history_ids = fields.One2many('bid.authorization.approve.history', 'bid_authorization_id', string='Bid Authorization Line')
 
 
@@ -48,6 +48,7 @@ class BidAuthorization(models.Model):
                 'confirm_date': fields.Date.today(),
                 'bid_authorization_id': record.id,
             })
+
     
     def action_cancel(self):
         for record in self:
@@ -79,7 +80,7 @@ class BidAuthorization(models.Model):
             related_approve_history = self.env['bid.authorization.approve.history'].search([('bid_authorization_id', '=', record.id)])
             related_approve_history.unlink()
         return super().unlink()
-    
+
     # @api.model
     # def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
     #     res = super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)

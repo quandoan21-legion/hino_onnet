@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from .lead import custom_lead, custom_lead_methods, crm_lead_button_bid
-from .crm_lead_vehicle_interest_line  import tab_custom_lead, tab_custom_lead_methods
+from .crm_lead_vehicle_interest_line  import tab_custom_lead, tab_custom_lead_methods, vehicle_interest
 from .sale_area import  sale_area, sale_area_methods
 from .sale_area_detail_line import sale_area_detail, sale_area_detail_methods
 from .cross_region_suggest import cross_region_suggest, cross_region_suggest_methods

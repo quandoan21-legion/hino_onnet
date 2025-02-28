@@ -50,7 +50,18 @@
                             </group>
                         </group>                        
                         <notebook>
-                            <page string="Product Details">
+                            <page string="Vehicle Customer Interest">
+                                <field name="vehicle_interest_ids" nolabel="1" widget="one2many_list" mode="tree,form">
+                                    <tree string="Product Details" editable="bottom">
+                                        <!-- <control>
+                                            <create name="add_product_control" string="Add a product"/>
+                                        </control> -->
+                                        <field name="x_model_id"/>
+                                        <field name="x_quantity"/>
+                                        <field name="x_body_type_id"/>
+                                        <field name="x_expected_implementation_time"/>
+                                    </tree>
+                                </field>
                             </page>
                             <page string="Approve History">
                                 <field name="bid_authorization_approve_history_ids" nolabel="1" widget="one2many_list" readonly="1">
