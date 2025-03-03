@@ -4,8 +4,8 @@ class VehicleInterest(models.Model):
     _name = 'crm.lead.vehicle.interest.line'
 
     lead_id = fields.Many2one('crm.lead', string='Sales Opportunity', required=True, ondelete='cascade', index=True)
-    x_customer_type = fields.Selection(related="lead_id.x_customer_type", readonly=True)
-    x_state = fields.Selection(related='lead_id.x_status', string='Status', readonly=True)
+    x_customer_type = fields.Selection(related="lead_id.x_customer_type")
+    x_state = fields.Selection(related='lead_id.x_status', string='Status')
     x_partner_code = fields.Many2one('res.partner', string='Customer Code', required=True)
     x_partner_name = fields.Char(string='Customer Name', required=True)
     x_address = fields.Text(string='Address', required=True)
@@ -13,8 +13,8 @@ class VehicleInterest(models.Model):
     x_model_id = fields.Many2one('product.product', string='Vehicle Type', required=True)
     x_body_type_id = fields.Many2one('hino.body.type', string='Body Type', required=True)
     x_quantity = fields.Integer(string='Quantity', required=True)
-    x_expected_implementation_time = fields.Date(string='Expected Delivery Date', required=True,related='sale_request_id.x_expected_sale_date')
-    x_expected_time_sign_contract = fields.Date(string='Expected Contract Signing Date', required=True,related='sale_request_id.x_expected_to_sign_contract')
+    x_expected_implementation_time = fields.Date(string='Expected Delivery Date')
+    x_expected_time_sign_contract = fields.Date(string='Expected Contract Signing Date')
     x_note = fields.Text(string='Note' )
     sale_request_id = fields.Many2one('sale.request', string='Sale Request')
     sale_detail_ids = fields.Many2one('sale.detail', string='Sale Details')

@@ -92,6 +92,7 @@
                                 <field name="x_vehicle_interest_ids" mode="tree,form"
                                     readonly="x_status not in ('draft')">
                                     <tree>
+                                        <field name="x_partner_code" />
                                         <field name="x_partner_name" />
                                         <field name="x_address" />
                                         <field name="x_quantity" />
