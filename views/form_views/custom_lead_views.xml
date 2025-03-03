@@ -10,12 +10,19 @@
                     <header>
 
                         <field name="x_status" invisible="1" />
-                        <button name="action_mark_failed" string="Reject Order" type="object"
-                            invisible="x_status != 'draft'" class="oe_highlight" />
+
+                        <button name="action_mark_draft" string="Reset Draft" type="object"
+                            class="oe_highlight" />
+                        <button name="action_mark_failed" string="Customer Doesn't Buy Car"
+                            type="object"
+                            invisible="x_status != 'in progress'" class="oe_highlight" />
                         <button name="action_create_customer" string="Create Customer" type="object"
                             invisible="x_partner_id" class="oe_highlight" />
-                        <button name="action_mark_failed" string="Failed" type="object"
-                            invisible="x_status != 'in progress'" />
+                        <button name="action_mark_canceled" string="Cancel" type="object" invisible="x_status == 'draft'"/>
+                        <button name="action_create_contract"
+                            type="object"
+                            string="Create Contract"
+                            class="oe_highlight" />
                         <button name="action_view_third_party_registration"
                             string="Propose in Encroaching area/Third party/Body maker"
                             type="object" invisible="x_request_sale_3rd_barrels_id" />
@@ -64,8 +71,8 @@
                                 <field name="email_from" readonly="x_status not in ('draft')" />
                                 <field name="x_vat" readonly="x_status not in ('draft')" />
                                 <field name="x_identity_number" readonly="x_status not in ('draft')" />
-<!--                                <field name="x_industry_id"-->
-<!--                                    readonly="x_status not in ('draft')" />-->
+                                <field name="x_industry_id"
+                                    readonly="x_status not in ('draft')" />
                                 <field name="x_service_contract" required="1"
                                     readonly="x_status not in ('draft')" />
                                 <field name="x_activity_area"

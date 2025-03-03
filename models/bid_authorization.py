@@ -2,14 +2,8 @@ from odoo import models, fields, api, _
 
 BID_AUTHORIZATION_STATE = [
     ('draft', 'Draft'),
-    ('pending', 'Pending'),
     ('approved', 'Approved'),
-    ('rejected', 'Rejected'),
     ('cancel', 'Cancel'),
-    ('win', 'Win'),
-    ('lose', 'Lose'),
-    ('signed', 'Signed'),
-    ('completed', 'Completed'),
 ]
 
 class BidAuthorization(models.Model):
@@ -38,39 +32,23 @@ class BidAuthorization(models.Model):
     attached_notice_file = fields.Binary(string='Attached Notice File')
 
     dealer_id = fields.Many2one('res.company', string='Dealer', required=True)
-    # lead_code_id = fields.Many2one('crm.lead', string='Lead Code', required=True)
-
+    lead_code_id = fields.Many2one('crm.lead', string='Lead Code')
+    vehicle_interest_ids = fields.Many2many('crm.lead.vehicle.interest.line', string='Vehicle Interest')
     bid_authorization_approve_history_ids = fields.One2many('bid.authorization.approve.history', 'bid_authorization_id', string='Bid Authorization Line')
-    def action_submit(self):
-        for record in self:
-            # if record.create_uid == self.env.user:
-            #     record.state = 'draft'
-            record.state = 'pending'
+
 
     def action_approved(self):
         for record in self:
-            # if record.create_uid == self.env.user:
-            #     record.state = 'pending'
-            record.state = 'approved'
-
-    def action_rejected(self):
-        for record in self:
-            # if record.create_uid == self.env.user:
-            #     record.state = 'pending'
             original_state = record.state
-            record.state = 'rejected'
-            return {
-                'type': 'ir.actions.act_window',
-                'name': 'Provide Reason',
-                'res_model': 'bid.authorization.approve.history',
-                'view_mode': 'form',
-                'target': 'new',
-                'context': {'default_reason': record.note, 
-                            'default_bid_authorization_id': record.id,
-                            'default_state_from': original_state,
-                            'default_state_to': record.state,
-                            'default_confirm_date': fields.Date.today()},            
-            }
+            record.state = 'approved'
+            record.approved_date = fields.Date.today()
+            approve_history = self.env['bid.authorization.approve.history'].create({
+                'state_from': original_state,
+                'state_to': record.state,
+                'confirm_date': fields.Date.today(),
+                'bid_authorization_id': record.id,
+            })
+
     
     def action_cancel(self):
         for record in self:
@@ -89,21 +67,6 @@ class BidAuthorization(models.Model):
                             'default_confirm_date': fields.Date.today()},
             }
     
-    def action_win(self):
-        for record in self:
-            record.state = 'win' 
-
-    def action_lose(self):
-        for record in self:
-            record.state = 'lose'
-
-    def action_signed(self):
-        for record in self:
-            record.state = 'signed'     
-
-    def action_completed(self): 
-        for record in self:
-            record.state = 'completed'
     
     @api.model_create_multi
     def create(self, vals_list):
@@ -112,6 +75,12 @@ class BidAuthorization(models.Model):
                 vals['request_code'] = self.env['ir.sequence'].next_by_code('bid.authorization') or _("New")
         return super().create(vals_list)
     
+    def unlink(self):
+        for record in self:
+            related_approve_history = self.env['bid.authorization.approve.history'].search([('bid_authorization_id', '=', record.id)])
+            related_approve_history.unlink()
+        return super().unlink()
+
     # @api.model
     # def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
     #     res = super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)

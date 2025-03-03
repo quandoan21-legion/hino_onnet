@@ -5,6 +5,11 @@
               name="Lead"
               parent="crm.crm_menu_root"
               sequence="10"/>
+    <menuitem id="crm_contract_menu"
+              name="Contract"
+              parent="crm.crm_menu_root"
+              action="crm_contract_action"
+              sequence="20"/>
 
     <!-- Attach the action to the menu -->
     <menuitem id="custom_crm_submenu"
