@@ -3,7 +3,7 @@ from datetime import datetime
 
 from odoo import models, fields, api, exceptions
 from odoo.exceptions import ValidationError, UserError
-
+from odoo.exceptions import UserError, warnings
 
 class CustomLeadMethods(models.Model):
     _inherit = 'crm.lead'
@@ -137,7 +137,7 @@ class CustomLeadMethods(models.Model):
                            vals['x_identity_number']))
         return domain
 
-    def _create_new_partner(self, vals):
+    def _create_new_partner(self, vals): 
         partner_vals = {
             'x_lead_id': vals.get('x_lead_id', 'Lead Id'),
             'name': vals.get('x_partner_name', 'Unnamed Customer'),
@@ -152,6 +152,7 @@ class CustomLeadMethods(models.Model):
             'x_register_sale_3rd_id': vals.get('x_request_sale_3rd_barrels_id'),
             'x_contact_address': vals.get('x_contact_address_complete'),
             'company_type': 'company' if vals.get('x_customer_status') == 'company' else 'person',
+            'x_allow_dealer_id': [(4, vals.get('x_dealer_branch_id'))] if vals.get('x_dealer_branch_id') else False,
             'x_state_id': vals.get('x_state_id'),
             'x_dealer_id': vals.get('x_dealer_id'),
             'x_dealer_branch_id': vals.get('x_dealer_branch_id'),
@@ -183,6 +184,9 @@ class CustomLeadMethods(models.Model):
 
     def action_mark_failed(self):
         self.write({'x_status': 'failed'})
+    
+    def action_mark_canceled(self):
+        self.write({'x_status': 'cancelled'})
 
 
     def action_create_customer(self):
@@ -303,7 +307,10 @@ class CustomLeadMethods(models.Model):
                 
             return contract_lines if contract_lines else []
 
-
+    def action_mark_draft(self):
+        self.write({'x_status': 'draft'})
+    def action_mark_cancel(self):
+        self.write({'x_status': 'cancelled'})
     def action_create_contract(self):
         """Create contract and change X_status to contract_signed"""
         contract_obj = self.env['crm.contract']
