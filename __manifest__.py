@@ -36,7 +36,7 @@
         'data/body_type_sequence.xml',
         'data/lead_sequence.xml',
         'data/contract_code_sequence.xml',
-
+        'data/bid_authorization_sequence.xml', 
 
         'views/inherit_views/product_template_views.xml',
         'views/inherit_views/res_partner_views.xml',
@@ -79,6 +79,8 @@
         'views/menu/sale_area_menu_items.xml',
         'views/menu/customer_rank_menu_items.xml',
         'views/menu/main_menu_items.xml',
+
+        'views/bid_authorization_views.xml',
     ],
 #     'assets': {
 #     'web.assets_backend': [
