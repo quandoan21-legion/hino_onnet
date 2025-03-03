@@ -10,7 +10,8 @@
                     <header>
                         <button name="action_upgrade_client" string="Upgrade Client" type="object"
                             class="oe_highlight" />
-<!--                        <field name="x_owned_car_line_ids"/>-->
+
+<!--                        <field name="x_hino_owned_cars" />-->
                     </header>
                     <sheet>
                         <field name="avatar_128" invisible="1" />
@@ -167,7 +168,7 @@
                                 </group>
                             </page>
                             <page string="Owned Vehicle Fleet">
-                                <field name="car_line_ids" >
+                                <field name="x_hino_owned_cars" >
                                     <tree editable="bottom">
                                         <field name="x_brand_name" />
                                         <field name="x_is_hino_vehicle" column_invisible="1" default="False"/>

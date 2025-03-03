@@ -70,6 +70,43 @@ class ResPartner(models.Model):
         string='Owned Car Lines',
 
     )
+    x_hino_owned_cars = fields.One2many(
+        'owned.team.car.line', 'x_partner_id',
+        string='Hino Vehicles',
+        compute="_compute_hino_and_non_hino_cars",
+        store=True
+    )
+
+    x_non_hino_owned_cars = fields.One2many(
+        'owned.team.car.line', 'x_partner_id',
+        string='Non-Hino Vehicles',
+        compute="_compute_hino_and_non_hino_cars",
+        store=True
+    )
+    x_owned_car_ids = fields.One2many('owned.team.car.line', 'x_partner_id', string="Owned Cars")
+
+    has_hino_vehicle = fields.Boolean(
+        string="Has Hino Vehicle",
+        compute="_compute_has_hino_vehicle",
+        store=True
+    )
+
+    def _compute_has_hino_vehicle(self):
+        for partner in self:
+            partner.has_hino_vehicle = bool(
+                self.env['owned.team.car.line'].search_count([
+                    ('partner_id', '=', partner.id),
+                    ('x_is_hino_vehicle', '=', True)
+                ])
+            )
+    @api.depends('x_owned_car_ids.x_is_hino_vehicle')
+    def _compute_hino_and_non_hino_cars(self):
+        for partner in self:
+            hino_vehicles = partner.x_owned_car_ids.filtered(lambda car: car.x_is_hino_vehicle)
+            non_hino_vehicles = partner.x_owned_car_ids.filtered(lambda car: not car.x_is_hino_vehicle)
+            partner.x_hino_owned_cars = [(6, 0, hino_vehicles.ids)]
+            partner.x_non_hino_owned_cars = [(6, 0, non_hino_vehicles.ids)]
+
     @api.depends('x_number_of_vehicles', 'x_hino_vehicle')
     def _compute_number_of_vehicles(self):
         for record in self:
