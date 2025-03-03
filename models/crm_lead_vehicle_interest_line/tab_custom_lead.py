@@ -21,6 +21,20 @@ class VehicleInterest(models.Model):
     parent_sale_detail = fields.Many2one('sale.detail', string='Sale Detail',
                                          domain="[('sale_request_id', '=', sale_request_id)]")
 
+
+    @api.model
+    def create(self, vals):
+        if 'x_partner_code' not in vals or not vals['x_partner_code']:
+            lead = self.env['crm.lead'].browse(vals.get('lead_id'))
+            vals['x_partner_code'] = lead.id
+        return super(VehicleInterest, self).create(vals)
+
+
+    def write(self, vals):
+        for record in self:
+            if 'x_partner_code' not in vals or not vals['x_partner_code']:
+                vals['x_partner_code'] = record.lead_id.id
+        return super(VehicleInterest, self).write(vals)
     @api.onchange('lead_id')
     def _onchange_lead_id(self):
         if self.lead_id:

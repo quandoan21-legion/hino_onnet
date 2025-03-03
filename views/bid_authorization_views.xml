@@ -7,8 +7,8 @@
                 <form string="Bid Authorization" readonly="state!='draft'">
                     <header>
                         <field name="state" widget="statusbar" statusbar_visible="draft,approved,cancel" />
-                        <button name="action_approved" type="object" string="Approve" invisible="state!='draft'"/>
                         <button name="action_cancel" type="object" string="Cancel" invisible="state!='draft'" />
+                        <button name="action_approved" type="object" string="Approve" invisible="state!='draft'"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
