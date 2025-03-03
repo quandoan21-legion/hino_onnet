@@ -20,7 +20,7 @@
                             string="Propose in Encroaching area/Third party/Body maker"
                             type="object" invisible="x_request_sale_3rd_barrels_id" />
                         <field name="x_status" widget="statusbar"
-                            statusbar_visible="draft,contract signed,in progress,completed,failed,cancelled" />
+                            statusbar_visible="draft,contract signed,in progress,completed,failed,cancelled" options="{'clickable': True}" />
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -109,6 +109,7 @@
                                         <field name="x_model_name" />
                                         <field name="x_quantity" />
                                         <field name="x_brand_name" />
+                                        <field name="x_is_hino_vehicle" widget="boolean_toggle"/>
                                     </tree>
                                 </field>
                             </page>

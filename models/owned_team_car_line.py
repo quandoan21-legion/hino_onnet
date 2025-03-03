@@ -14,9 +14,8 @@ class CustomLeadLine(models.Model):
     x_brand_name = fields.Char(string='Brand Name')
     x_is_hino_vehicle = fields.Boolean(
         string='Is Hino Vehicle',
-
         store=True,
-
+        default=False
     )
     x_brand_car = fields.Char(string='Car Firm Name')
     customer_rank_upgrade_id = fields.Many2one('customer.rank.upgrade', string='Potential customer')
