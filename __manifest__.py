@@ -34,6 +34,8 @@
         'data/partner_sequence.xml',
         'data/sale_request_sequence.xml',
         'data/body_type_sequence.xml',
+        'data/lead_sequence.xml',
+        'data/contract_code_sequence.xml',
         'data/bid_authorization_sequence.xml', 
 
         'views/inherit_views/product_template_views.xml',
@@ -47,6 +49,7 @@
         'views/form_views/custom_lead_views.xml',
         'views/tree_views/customer_contact_tree_views.xml',
         'views/form_views/sale_area_view.xml',
+        'views/form_views/contract_view.xml',
 
         'views/form_views/cross_region_suggest_view.xml',
         'views/form_views/cross_region_sale_view.xml',
@@ -57,6 +60,7 @@
         'views/form_views/wizard_pop_cancel_view.xml',
         'views/tree_views/sale_request_views.xml',
         'views/form_views/customer_interest_vehicle.xml',
+        'views/form_views/contract_view.xml',
         'views/tree_views/cross_region_sale_views.xml',
         'views/tree_views/cross_region_suggest_views.xml',
         'views/tree_views/sale_area_views.xml',
@@ -65,6 +69,8 @@
         'views/tree_views/hino_customer_upgrade_rank.xml',
         'views/tree_views/approach_channel_view.xml',
         'views/tree_views/body_type.xml',
+        'views/tree_views/contract_tree_view.xml',
+        'views/inherit_views/product_template_views.xml',
 
         'views/menu/cross_region_suggest_menu_items.xml',
         'views/menu/sale_request_menu_items.xml',
@@ -85,6 +91,7 @@
     'demo': [
         'demo/demo.xml',
     ],
+    'test': True,
     'installable': True,
     'application': True,
 }

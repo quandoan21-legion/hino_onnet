@@ -17,5 +17,6 @@ from . import owned_team_car_line, approach_channel, customer_follow_up
 from .third_party_registration import third_party_registration, third_party_registration_approval, res_partner
 from .crm_request_upgrade_customer_rank import request_upgrade_customer_rank, approve_history
 from .product import custom_product
+from .contract import contract, contract_line
 from . import bid_authorization, bid_authorization_approve_history
 from .sale_request import sale_detail

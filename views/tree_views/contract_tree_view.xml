@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="crm_contract_action" model="ir.actions.act_window">
+        <field name="name">Contracts</field>
+        <field name="res_model">crm.contract</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+<!-- Tree View -->
+    <record id="view_tree_crm_contract" model="ir.ui.view">
+            <field name="name">crm_contract_tree</field>
+            <field name="model">crm.contract</field>
+            <field name="arch" type="xml">
+                <tree string="contract_tree">
+                    <field name="contract_code"/>
+                    <field name="customer_id"/>
+                    <field name="lead_code_id"/>
+                    <field name="address"/>
+                    <field name="customer_class_id"/>
+                    <field name="attachment_ids"/>
+                    <field name="sign_day"/>
+                    <field name="sign_week"/>
+<!--                    <field name="dealer_id"/>-->
+                    <field name="dealer_branch_id"/>
+                    <field name="salesperson_id"/>
+                    <field name="purchase_type"/>
+                </tree>
+            </field>
+        </record>
+</odoo>

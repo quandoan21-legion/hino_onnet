@@ -1,8 +1,8 @@
 import re
 from datetime import datetime
 
-from odoo import models, fields, api
-from odoo.exceptions import ValidationError
+from odoo import models, fields, api, exceptions
+from odoo.exceptions import ValidationError, UserError
 
 
 class CustomLeadMethods(models.Model):
@@ -249,3 +249,82 @@ class CustomLeadMethods(models.Model):
             }
         }
 
+    @api.constrains('x_state_id', 'x_dealer_branch_id')
+    def _check_customer_state(self):
+        for record in self:
+            if record.x_dealer_branch_id and record.x_dealer_branch_id.state_id:
+                company_state = record.x_dealer_branch_id.state_id
+                if company_state.id != record.x_state_id.id:
+
+                    raise ValidationError(
+                        "The selected state must match the state of the Dealer Branch Company.")
+
+
+    # @api.constrains('x_partner_id')
+    # def _check_unique_x_partner_id(self):
+    #     for record in self:
+    #         if record.x_partner_id:
+    #             existing_lead = self.search([
+    #                 ('x_partner_id', '=', record.x_partner_id.id),
+    #                 ('id', '!=', record.id)  # Exclude the current record
+    #             ], limit=1)
+    #
+    #             if existing_lead:
+    #                 raise ValidationError("This customer is already assigned to another lead!")
+    #
+
+    def _prepare_contract_values(self):
+        """Prepare values for crm.contract"""
+        self.ensure_one()
+        return {
+            'customer_id': self.x_partner_id.id,
+            'lead_code_id': self.id,
+            'address': self.x_contact_address_complete,
+            'customer_class_id': self.x_partner_rank_id.id,
+            'purchase_type': self.x_purchase_type,
+            'salesperson_id': self.x_sale_person_id.id,
+            'dealer_id': self.x_dealer_id.id,
+            'dealer_branch_id': self.x_dealer_branch_id.id,
+        }
+
+    def _prepare_contract_line_values(self, contract):
+        """Prepare values for crm.contract.line"""
+        contract_lines = []
+        vehicle_interest = self.env['crm.lead.vehicle.interest.line'].search([('lead_id','=',self.id)])
+        for vehicle in vehicle_interest:
+            for _ in range(vehicle.x_quantity):
+                contract_lines.append({
+                    'contract_id':contract.id,
+                    'line_end_customer_id':vehicle.x_partner_code.id,
+                    'line_model_id':vehicle.x_model_id.id,
+                    'line_address':self.x_contact_address_complete,
+                    'line_province_city_id':self.x_state_id.id,
+                })
+                
+            return contract_lines if contract_lines else []
+
+
+    def action_create_contract(self):
+        """Create contract and change X_status to contract_signed"""
+        contract_obj = self.env['crm.contract']
+        contract_line_obj = self.env['crm.contract.line']
+
+        for lead in self:
+            if not lead.x_partner_id:
+                raise UserError("Need customer to create contact")
+
+        #create crm.contract record
+        contract_vals = lead._prepare_contract_values()
+        contract = contract_obj.create(contract_vals)
+
+        #create crm.contract.line record
+        contract_line_vals = lead._prepare_contract_line_values(contract)
+        if not contract_line_vals:
+            raise UserError("No contract line values were generated. Check vehicle interests.")
+            
+        contract_line_obj.create(contract_line_vals)
+
+        # Update lead status
+        self.write({'x_status': 'contract signed'})
+
+        return True

@@ -12,7 +12,7 @@ class CRMFollowUp(models.Model):
     x_result = fields.Text(string="Result", help="Results after discussion with customers.")
     x_recommendations = fields.Text(string="Recommendations", help="Suggested comments after discussion.")
     x_sale_person_follow_up = fields.Many2one('hr.employee', string="Salesperson Follow-Up",
-                                              domain=[('job_id.name', '=', 'Sales staff')],
+                                              domain=[('job_title', '=', 'Sales staff')],
                                               help="Salesperson Follow-Up")
 
     x_sale_person_follow_up_id = fields.Many2one('hr.employee', string="Salesperson Follow-Up ID")
