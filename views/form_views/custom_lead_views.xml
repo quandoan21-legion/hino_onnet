@@ -68,7 +68,7 @@
                                 <field name="email_from" readonly="x_status not in ('draft')" />
                                 <field name="x_vat" readonly="x_status not in ('draft')" />
                                 <field name="x_identity_number" readonly="x_status not in ('draft')" />
-                                <field name="x_industry_id" required="1"
+                                <field name="x_industry_id"
                                     readonly="x_status not in ('draft')" />
                                 <field name="x_service_contract" required="1"
                                     readonly="x_status not in ('draft')" />
