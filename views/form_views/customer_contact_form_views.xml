@@ -52,7 +52,7 @@
                                 <field name="x_currently_rank_id" />
                                 <field name="x_field_sale_id" />
                                 <field name="x_register_sale_3rd_id" />
-                                <field name="x_allow_dealer_id" />
+                                <field name="x_allow_dealer_id" widget="many2many_tags"/>
                             </group>
                         </group>
                         <div class="oe_button_box" name="button_box">
