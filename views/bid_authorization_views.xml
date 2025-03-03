@@ -52,7 +52,7 @@
                         <notebook>
                             <page string="Vehicle Customer Interest">
                                 <field name="vehicle_interest_ids" nolabel="1" widget="one2many_list" mode="tree,form">
-                                    <tree string="Product Details" editable="bottom">
+                                    <tree string="Product Details" create="false" edit="false">
                                         <!-- <control>
                                             <create name="add_product_control" string="Add a product"/>
                                         </control> -->
