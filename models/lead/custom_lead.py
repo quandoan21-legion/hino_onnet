@@ -1,4 +1,4 @@
-from odoo import models, fields, api,exceptions
+from odoo import models, fields, api
 
 
 class CustomLead(models.Model):
@@ -50,6 +50,7 @@ class CustomLead(models.Model):
                                                     domain="[('x_customer_id', '=', x_partner_id), ('x_state', '=', 'approved')]")
     # domain="[('x_state', '=', 'approved')]")
 
+    x_bidding_package = fields.Char(string='Bidding Package', tracking=True)
     x_purchase_type = fields.Selection(
         [('online_shopping', 'Online Shopping'),
          ('bidding', 'Bidding'), ('other', 'Other')],
@@ -57,19 +58,29 @@ class CustomLead(models.Model):
     )
     x_customer_follow_up_ids = fields.One2many(
         'crm.follow.up', 'lead_id', string='Customer Follow-Up')
-    x_bidding_package = fields.Char(string='Bidding Package', tracking=True)
     x_project = fields.Char(string='Project', tracking=True)
     x_estimated_time_of_bid_opening = fields.Date(
         string='Estimated time of bid opening', tracking=True)
     x_area = fields.Char(string='Area', tracking=True)
     x_service_contract = fields.Boolean(
         string='Service Contact', tracking=True, require=True)
-    x_activity_area = fields.Char(
-        string='Activity Area', tracking=True, require=True)
+    x_activity_area = fields.Many2one('sale.area',
+                                      string='Activity Area', tracking=True, require=True)
     x_dealer_id = fields.Many2one(
-        'res.company', string='Dealer', readonly=True)
-    x_dealer_branch_id = fields.Many2one('res.company', string='Dealer Branch',
-                                         default=lambda self: self.env.user.company_id, tracking=True, require=True, readonly=True)
+        'res.company',
+        string='Dealer',
+        readonly=True,
+        compute="_compute_dealer_id",
+        store=True
+    )
+    x_dealer_branch_id = fields.Many2one(
+        'res.company',
+        string='Dealer Branch',
+        default=lambda self: self.env.user.company_id,
+        tracking=True,
+        required=True,
+        domain="[('parent_id', '!=', False)]"
+    )
     x_sale_person_id = fields.Many2one('hr.employee', string='Sales Person', domain=[
                                        ('job_id.name', '=', 'Sales staff')], tracking=True, require=True)
     x_approaching_channel_id = fields.Many2one(
@@ -93,7 +104,6 @@ class CustomLead(models.Model):
         ('cancelled', 'Cancelled'),
     ], string='Status', default='draft', tracking=True)
 
-
     @api.depends('x_status')
     def _compute_readonly_fields(self):
         for record in self:
@@ -102,4 +112,3 @@ class CustomLead(models.Model):
     # _sql_constraints = [
     # ('unique_x_partner_id', 'UNIQUE(x_partner_id)', 'This customer already exists in another lead!')
     # ]
-

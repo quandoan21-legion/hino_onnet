@@ -1,5 +1,4 @@
 import re
-
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
@@ -45,8 +44,12 @@ class ResPartner(models.Model):
     x_service_contract = fields.Boolean(
         string='Service Contact', tracking=True)
 
-    x_number_of_vehicles = fields.Integer(string='Number of Vehicles', compute='_compute_number_of_vehicles')
-    x_hino_vehicle = fields.Integer(string='Hino Vehicle', compute='_compute_number_of_vehicles')
+    x_number_of_vehicles = fields.Integer(
+        string='Number of Vehicles', compute="_compute_number_of_vehicles")
+    x_hino_vehicle = fields.Integer(
+        string='Hino Vehicle', compute="_compute_number_of_vehicles")
+    x_allow_dealer_id = fields.Many2many(
+        'res.company', string="Dealers allowed to sale with this customer", readonly=1)
     x_number_repair_order = fields.Integer(string='Number of Repair Order')
     x_cumulative_points = fields.Integer(string='Cumulative Points')
     x_register_sale_3rd_id = fields.Many2one(
@@ -70,7 +73,8 @@ class ResPartner(models.Model):
                     []
                 )[0]['x_quantity']
                 record.x_hino_vehicle = self.env['owned.team.car.line'].read_group(
-                    [('lead_id', '=', record.x_lead_id), ('x_is_hino_vehicle', '=', True)],
+                    [('lead_id', '=', record.x_lead_id),
+                     ('x_is_hino_vehicle', '=', True)],
                     ['x_quantity:sum'],
                     []
                 )[0]['x_quantity']
@@ -86,6 +90,7 @@ class ResPartner(models.Model):
                     [('lead_id', '=', partner.x_lead_id)])
             else:
                 partner.x_owned_car_line_ids = self.env['owned.team.car.line']
+
     @api.constrains('phone')
     def _check_phone_unique(self):
         for record in self:

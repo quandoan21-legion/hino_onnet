@@ -6,7 +6,8 @@ from .sale_area_detail_line import sale_area_detail, sale_area_detail_methods
 from .cross_region_suggest import cross_region_suggest, cross_region_suggest_methods
 from .body_type import body_type, body_type_methods
 from .cross_region_sale import sale_region, sale_region_methods
-from .sale_request import sale_request, sale_request_methods, wizard_pop_refuse, sale_request_send_mail
+from .sale_request import sale_request, sale_request_methods, wizard_pop_refuse, sale_request_approval
+from .sale_request import sale_request, sale_request_methods, wizard_pop_refuse, sale_request_send_mail, wizard_pop_cancel
 from .customer_rank import customer_rank
 from .partner import custom_partner, custom_bank_line, custom_contact_line
 from .crm_lead_contact_person import crm_lead_contact_person
@@ -17,3 +18,4 @@ from .third_party_registration import third_party_registration, third_party_regi
 from .crm_request_upgrade_customer_rank import request_upgrade_customer_rank, approve_history
 from .product import custom_product
 from . import bid_authorization, bid_authorization_approve_history
+from .sale_request import sale_detail

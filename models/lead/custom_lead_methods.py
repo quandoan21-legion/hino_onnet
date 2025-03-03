@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 
-from odoo import models, api, exceptions
+from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
 
@@ -12,24 +12,28 @@ class CustomLeadMethods(models.Model):
     def create(self, vals):
         if self._validate_customer_state(vals):
             vals['name'] = self._generate_pc_number()
-            # if not vals.get('x_partner_id'):  # Only create a new partner if x_partner_id is not provided
-            #     vals['x_partner_id'] = self._get_or_create_partner(vals)
             return super(CustomLeadMethods, self).create(vals)
         raise ValidationError("The customer state does not match with your Company State")
 
-    # @api.model
-    # def create(self, vals):
-    #     if self._validate_customer_state(vals):
-    #         vals['name'] = self._generate_pc_number()
-    #         vals['x_partner_id'] = self._get_or_create_partner(vals)
-    #         return super(CustomLeadMethods, self).create(vals)
-    #     raise ValidationError("The customer state does not match with your Company State")
-    # def write(self, vals):
-    #     """ Prevent manual saving when status is not 'draft' """
-    #     for record in self:
-    #         if vals.get('x_partner_id'):
-    #             raise exceptions.UserError("You cannot modify this lead ")
-    #     return super(CustomLeadMethods, self).write(vals)
+    def write(self, vals):
+        if self._validate_customer_state(vals):
+            vals['name'] = self._generate_pc_number()
+            return super(CustomLeadMethods, self).write(vals)
+        raise ValidationError("The customer state does not match with your Company State")
+
+    @api.onchange('x_dealer_branch_id')
+    def _onchange_dealer_branch_id(self):
+        if self.x_dealer_branch_id and self.x_dealer_branch_id.parent_id:
+            self.x_dealer_id = self.x_dealer_branch_id.parent_id
+        else:
+            self.x_dealer_id = False
+
+    @api.depends('x_dealer_branch_id')
+    def _compute_dealer_id(self):
+        for record in self:
+            record.x_dealer_id = record.x_dealer_branch_id.parent_id if record.x_dealer_branch_id else False
+
+
     @api.onchange('x_partner_id')
     def _onchange_x_partner_id(self):
         if self.x_partner_id:
@@ -48,10 +52,10 @@ class CustomLeadMethods(models.Model):
             business_reg_id = self.x_partner_id.x_business_registration_id or ''
             self.x_vat = self.x_partner_id.x_business_registration_id
             self.x_identity_number = self.x_partner_id.x_identity_number
-            self.x_industry_id = self.x_partner_id.x_industry_id
+            self.x_industry_id = self.x_partner_id.x_industry_id.id if self.x_partner_id.x_industry_id else False
             self.x_service_contract = self.x_partner_id.x_service_contract
             self.x_request_sale_3rd_barrels_id = self.x_partner_id.x_register_sale_3rd_id
-            self.x_activity_area = self.x_partner_id.x_activity_area
+            self.x_activity_area = self.x_partner_id.x_activity_area.id if self.x_partner_id.x_activity_area else False
             self.x_dealer_id = self.x_partner_id.x_dealer_id
             self.x_partner_rank_id = self.x_partner_id.x_currently_rank_id
             self.x_customer_status = 'company' if self.x_partner_id.company_type == 'company' else 'person'
@@ -144,7 +148,7 @@ class CustomLeadMethods(models.Model):
             'website': vals.get('x_website'),
             'x_business_registration_id': vals.get('x_vat'),
             'x_identity_number': vals.get('x_identity_number'),
-            'x_industry_id': vals.get('x_industry_id'),
+            'x_industry_id': vals.get('x_industry_id') if vals.get('x_industry_id') else False,  # FIXED
             'x_register_sale_3rd_id': vals.get('x_request_sale_3rd_barrels_id'),
             'x_contact_address': vals.get('x_contact_address_complete'),
             'company_type': 'company' if vals.get('x_customer_status') == 'company' else 'person',
@@ -176,21 +180,15 @@ class CustomLeadMethods(models.Model):
                     raise models.ValidationError(
                         "The Identity number must contain from 9 to 13 digits.")
 
-    # @api.onchange('state')
-    # def _onchange_state(self):
-    #     if self.state != 'draft':
-    #         self.salesperson_id = False
 
     def action_mark_failed(self):
         self.write({'x_status': 'failed'})
 
 
     def action_create_customer(self):
-        self._check_customer_state()
         for record in self:
-            if not record.x_partner_id:  # Check if x_partner_id is missing
+            if not record.x_partner_id:
                 vals = {
-
                     'x_lead_id': record.id,
                     'x_partner_name': record.x_partner_name,
                     'phone': record.phone,
@@ -198,7 +196,7 @@ class CustomLeadMethods(models.Model):
                     'x_vat': record.x_vat,
                     'x_website': record.x_website,
                     'x_identity_number': record.x_identity_number,
-                    'x_industry_id': record.x_industry_id,
+                    'x_industry_id': record.x_industry_id.id if record.x_industry_id else False,
                     'x_request_sale_3rd_barrels_id': record.x_request_sale_3rd_barrels_id,
                     'x_contact_address_complete': record.x_contact_address_complete,
                     'x_customer_status': record.x_customer_status,
@@ -209,7 +207,12 @@ class CustomLeadMethods(models.Model):
                     'x_service_contract': record.x_service_contract,
                     'x_partner_rank_id': record.x_partner_rank_id.id if record.x_partner_rank_id else False,
                 }
+                
+                if not self._validate_customer_state(vals):
+                    raise ValidationError("The customer state does not match with your Company State")
+
                 record.x_partner_id = record._get_or_create_partner(vals)
+
         self.write({'x_status': 'in progress'})
 
     def _validate_customer_state(self, vals):
@@ -228,31 +231,21 @@ class CustomLeadMethods(models.Model):
     def action_view_third_party_registration(self):
         return {
             'type': 'ir.actions.act_window',
-            'name': '3rd Party/Body Maker Registration',
-            'view_mode': 'tree,form',
-            'res_model': 'third.party.registration',
+            'name': 'sale.request.tree',
+            'view_mode': 'form',
+            'res_model': 'sale.request',
+            'context' : {
+                'default_x_customer_id': self.x_partner_id.id,
+                'default_x_request_dealer_id': self.x_dealer_id.id,
+                'default_x_dealer_branch_id': self.x_dealer_branch_id.id,
+                'default_x_customer_name': self.x_partner_name,
+                'default_x_customer_address': self.x_contact_address_complete,
+                'default_x_province_id': self.x_state_id.id,
+                'default_x_identification_id': self.x_identity_number,
+                'default_x_business_registration_id': self.x_vat,
+                'default_x_lead_code_id': self.id,
+                'default_x_customer_region': self.x_activity_area.id,
+                'default_x_request_date': fields.Date.context_today(self),
+            }
         }
 
-    @api.constrains('x_state_id', 'x_dealer_branch_id')
-    def _check_customer_state(self):
-        for record in self:
-            if record.x_dealer_branch_id and record.x_dealer_branch_id.state_id:
-                company_state = record.x_dealer_branch_id.state_id
-                if company_state.id != record.x_state_id.id:
-
-                    raise ValidationError(
-                        "The selected state must match the state of the Dealer Branch Company.")
-
-
-    # @api.constrains('x_partner_id')
-    # def _check_unique_x_partner_id(self):
-    #     for record in self:
-    #         if record.x_partner_id:
-    #             existing_lead = self.search([
-    #                 ('x_partner_id', '=', record.x_partner_id.id),
-    #                 ('id', '!=', record.id)  # Exclude the current record
-    #             ], limit=1)
-    #
-    #             if existing_lead:
-    #                 raise ValidationError("This customer is already assigned to another lead!")
-    #

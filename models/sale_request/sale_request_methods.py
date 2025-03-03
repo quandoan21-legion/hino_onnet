@@ -1,6 +1,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
-from datetime import timedelta
+from odoo.exceptions import UserError
+from datetime import timedelta, date
 class SaleRequestMethods(models.Model):
     _inherit = 'sale.request'
 
@@ -13,127 +14,123 @@ class SaleRequestMethods(models.Model):
     def _generate_request_code(self):
         return self.env['ir.sequence'].next_by_code('sale.request.sequence') or '/'
 
-    @api.model
-    def get_view(self, view_id=None, view_type='form', **options):
-        res = super().get_view(view_id, view_type, **options)
-        if view_type == 'tree' and 'arch' in res:
-            res['arch'] = res['arch'].replace('<tree>', '<tree create="false">')
-        return res
+    @api.onchange('x_dealer_branch_id')
+    def _onchange_dealer_branch_id(self):
+        if self.x_dealer_branch_id and self.x_dealer_branch_id.parent_id:
+            self.x_request_dealer_id = self.x_dealer_branch_id.parent_id
+        else:
+            self.x_request_dealer_id = False
 
-    @api.depends('x_province_id')
-    def _compute_customer_region(self):
+    @api.depends('x_dealer_branch_id')
+    def _compute_request_dealer_id(self):
         for record in self:
-            if record.province_id:
-                record.customer_region = self.env['sale.area'].search([
-                    ('province_ids', 'in', record.province_id.id)
-                ], limit=1)
-
-    @api.depends('x_customer_id', 'x_identification_id', 'x_business_registration')
-    def _compute_old_customer(self):
-        for record in self:
-            record.x_old_customer = False
-            if record.x_customer_id or self.env['res.partner'].search([
-                ('identification_id', '=', record.x_identification_id),
-                ('business_registration', '=', record.x_business_registration)
-            ], limit=1):
-                record.x_old_customer = True
-
-    @api.depends('x_sale_detail_ids.qty_done', 'x_sale_detail_ids.qty_confirmed')
-    def _compute_sale_status(self):
-        for record in self:
-            if record.x_state in ['approved', 'partial_sale', 'completed'] and record.x_sale_detail_ids:
-                total_done = sum(record.x_sale_detail_ids.mapped('qty_done'))
-                total_confirmed = sum(record.x_sale_detail_ids.mapped('qty_confirmed'))
-                if total_done == total_confirmed:
-                    record.x_state = 'completed'
-                elif total_done > 0:
-                    record.x_state = 'partial_sale'
+            record.x_request_dealer_id = record.x_dealer_branch_id.parent_id if record.x_dealer_branch_id else False
 
     @api.onchange('x_customer_id')
-    def _onchange_customer_id(self):
+    def _onchange_x_customer_id(self):
         if self.x_customer_id:
             self.x_customer_name = self.x_customer_id.name
             self.x_customer_address = self.x_customer_id.street
-            self.x_province_id = self.x_customer_id.state_id
-            self.x_lead_code_id = self.env['crm.lead'].search([
-                ('partner_id', '=', self.x_customer_id.id)
-            ], order="create_date desc", limit=1)
+            self.x_province_id = self.x_customer_id.state_id.id
+        else:
+            self.x_customer_name = ''
+            self.x_customer_address = ''
+            self.x_province_id = False
 
-    @api.onchange('x_lead_code_id')
-    def _onchange_lead_code_id(self):
-        if self.x_lead_code_id:
-            self.x_customer_name = self.x_lead_code_id.contact_name
-            self.x_customer_address = self.x_lead_code_id.street
-            self.x_province_id = self.x_lead_code_id.state_id
-            self.x_customer_id = False
-
-    @api.onchange('x_customer_type', 'x_province_id')
-    def _check_region(self):
-        if self.x_customer_type in ['third_party', 'box_packer'] and not self.x_province_id:
-            return {'warning': {'title': 'Warning', 'message': 'Province must be set for this customer type'}}
-
-    @api.constrains('x_expected_sale_date')
-    def _check_expected_sale_date(self):
+    @api.depends('x_customer_id')
+    def _compute_old_customer(self):
         for record in self:
-            if record.x_expected_sale_date and record.x_expected_sale_date < fields.Date.today():
-                raise ValidationError('Expected sale date cannot be in the past')
+            record.x_old_customer = bool(
+                record.x_customer_id and
+                self.env['res.partner'].search_count([('id', '=', record.x_customer_id.id)]) > 0
+            )
 
-    @api.constrains('x_attach_file', 'x_attach_filename')
-    def _check_file_type(self):
+    @api.depends('x_lead_code_id')
+    def _compute_readonly_customer(self):
         for record in self:
-            if record.x_attach_file and not record.x_attach_filename.lower().endswith('.pdf'):
-                raise ValidationError('Only PDF files are allowed')
-            
+            record.x_customer_id.readonly = bool(record.x_lead_code_id)
+
+    def check_region(self, dealer_id, city_id):
+        return bool(self.env['sale.area'].search([
+            ('dealer_id', '=', dealer_id),
+            ('city_id', '=', city_id),
+        ], limit=1))
+
+    @api.constrains('x_expected_sale_date', 'x_expected_to_sign_contract')
+    def _check_expected_dates(self):
+        for record in self:
+            today = date.today()
+
+            if record.x_expected_sale_date and record.x_expected_sale_date < today:
+                raise ValidationError("Expected Sale Date must be greater than or equal to the current date.")
+
+            if record.x_expected_to_sign_contract and record.x_expected_to_sign_contract < today:
+                raise ValidationError(
+                    "Expected to Sign Contract Date must be greater than or equal to the current date.")
+
+            if (record.x_expected_sale_date and record.x_expected_to_sign_contract and
+                    record.x_expected_to_sign_contract < record.x_expected_sale_date):
+                raise ValidationError(
+                    "Expected to Sign Contract Date must be greater than or equal to the Expected Sale Date.")
+
     def action_submit(self):
-        self.ensure_one()
-        self._check_region()
-        vals = {'x_state': 'pending', 'x_request_date': fields.Date.today()}
-        tracking_values = []
-        for field, value in vals.items():
-            old_value = self[field]
-            if old_value != value:
-                field_record = self.env['ir.model.fields'].search([
-                    ('model', '=', self._name),
-                    ('name', '=', field)
-                ], limit=1)
-                if field_record:
-                    tracking_values.append((0, 0, {
-                        'field_id': field_record.id,
-                        'old_value_char': str(old_value) if isinstance(old_value, (str, bool, int, float)) else None,
-                        'new_value_char': str(value) if isinstance(value, (str, bool, int, float)) else None,
-                    }))
-        self.write(vals)
-        
-        self.env['mail.activity'].create({
-            'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
-            'note': f'Please review request {self.x_request_code} submitted by {self.env.user.name}',
-            'res_id': self.id,
-            'res_model_id': self.env['ir.model'].search([('model', '=', self._name)], limit=1).id,
-            'summary': f'Review Request {self.x_request_code}',
-            # 'user_id': self.x_hmv_approver_id.id,
-            'date_deadline': fields.Date.today() + timedelta(days=2)  # Set 2-day deadline
-        })
-        
-        
-        msg = f"""
-            Request submitted for approval
-            Submitted by: {self.env.user.name}
-            Status: Draft -> Pending
-            Date: {fields.Date.today()}
-        """
-        self.message_post(body=msg, tracking_value_ids=tracking_values)
+        for record in self:
+            if record.x_state != 'draft':
+                raise UserError(_("The request form is not in Draft state!"))
+
+            sale_region = self.env['sale.region'].search([
+                ('x_dealer_branch_id', '=', record.x_dealer_branch_id.id)
+            ], limit=1)
+
+            if not sale_region:
+                raise UserError(_("No sales region found for the dealer"))
+
+            allowed_areas = sale_region.x_field_sale_ids.ids
+
+            if record.x_customer_type in ['third_party', 'builder']:
+                if record.x_province_id.id not in allowed_areas:
+                    missing_customers = record.sale_detail_ids.filtered(lambda d: not d.x_customers_use_id)
+
+                    if missing_customers:
+                        raise UserError(_("OUT-OF-REGION SALE, PLEASE PROVIDE COMPLETE END CUSTOMER INFORMATION."))
+
+            record.x_state = 'pending'
 
     def action_approve(self):
         self.ensure_one()
-        vals = {'x_state': 'approved', 'x_approve_date': fields.Date.today()}
-        self.write(vals)
-        msg = f"""
-            Request approved
-            Approved by: {self.env.user.name}
-            Status: Pending -> Approved
-            Date: {fields.Date.today()}
-        """
-        self.message_post(body=msg)
+
+        if not self:
+            raise ValidationError("No record found for approval.")
+        if not self.exists():
+            raise ValidationError("The request must be saved before approval.")
+        if not self.id:
+            raise ValidationError("The request must be saved before approval.")
+
+        employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        if not employee:
+            raise ValidationError("You must be an employee to approve this request.")
+
+        if self.x_customer_id:
+            allowed_dealers = self.x_customer_id.x_allow_dealer_id
+
+            if self.x_request_dealer_id and self.x_request_dealer_id not in allowed_dealers:
+                self.x_customer_id.write({
+                    'x_allow_dealer_id': [(4, self.x_request_dealer_id.id)]
+                })
+
+        self.env['sales.request.approval'].create({
+            'x_request_id': self.id,
+            'x_confirmer_id': employee.id,
+            'x_department_id': employee.department_id.id,
+            'x_position_id': employee.job_id.id,
+            'x_state_from': 'pending',
+            'x_state_to': 'approved',
+            'x_confirm_date': fields.Date.today(),
+            'x_reason': self.x_reason or 'Auto-approved',
+        })
+
+        self.x_state = 'approved'
+        self.x_approve_date = fields.Date.today()
 
     def action_refuse(self):
         return {
@@ -146,13 +143,11 @@ class SaleRequestMethods(models.Model):
         }
 
     def action_cancel(self):
-        for request in self:
-            if request.x_state != 'draft':
-                raise ValidationError(_('Only draft requests can be canceled.'))
-            if self.env.user != request.create_uid:
-                raise ValidationError(_('Only the creator can cancel this request.'))
-            if not request.x_cancellation_reason:
-                raise ValidationError(_('Provide a cancellation reason.'))
-            request.write({'x_state': 'cancelled'})
-            request.message_post(body=f'Request cancelled. Reason: {request.x_cancellation_reason}')
-        return True
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Enter Cancel Reason',
+            'res_model': 'sale.request.cancel.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_sale_request_id': self.id}
+        }
