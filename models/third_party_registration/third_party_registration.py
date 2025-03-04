@@ -30,6 +30,7 @@ class ThirdPartyRegistration(models.Model):
         tracking=True
     )
     x_business_field_id = fields.Many2one('res.partner.industry', string='Industry', tracking=True)
+
     x_registration_type = fields.Selection([
         ('last_customer', 'Last Customer'),
         ('third_party', 'Third Party'),
