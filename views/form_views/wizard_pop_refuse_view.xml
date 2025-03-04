@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Reason Rejection">
                 <group>
-                    <field name="refuse_reason" placeholder="Enter the reason for rejection..." />
+                    <field name="refuse_reason" placeholder="Enter the reason for rejection.." />
                 </group>
                 <footer>
                     <button name="confirm_refuse" type="object" string="Submit" class="btn-primary"/>
