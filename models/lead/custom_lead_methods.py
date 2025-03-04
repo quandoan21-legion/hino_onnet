@@ -238,7 +238,7 @@ class CustomLeadMethods(models.Model):
             'name': 'sale.request.tree',
             'view_mode': 'form',
             'res_model': 'sale.request',
-            'context' : {
+            'context': {
                 'default_x_customer_id': self.x_partner_id.id,
                 'default_x_request_dealer_id': self.x_dealer_id.id,
                 'default_x_dealer_branch_id': self.x_dealer_branch_id.id,
