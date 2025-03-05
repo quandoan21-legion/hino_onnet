@@ -20,8 +20,8 @@ class CustomLead(models.Model):
         'crm.lead.contact.person', 'lead_id', string='Contact')
     x_customer_status = fields.Selection(
         [
-            ('company', 'Company'),
             ('person', 'Individual'),
+            ('company', 'Company'),
             ('internal_hmv', 'Internal HMV')
         ],
         string="Customer Status",
