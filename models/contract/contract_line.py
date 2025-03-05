@@ -110,5 +110,5 @@ class CRMContractLine(models.Model):
             existing_count = self.search_count([
                 ('contract_id','=',vals['contract_id'])
             ])
-            vals['category'] = existing_count + 1
+            vals['line_category'] = existing_count + 1
         return super().create(vals)

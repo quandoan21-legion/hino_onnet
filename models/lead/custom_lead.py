@@ -48,7 +48,6 @@ class CustomLead(models.Model):
                                                     string='Proposal to sell in Encroaching area/Third party/Body maker',
                                                     readonly=True,
                                                         domain="[('x_customer_id', '=', x_partner_id), ('x_state', '=', 'approved')]")
-    # domain="[('x_state', '=', 'approved')]")
 
     x_bidding_package = fields.Char(string='Bidding Package', tracking=True)
     x_purchase_type = fields.Selection(
@@ -56,16 +55,13 @@ class CustomLead(models.Model):
          ('bidding', 'Bidding'), ('other', 'Other')],
         string='Purchase type', tracking=True, require=True
     )
-    x_customer_follow_up_ids = fields.One2many(
-        'crm.follow.up', 'lead_id', string='Customer Follow-Up')
     x_project = fields.Char(string='Project', tracking=True)
     x_estimated_time_of_bid_opening = fields.Date(
         string='Estimated time of bid opening', tracking=True)
     x_area = fields.Char(string='Area', tracking=True)
     x_service_contract = fields.Boolean(
         string='Service Contact', tracking=True, require=True)
-    x_activity_area = fields.Many2one('sale.area',
-                                      string='Activity Area', tracking=True, require=True)
+    x_activity_area = fields.Char(string='Activity Area', tracking=True, require=True)
     x_dealer_id = fields.Many2one(
         'res.company',
         string='Dealer',
@@ -76,7 +72,6 @@ class CustomLead(models.Model):
     x_dealer_branch_id = fields.Many2one(
         'res.company',
         string='Dealer Branch',
-        default=lambda self: self.env.user.company_id,
         tracking=True,
         required=True,
         domain="[('parent_id', '!=', False)]"
@@ -97,9 +92,8 @@ class CustomLead(models.Model):
 
     x_status = fields.Selection([
         ('draft', 'Draft'),
-        ('contract signed', 'Contract Signed'),
         ('in progress', 'In Progress'),
-        ('completed', 'Completed'),
+        ('contract signed', 'Contract Signed'),
         ('failed', 'Failed'),
         ('cancelled', 'Cancelled'),
     ], string='Status', default='draft', tracking=True)
