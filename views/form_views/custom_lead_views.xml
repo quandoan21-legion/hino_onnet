@@ -116,8 +116,8 @@
                                         <field name="x_model_name" />
                                         <field name="x_quantity" />
                                         <field name="x_brand_name" />
-<!--                                        <field name="x_is_hino_vehicle" widget="boolean_toggle"/>-->
-                                        <field name="x_is_hino_vehicle" column_invisible="1"/>
+                                        <field name="x_is_hino_vehicle" widget="boolean_toggle"/>
+<!--                                        <field name="x_is_hino_vehicle" column_invisible="1"/>-->
                                     </tree>
                                 </field>
                             </page>

@@ -69,6 +69,47 @@ class CustomerRankUpgrade(models.Model):
         compute='_compute_x_owned_car_line_ids',
         store=True
     )
+    x_is_hino_vehicle = fields.One2many(
+        'owned.team.car.line', 'x_partner_id',
+        string='Hino Vehicle List',
+        compute='_compute_x_is_hino_vehicle',
+        store=True
+    )
+    x_not_is_hino_vehicle = fields.One2many(
+        'owned.team.car.line', 'x_partner_id',
+        string='Hino Vehicle List',
+        compute='_compute_x_not_is_hino_vehicle',
+        store=True
+    )
+    @api.depends('x_partner_id')
+    def _compute_x_owned_car_line_ids(self):
+        for record in self:
+            if record.x_partner_id:
+                record.x_owned_car_line_ids = record.x_partner_id.x_owned_car_line_ids
+            else:
+                record.x_owned_car_line_ids = False
+
+    @api.depends('x_owned_car_line_ids')
+    def _compute_x_is_hino_vehicle(self):
+        for record in self:
+            record.x_is_hino_vehicle = any(car.x_brand_name == "Hino" for car in record.x_owned_car_line_ids)
+
+    @api.depends('x_owned_car_line_ids.x_is_hino_vehicle')
+    def _compute_x_not_is_hino_vehicle(self):
+        for record in self:
+            if record.x_owned_car_line_ids:
+                record.x_is_hino_vehicle = record.x_owned_car_line_ids.filtered(
+                    lambda car: car.x_is_hino_vehicle == False)
+            else:
+                record.x_is_hino_vehicle = [(5, 0, 0)]
+
+    @api.depends('x_owned_car_line_ids.x_is_hino_vehicle')
+    def _compute_x_is_hino_vehicle(self):
+        for record in self:
+            if record.x_owned_car_line_ids:
+                record.x_is_hino_vehicle = record.x_owned_car_line_ids.filtered(lambda car: car.x_is_hino_vehicle == True)
+            else:
+                record.x_is_hino_vehicle = [(5, 0, 0)]
 
     @api.depends('x_partner_id')
     def _compute_x_owned_car_line_ids(self):
@@ -79,28 +120,28 @@ class CustomerRankUpgrade(models.Model):
             else:
                 record.x_owned_car_line_ids = [(5, 0, 0)]
                 record.x_owned_team_car_ids = [(5, 0, 0)]
-    @api.depends('x_partner_id')
-    def _compute_x_owned_car_line_ids(self):
-        for record in self:
-            if record.x_partner_id:
-                record.x_owned_car_line_ids = record.x_partner_id.x_owned_car_line_ids
-            else:
-                record.x_owned_car_line_ids = [(5, 0, 0)]
+    # @api.depends('x_partner_id')
+    # def _compute_x_owned_car_line_ids(self):
+    #     for record in self:
+    #         if record.x_partner_id:
+    #             record.x_owned_car_line_ids = record.x_partner_id.x_owned_car_line_ids
+    #         else:
+    #             record.x_owned_car_line_ids = [(5, 0, 0)]
 
-    @api.depends('x_partner_id')
-    def _compute_x_owned_team_car_ids(self):
-        """
-        Fetch all owned team car lines for the selected customer.
-        The records are searched using x_partner_id.
-        """
-        for record in self:
-            if record.x_partner_id:
-                owned_cars = self.env['owned.team.car.line'].search([
-                    ('x_partner_id', '=', record.x_partner_id.id)
-                ])
-                record.x_owned_team_car_ids = [(6, 0, owned_cars.ids)]
-            else:
-                record.x_owned_team_car_ids = [(5, 0, 0)]
+    # @api.depends('x_partner_id')
+    # def _compute_x_owned_team_car_ids(self):
+    #     """
+    #     Fetch all owned team car lines for the selected customer.
+    #     The records are searched using x_partner_id.
+    #     """
+    #     for record in self:
+    #         if record.x_partner_id:
+    #             owned_cars = self.env['owned.team.car.line'].search([
+    #                 ('x_partner_id', '=', record.x_partner_id.id)
+    #             ])
+    #             record.x_owned_team_car_ids = [(6, 0, owned_cars.ids)]
+    #         else:
+    #             record.x_owned_team_car_ids = [(5, 0, 0)]
 
     @api.onchange('x_partner_id')
     def _onchange_x_partner_id(self):

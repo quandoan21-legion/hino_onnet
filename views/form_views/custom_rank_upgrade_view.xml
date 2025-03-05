@@ -41,7 +41,7 @@
 
                     <notebook>
                         <page string="Hino Vehicles">
-        <field name="x_owned_car_line_ids" widget="one2many_list">
+        <field name="x_is_hino_vehicle" widget="one2many_list">
             <tree editable="bottom">
                 <field name="x_brand_name"/>
                 <field name="x_model_id" />
