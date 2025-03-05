@@ -55,7 +55,7 @@ class CustomLeadMethods(models.Model):
             self.x_industry_id = self.x_partner_id.x_industry_id.id if self.x_partner_id.x_industry_id else False
             self.x_service_contract = self.x_partner_id.x_service_contract
             self.x_request_sale_3rd_barrels_id = self.x_partner_id.x_register_sale_3rd_id
-            self.x_activity_area = self.x_partner_id.x_activity_area.id if self.x_partner_id.x_activity_area else False
+            self.x_activity_area = self.x_partner_id.x_activity_area
             self.x_dealer_id = self.x_partner_id.x_dealer_id
             self.x_partner_rank_id = self.x_partner_id.x_currently_rank_id
             self.x_customer_status = 'company' if self.x_partner_id.company_type == 'company' else 'person'
@@ -300,7 +300,7 @@ class CustomLeadMethods(models.Model):
                 contract_lines.append({
                     'contract_id':contract.id,
                     'line_end_customer_id':vehicle.x_partner_code.id,
-                    'line_model_id':vehicle.x_model_id.id,
+                    # 'line_model_id':vehicle.x_model_id.id,
                     'line_address':self.x_contact_address_complete,
                     'line_province_city_id':self.x_state_id.id,
                 })
