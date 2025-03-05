@@ -13,14 +13,28 @@ class VehicleInterest(models.Model):
     x_model_id = fields.Many2one('product.product', string='Vehicle Type', required=True)
     x_body_type_id = fields.Many2one('hino.body.type', string='Body Type', required=True)
     x_quantity = fields.Integer(string='Quantity', required=True)
-    x_expected_implementation_time = fields.Date(string='Expected Delivery Date', required=True,related='sale_request_id.x_expected_sale_date')
-    x_expected_time_sign_contract = fields.Date(string='Expected Contract Signing Date', required=True,related='sale_request_id.x_expected_to_sign_contract')
+    x_expected_implementation_time = fields.Date(string='Expected Delivery Date', required=True)
+    x_expected_time_sign_contract = fields.Date(string='Expected Contract Signing Date', required=True)
     x_note = fields.Text(string='Note' )
     sale_request_id = fields.Many2one('sale.request', string='Sale Request')
     sale_detail_ids = fields.Many2one('sale.detail', string='Sale Details')
     parent_sale_detail = fields.Many2one('sale.detail', string='Sale Detail',
                                          domain="[('sale_request_id', '=', sale_request_id)]")
 
+
+    @api.model
+    def create(self, vals):
+        if 'x_partner_code' not in vals or not vals['x_partner_code']:
+            lead = self.env['crm.lead'].browse(vals.get('lead_id'))
+            vals['x_partner_code'] = lead.id
+        return super(VehicleInterest, self).create(vals)
+
+
+    def write(self, vals):
+        for record in self:
+            if 'x_partner_code' not in vals or not vals['x_partner_code']:
+                vals['x_partner_code'] = record.lead_id.id
+        return super(VehicleInterest, self).write(vals)
     @api.onchange('lead_id')
     def _onchange_lead_id(self):
         if self.lead_id:
