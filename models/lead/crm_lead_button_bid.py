@@ -33,11 +33,13 @@ class CustomLead(models.Model):
             related_bid_authorization = self.env['bid.authorization'].search([('lead_code_id', '=', record.id)])
             if related_bid_authorization and related_bid_authorization.state == 'draft':
                 related_bid_authorization.unlink()
+            if record.x_vehicle_interest_ids:
+                record.x_vehicle_interest_ids.unlink()
         return super().unlink()
 
     @api.onchange('x_dealer_id', 'x_partner_name', 'x_contact_address_complete', 'x_project', 'x_area', 'x_bidding_package', 'x_estimated_time_of_bid_opening', 'x_vehicle_interest_ids')
     def _onchange_x_dealer_id(self):
-        related_bid_authorization = self.env['bid.authorization'].search([('lead_code_id', '=', self.id.origin)])
+        related_bid_authorization = self.env['bid.authorization'].search([('lead_code_id', '=', self._origin.id)])
         if related_bid_authorization and related_bid_authorization.state == 'draft' and self.x_status == 'draft':
             related_bid_authorization.write({'dealer_id': self.x_dealer_id.id,
                                              'investor_name': self.x_partner_name,
