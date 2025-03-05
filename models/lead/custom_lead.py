@@ -92,9 +92,8 @@ class CustomLead(models.Model):
 
     x_status = fields.Selection([
         ('draft', 'Draft'),
-        ('contract signed', 'Contract Signed'),
         ('in progress', 'In Progress'),
-        ('completed', 'Completed'),
+        ('contract signed', 'Contract Signed'),
         ('failed', 'Failed'),
         ('cancelled', 'Cancelled'),
     ], string='Status', default='draft', tracking=True)
