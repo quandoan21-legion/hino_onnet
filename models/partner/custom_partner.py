@@ -6,10 +6,8 @@ from odoo.exceptions import ValidationError
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    # x_potential_count = fields.Integer(compute="_compute_potential_count", string="Potential") - Logic
-    x_potential_count = fields.Integer(string="Lead")
-    # x_contract_count = fields.Integer(compute="_compute_contract_count", string="Contracts") - Logic
-    x_contract_count = fields.Integer(string="Contract")
+    x_potential_count = fields.Integer(compute="_compute_potential_count", string="Lead")
+    x_contract_count = fields.Integer(compute="_compute_contract_count",string="Contract")
     # x_vehicle_management_count = fields.Integer(compute="_compute_vehicle_management_count", string="Vehicle Management") - Logic
     x_vehicle_management_count = fields.Integer(string="Vehicle Management")
     company_type = fields.Selection(
@@ -185,13 +183,15 @@ class ResPartner(models.Model):
     #         if record.x_customer_type == 'third_party' and not record.x_register_sale_3rd_id:
     #             raise ValidationError("Register Sale 3rd is required for Third Party customers. Please enter a valid Register Sale 3rd ID.")
 
-    # def _compute_potential_count(self):
-    #     for record in self:
-    #         record.x_potential_count = self.env['crm.lead'].search_count([('x_partner_id', '=', record.id)])
+    @api.depends('x_lead_id')
+    def _compute_potential_count(self):
+        for record in self:
+            record.x_potential_count = self.env['crm.lead'].search_count([('x_partner_id', '=', record.id)])
 
-    # def _compute_contract_count(self):
-    #     for record in self:
-    #         record.x_contract_count = self.env['sale.order'].search_count([('x_cusomer_id', '=', record.id)])
+    @api.depends('x_lead_id')
+    def _compute_contract_count(self):
+        for record in self:
+            record.x_contract_count = self.env['crm.contract'].search_count([('customer_id', '=', record.id)])
 
     # def _compute_vehicle_management_count(self):
     #     for record in self:
@@ -213,8 +213,8 @@ class ResPartner(models.Model):
             'type': 'ir.actions.act_window',
             'name': 'Contracts',
             'view_mode': 'tree,form',
-            'res_model': 'sale.order',
-            'domain': [('x_partner_id', '=', self.id)],
+            'res_model': 'crm.contract',
+            'domain': [('customer_id', '=', self.id)],
             'context': {'default_x_partner_id': self.id},
         }
 
