@@ -11,7 +11,7 @@ class VehicleInterest(models.Model):
     x_partner_name = fields.Char(string='Customer Name', required=True)
     x_address = fields.Text(string='Address', required=True)
     x_province_id = fields.Many2one('res.country.state', string='Province/City', required=True)
-    x_model_id = fields.Many2one('product.product', string='Vehicle Type', required=True)
+    x_model_id = fields.Many2one('product.product', string='Model', required=True)
     x_body_type_id = fields.Many2one('hino.body.type', string='Body Type', required=True)
     x_quantity = fields.Integer(string='Quantity', required=True)
     x_expected_implementation_time = fields.Date(string='Expected Delivery Date', required=True)
@@ -38,7 +38,7 @@ class VehicleInterest(models.Model):
     @api.onchange('lead_id')
     def _onchange_lead_id(self):
         if self.lead_id:
-            self.x_partner_code = self.lead_id.x_partner_id.id
+            # self.x_partner_code = self.lead_id.x_partner_id.id
             self.x_partner_name = self.lead_id.x_partner_name
             self.x_address = self.lead_id.x_contact_address_complete
             self.x_province_id = self.lead_id.x_state_id
