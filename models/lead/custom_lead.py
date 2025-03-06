@@ -65,7 +65,7 @@ class CustomLead(models.Model):
     x_service_contract = fields.Boolean(
         string='Service Contact', tracking=True, require=True)
     x_activity_area = fields.Many2one('sale.area',
-                                      string='Activity Area', tracking=True, require=True)
+                                      string='Activity Area', tracking=True)
     x_dealer_id = fields.Many2one(
         'res.company',
         string='Dealer',
@@ -118,3 +118,46 @@ class CustomLead(models.Model):
         for lead in self:
             if lead.partner_id:
                 lead.partner_id._sync_owned_car_lines()
+    @api.model
+    def create(self, vals):
+        """Auto-fill fields if the contact (x_partner_id) already exists in another lead"""
+        if vals.get('x_partner_id'):
+            existing_lead = self.search([('x_partner_id', '=', vals['x_partner_id'])], limit=1)
+            if existing_lead:
+                vals.update(self._prepare_auto_fill_vals(existing_lead))
+
+        return super(CustomLead, self).create(vals)
+
+    def write(self, vals):
+        """Auto-fill fields when updating an existing lead if contact exists in another lead"""
+        for lead in self:
+            if 'x_partner_id' in vals and vals['x_partner_id']:
+                existing_lead = self.search([('x_partner_id', '=', vals['x_partner_id'])], limit=1)
+                if existing_lead:
+                    vals.update(self._prepare_auto_fill_vals(existing_lead))
+
+        return super(CustomLead, self).write(vals)
+
+    def _prepare_auto_fill_vals(self, existing_lead):
+        """Prepare dictionary of values to auto-fill from an existing lead"""
+        return {
+            'x_partner_name': existing_lead.x_partner_name,
+            'x_website': existing_lead.x_website,
+            'x_contact_address_complete': existing_lead.x_contact_address_complete,
+            'x_customer_status': existing_lead.x_customer_status,
+            'x_customer_type': existing_lead.x_customer_type,
+            'x_vat': existing_lead.x_vat,
+            'x_identity_number': existing_lead.x_identity_number,
+            'x_partner_rank_id': existing_lead.x_partner_rank_id.id if existing_lead.x_partner_rank_id else False,
+            'x_activity_area': existing_lead.x_activity_area.id if existing_lead.x_activity_area else False,
+            'x_dealer_id': existing_lead.x_dealer_id.id if existing_lead.x_dealer_id else False,
+            'x_dealer_branch_id': existing_lead.x_dealer_branch_id.id if existing_lead.x_dealer_branch_id else False,
+            'x_sale_person_id': existing_lead.x_sale_person_id.id if existing_lead.x_sale_person_id else False,
+            'x_approaching_channel_id': existing_lead.x_approaching_channel_id.id if existing_lead.x_approaching_channel_id else False,
+            'x_state_id': existing_lead.x_state_id.id if existing_lead.x_state_id else False,
+            'x_vehicle_interest_ids': [(6, 0, existing_lead.x_vehicle_interest_ids.ids)],
+            'x_customer_follow_up_ids': [(6, 0, existing_lead.x_customer_follow_up_ids.ids)],
+            'x_owned_team_car_line_ids': [(6, 0, existing_lead.x_owned_team_car_line_ids.ids)],
+            'x_member_unit_ids': [(6, 0, existing_lead.x_member_unit_ids.ids)],
+            'x_contact_person_ids': [(6, 0, existing_lead.x_contact_person_ids.ids)],
+        }
