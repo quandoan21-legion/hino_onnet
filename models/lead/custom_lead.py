@@ -47,7 +47,7 @@ class CustomLead(models.Model):
     x_request_sale_3rd_barrels_id = fields.Many2one('third.party.registration',
                                                     string='Proposal to sell in Encroaching area/Third party/Body maker',
                                                     readonly=True,
-                                                    domain="[('x_customer_id', '=', x_partner_id), ('x_state', '=', 'approved')]")
+                                                    domain="[ ('x_state', '=', 'approved')]")
 
     x_bidding_package = fields.Char(string='Bidding Package', tracking=True)
     x_purchase_type = fields.Selection(
@@ -102,7 +102,3 @@ class CustomLead(models.Model):
     def _compute_readonly_fields(self):
         for record in self:
             record.x_readonly_fields = record.x_status != 'draft'
-
-    # _sql_constraints = [
-    # ('unique_x_partner_id', 'UNIQUE(x_partner_id)', 'This customer already exists in another lead!')
-    # ]
