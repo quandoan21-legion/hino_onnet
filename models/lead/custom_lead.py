@@ -28,14 +28,14 @@ class CustomLead(models.Model):
         default='person'
     )
     x_partner_id = fields.Many2one(
-        'res.partner', string='Customer', tracking=True)
+        'res.partner', string='Customer', tracking=True, store=True)
     x_partner_name = fields.Char(
         string='Customer Name', store=True, tracking=True)
     x_website = fields.Char(string="Website", store=True, tracking=True)
     x_contact_address_complete = fields.Char(
         string="Contact Address", help="Customer's detailed address.", require=True)
     x_customer_type = fields.Selection(
-        [('draft', 'Draft'), ('third_party', 'Third Party'),
+        [('draft', 'Old Customer'), ('third_party', 'Third Party'),
          ('body_maker', 'Body Maker')],
         string='Third part/Body maker', default='draft', tracking=True
     )

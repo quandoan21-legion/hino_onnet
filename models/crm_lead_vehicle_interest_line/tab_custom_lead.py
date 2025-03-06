@@ -1,5 +1,6 @@
 from odoo import models, fields, api
-
+import logging
+_logger = logging.getLogger(__name__)
 
 class VehicleInterest(models.Model):
     _name = 'crm.lead.vehicle.interest.line'
@@ -23,25 +24,43 @@ class VehicleInterest(models.Model):
                                          domain="[('sale_request_id', '=', sale_request_id)]")
 
     @api.model
+    @api.model
     def create(self, vals):
+        _logger.info(f"Creating new Vehicle Interest with values: {vals}")
+
         if 'x_partner_code' not in vals or not vals['x_partner_code']:
             lead = self.env['crm.lead'].browse(vals.get('lead_id'))
-            vals['x_partner_code'] = lead.id
+            if lead:
+                _logger.info(
+                    f"Found Lead: {lead.id}, Setting x_partner_code to: {lead.x_partner_id.id if lead.x_partner_id else 'None'}")
+                vals['x_partner_code'] = lead.x_partner_id.id if lead.x_partner_id else False
+            else:
+                _logger.warning("Lead not found, x_partner_code not set.")
+
         return super(VehicleInterest, self).create(vals)
 
     def write(self, vals):
+        _logger.info(f"Updating Vehicle Interest {self.id} with values: {vals}")
+
         for record in self:
             if 'x_partner_code' not in vals or not vals['x_partner_code']:
-                vals['x_partner_code'] = record.lead_id.id
+                vals['x_partner_code'] = record.lead_id.x_partner_id.id if record.lead_id.x_partner_id else False
+                _logger.info(f"Updating x_partner_code for {record.id} to {vals['x_partner_code']}")
+
         return super(VehicleInterest, self).write(vals)
 
     @api.onchange('lead_id')
     def _onchange_lead_id(self):
+        _logger.info(f"Triggered _onchange_lead_id for record ID: {self.id}")
         if self.lead_id:
+            _logger.info(
+                f"Lead ID: {self.lead_id.id}, Partner ID: {self.lead_id.x_partner_id.id if self.lead_id.x_partner_id else 'None'}")
             self.x_partner_code = self.lead_id.x_partner_id.id
             self.x_partner_name = self.lead_id.x_partner_name
             self.x_address = self.lead_id.x_contact_address_complete
             self.x_province_id = self.lead_id.x_state_id
+        else:
+            _logger.warning("lead_id is not set, skipping update.")
 
     @api.onchange('lead_id.x_request_sale_3rd_barrels_id')
     def _onchange_x_request_sale_3rd_barrels_id(self):
