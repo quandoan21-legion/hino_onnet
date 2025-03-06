@@ -286,16 +286,14 @@ class CustomLeadMethods(models.Model):
         contract_lines = []
         vehicle_interest = self.env['crm.lead.vehicle.interest.line'].search([('lead_id', '=', self.id)])
         for vehicle in vehicle_interest:
-            for _ in range(vehicle.x_quantity):
                 contract_lines.append({
                     'contract_id': contract.id,
                     'line_end_customer_id': vehicle.x_partner_code.id,
-                    # 'line_model_id':vehicle.x_model_id.id,
+                    'model_id':vehicle.x_model_id.id,
                     'line_address': self.x_contact_address_complete,
                     'line_province_city_id': self.x_state_id.id,
                 })
-
-            return contract_lines if contract_lines else []
+        return contract_lines if contract_lines else []
 
     def action_mark_draft(self):
         self.write({'x_status': 'draft'})
