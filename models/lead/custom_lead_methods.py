@@ -239,7 +239,6 @@ class CustomLeadMethods(models.Model):
                 'default_x_identification_id': self.x_identity_number,
                 'default_x_business_registration_id': self.x_vat,
                 'default_x_lead_code_id': self.id,
-                'default_x_customer_region': self.x_activity_area,
                 'default_x_request_date': fields.Date.context_today(self),
             }
         }

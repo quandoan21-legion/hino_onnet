@@ -2,6 +2,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError
 from datetime import timedelta, date
+
 class SaleRequestMethods(models.Model):
     _inherit = 'sale.request'
 
@@ -21,30 +22,15 @@ class SaleRequestMethods(models.Model):
         else:
             self.x_request_dealer_id = False
 
-    @api.onchange('x_province_id')
-    def _onchange_province_id(self):
-        """Cập nhật khu vực khách hàng khi tỉnh/thành phố thay đổi"""
-        if self.x_province_id:
-            # Tìm tỉnh/thành phố trong bảng res.country.state và lấy khu vực tương ứng
-            state = self.env['res.country.state'].browse(self.x_province_id.id)
-            if state.sale_area_id:
-                self.x_customer_region = state.sale_area_id
+    @api.depends('x_province_id')
+    def _compute_customer_region(self):
+        for record in self:
+            if record.x_province_id:
+                sale_area_detail = self.env['sales.area.detail.line'].search([('x_code', '=', record.x_province_id.id)],
+                                                                             limit=1)
+                record.x_customer_region = sale_area_detail.x_sale_area_id if sale_area_detail else False
             else:
-                self.x_customer_region = False
-        else:
-            self.x_customer_region = False
-
-    # Nếu bạn muốn hàm này chạy khi lấy dữ liệu từ lead, thêm hàm sau
-    def _get_data_from_lead(self, lead):
-        # Giả sử hàm này được gọi khi bạn bấm nút để chuyển dữ liệu từ lead
-        # Code chuyển dữ liệu từ lead sang sale.request
-
-        # Sau khi chuyển dữ liệu từ lead, cập nhật x_customer_region
-        if self.x_province_id:
-            state = self.env['res.country.state'].browse(self.x_province_id.id)
-            if state.sale_area_id:
-                self.x_customer_region = state.sale_area_id
-
+                record.x_customer_region = False
 
     @api.depends('x_dealer_branch_id')
     def _compute_request_dealer_id(self):
