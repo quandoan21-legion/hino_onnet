@@ -105,10 +105,8 @@ class CRMContractLine(models.Model):
 
     @api.model
     def create(self, vals):
-        """Auto-increment for category field"""
         if 'contract_id' in vals:
-            existing_count = self.search_count([
-                ('contract_id','=',vals['contract_id'])
-            ])
-            vals['category'] = existing_count + 1
+            contract = self.env['crm.contract'].browse(vals['contract_id'])
+            existing_count = len(contract.contract_line_ids)
+            vals['line_category'] = existing_count + 1
         return super().create(vals)

@@ -8,12 +8,10 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-
-                        <field name="x_status" invisible="1" />
-
-                        <button name="action_mark_draft" string="Reset Draft" type="object"
-                            class="oe_highlight" />
-                        <button name="action_mark_failed" string="Customer Doesn't Buy Car"
+                        <field name="x_status" widget="statusbar"
+                            statusbar_visible="draft,in progress,contract signed,failed,cancelled" />
+                        <button name="action_mark_draft" string="Reset Draft" type="object" invisible="x_status == 'draft'"/>
+                        <button name="action_mark_failed" string="Reject Lead"
                             type="object"
                             invisible="x_status != 'in progress'" class="oe_highlight" />
                         <button name="action_create_customer" string="Create Customer" type="object"
@@ -22,12 +20,11 @@
                         <button name="action_create_contract"
                             type="object"
                             string="Create Contract"
+                            invisible="x_status == 'contract signed' or x_status == 'cancelled'" 
                             class="oe_highlight" />
                         <button name="action_view_third_party_registration"
                             string="Propose in Encroaching area/Third party/Body maker"
-                            type="object" invisible="x_request_sale_3rd_barrels_id" />
-                        <field name="x_status" widget="statusbar"
-                            statusbar_visible="draft,contract signed,in progress,completed,failed,cancelled" />
+                            type="object" invisible="x_request_sale_3rd_barrels_id or x_partner_id"/>
                     </header>
                     <sheet>
                         <div class="oe_title">

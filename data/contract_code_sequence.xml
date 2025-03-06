@@ -5,7 +5,7 @@
         <record id="seq_contract_code" model="ir.sequence">
             <field name="name">Contract Code</field>
             <field name="code">crm.contract</field>
-            <field name="prefix">C0%(year)s</field>
+            <field name="prefix">C0%(y)s</field>
             <field name="padding">4</field>
             <field name="number_increment">1</field>
             <field name="number_next">1</field>

@@ -84,7 +84,7 @@ class CRMContract(models.Model):
         year_suffix = fiscal_year.name[-2:] if fiscal_year else datetime.today().year % 100
 
         sequence = self.env['ir.sequence'].next_by_code('crm.contract') or "0001"
-        vals["contract_code"] = f"C0{year_suffix}{sequence}"
+        vals["contract_code"] = f"CO{year_suffix}{sequence}"
 
         return super().create(vals)
 
