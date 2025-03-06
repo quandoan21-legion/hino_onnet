@@ -29,7 +29,6 @@ class CRMContractLine(models.Model):
     line_third_party_offer_ids = fields.Many2many(
         'third.party.registration',
         string="Third Party Offer",
-        domain="[('x_customer_id', '=', x_partner_id), ('x_state', '=', 'approved')]"
     )
     model_id = fields.Many2one(
         'product.product',
