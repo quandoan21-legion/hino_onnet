@@ -38,7 +38,7 @@ class VehicleInterest(models.Model):
     @api.onchange('lead_id')
     def _onchange_lead_id(self):
         if self.lead_id:
-            # self.x_partner_code = self.lead_id.x_partner_id.id
+            self.x_partner_code = self.lead_id.x_partner_id.id
             self.x_partner_name = self.lead_id.x_partner_name
             self.x_address = self.lead_id.x_contact_address_complete
             self.x_province_id = self.lead_id.x_state_id
