@@ -5,6 +5,7 @@ from odoo import models, fields, api, exceptions
 from odoo.exceptions import ValidationError, UserError
 from odoo.exceptions import UserError, warnings
 
+
 class CustomLeadMethods(models.Model):
     _inherit = 'crm.lead'
 
@@ -32,7 +33,6 @@ class CustomLeadMethods(models.Model):
     def _compute_dealer_id(self):
         for record in self:
             record.x_dealer_id = record.x_dealer_branch_id.parent_id if record.x_dealer_branch_id else False
-
 
     @api.onchange('x_partner_id')
     def _onchange_x_partner_id(self):
@@ -127,7 +127,6 @@ class CustomLeadMethods(models.Model):
             return existing_partner.id
         return self._create_new_partner(vals).id
 
-
     def _build_partner_search_domain(self, vals):
         domain = []
         if vals.get('x_vat'):
@@ -137,7 +136,7 @@ class CustomLeadMethods(models.Model):
                            vals['x_identity_number']))
         return domain
 
-    def _create_new_partner(self, vals): 
+    def _create_new_partner(self, vals):
         partner_vals = {
             'x_lead_id': vals.get('x_lead_id', 'Lead Id'),
             'name': vals.get('x_partner_name', 'Unnamed Customer'),
@@ -162,7 +161,6 @@ class CustomLeadMethods(models.Model):
         }
         return self.env['res.partner'].create(partner_vals)
 
-
     @api.constrains('x_customer_status', 'x_identity_number', 'x_vat')
     def _check_customer_status_requirements(self):
         for record in self:
@@ -181,13 +179,11 @@ class CustomLeadMethods(models.Model):
                     raise models.ValidationError(
                         "The Identity number must contain from 9 to 13 digits.")
 
-
     def action_mark_failed(self):
         self.write({'x_status': 'failed'})
-    
+
     def action_mark_canceled(self):
         self.write({'x_status': 'cancelled'})
-
 
     def action_create_customer(self):
         for record in self:
@@ -211,7 +207,7 @@ class CustomLeadMethods(models.Model):
                     'x_service_contract': record.x_service_contract,
                     'x_partner_rank_id': record.x_partner_rank_id.id if record.x_partner_rank_id else False,
                 }
-                
+
                 if not self._validate_customer_state(vals):
                     raise ValidationError("The customer state does not match with your Company State")
 
@@ -226,11 +222,6 @@ class CustomLeadMethods(models.Model):
             if dealer_branch.state_id.id != vals.get('x_state_id'):
                 return False
         return True
-    def action_cancel_lead(self):
-        reason = self.env.context.get('cancel_reason')
-        if not reason:
-            raise ValidationError("A reason for cancellation is required.")
-        self.write({'x_status': 'cancelled'})
 
     def action_view_third_party_registration(self):
         return {
@@ -238,7 +229,7 @@ class CustomLeadMethods(models.Model):
             'name': 'sale.request.tree',
             'view_mode': 'form',
             'res_model': 'sale.request',
-            'context' : {
+            'context': {
                 'default_x_customer_id': self.x_partner_id.id,
                 'default_x_request_dealer_id': self.x_dealer_id.id,
                 'default_x_dealer_branch_id': self.x_dealer_branch_id.id,
@@ -262,7 +253,6 @@ class CustomLeadMethods(models.Model):
 
                     raise ValidationError(
                         "The selected state must match the state of the Dealer Branch Company.")
-
 
     # @api.constrains('x_partner_id')
     # def _check_unique_x_partner_id(self):
@@ -294,23 +284,25 @@ class CustomLeadMethods(models.Model):
     def _prepare_contract_line_values(self, contract):
         """Prepare values for crm.contract.line"""
         contract_lines = []
-        vehicle_interest = self.env['crm.lead.vehicle.interest.line'].search([('lead_id','=',self.id)])
+        vehicle_interest = self.env['crm.lead.vehicle.interest.line'].search([('lead_id', '=', self.id)])
         for vehicle in vehicle_interest:
             for _ in range(vehicle.x_quantity):
                 contract_lines.append({
-                    'contract_id':contract.id,
-                    'line_end_customer_id':vehicle.x_partner_code.id,
+                    'contract_id': contract.id,
+                    'line_end_customer_id': vehicle.x_partner_code.id,
                     # 'line_model_id':vehicle.x_model_id.id,
-                    'line_address':self.x_contact_address_complete,
-                    'line_province_city_id':self.x_state_id.id,
+                    'line_address': self.x_contact_address_complete,
+                    'line_province_city_id': self.x_state_id.id,
                 })
-                
+
             return contract_lines if contract_lines else []
 
     def action_mark_draft(self):
         self.write({'x_status': 'draft'})
+
     def action_mark_cancel(self):
         self.write({'x_status': 'cancelled'})
+
     def action_create_contract(self):
         """Create contract and change X_status to contract_signed"""
         contract_obj = self.env['crm.contract']
@@ -320,15 +312,15 @@ class CustomLeadMethods(models.Model):
             if not lead.x_partner_id:
                 raise UserError("Need customer to create contact")
 
-        #create crm.contract record
+        # create crm.contract record
         contract_vals = lead._prepare_contract_values()
         contract = contract_obj.create(contract_vals)
 
-        #create crm.contract.line record
+        # create crm.contract.line record
         contract_line_vals = lead._prepare_contract_line_values(contract)
         if not contract_line_vals:
             raise UserError("No contract line values were generated. Check vehicle interests.")
-            
+
         contract_line_obj.create(contract_line_vals)
 
         # Update lead status
