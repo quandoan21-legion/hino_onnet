@@ -2,6 +2,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError
 from datetime import timedelta, date
+
 class SaleRequestMethods(models.Model):
     _inherit = 'sale.request'
 
@@ -20,6 +21,16 @@ class SaleRequestMethods(models.Model):
             self.x_request_dealer_id = self.x_dealer_branch_id.parent_id
         else:
             self.x_request_dealer_id = False
+
+    @api.depends('x_province_id')
+    def _compute_customer_region(self):
+        for record in self:
+            if record.x_province_id:
+                sale_area_detail = self.env['sales.area.detail.line'].search([('x_code', '=', record.x_province_id.id)],
+                                                                             limit=1)
+                record.x_customer_region = sale_area_detail.x_sale_area_id if sale_area_detail else False
+            else:
+                record.x_customer_region = False
 
     @api.depends('x_dealer_branch_id')
     def _compute_request_dealer_id(self):
