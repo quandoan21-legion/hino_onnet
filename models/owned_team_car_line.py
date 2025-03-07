@@ -35,4 +35,3 @@ class CustomLeadLine(models.Model):
                     "You cannot create a new Owned car line because this lead form is not in DRAFT status."
                 )
         return super(CustomLeadLine, self).create(vals_list)  # Use 'create', not 'write'
-

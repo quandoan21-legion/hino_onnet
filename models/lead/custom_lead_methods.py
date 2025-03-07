@@ -45,6 +45,14 @@ class CustomLeadMethods(models.Model):
             self.x_website = self.x_partner_id.website
             self.phone = self.x_partner_id.phone
             self.email_from = self.x_partner_id.email
+
+            if self.x_partner_id.x_customer_type in ['third_party', 'body_maker']:
+                self.x_customer_type = self.x_partner_id.x_customer_type
+            else:
+                self.x_customer_type = 'draft'
+
+            vat = self.x_partner_id.vat or ''
+            business_reg_id = self.x_partner_id.x_business_registration_id or ''
             self.x_vat = self.x_partner_id.x_business_registration_id
             self.x_identity_number = self.x_partner_id.x_identity_number
             self.x_industry_id = self.x_partner_id.x_industry_id.id if self.x_partner_id.x_industry_id else False
@@ -55,11 +63,8 @@ class CustomLeadMethods(models.Model):
             self.x_partner_rank_id = self.x_partner_id.x_currently_rank_id
             self.x_customer_status = 'company' if self.x_partner_id.company_type == 'company' else 'person'
             self.x_contact_address_complete = self.x_partner_id.x_contact_address
-
             self.x_state_id = self.x_partner_id.x_state_id.id if self.x_partner_id.x_state_id else False
             self.x_dealer_branch_id = self.x_partner_id.x_dealer_branch_id.id if self.x_partner_id.x_dealer_branch_id else False
-            self.x_owned_team_car_line_ids = [(6, 0, self.x_partner_id.x_owned_car_line_ids.ids)]
-            self.x_number_of_vehicles = self.x_partner_id.x_number_of_vehicles
 
     @api.constrains('x_customer_type', 'x_partner_id')
     def _validate_customer_type(self):
