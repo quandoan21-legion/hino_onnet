@@ -6,7 +6,7 @@ class CustomLeadLine(models.Model):
     _name = 'owned.team.car.line'
 
     lead_id = fields.Many2one('crm.lead', string='Lead')
-    # x_partner_id = fields.Many2one('res.partner', string='Partner')
+    x_partner_id = fields.Many2one('res.partner', string='Partner')
     x_model_name = fields.Char(string='Model Name')
     x_model_id = fields.Many2one('product.product', string='Model Hino')
     x_quantity = fields.Integer(string='Quantity')
@@ -18,7 +18,12 @@ class CustomLeadLine(models.Model):
         default=False
     )
     x_brand_car = fields.Char(string='Car Firm Name')
-    customer_rank_upgrade_id = fields.Many2one('customer.rank.upgrade', string='Potential customer')
+    customer_rank_upgrade_id = fields.Many2one(git
+        'customer.rank.upgrade',
+        string='Customer Rank Upgrade',
+        ondelete='cascade'
+    )
+
     partner_id = fields.Many2one('res.partner', string='Owner',ondelete='cascade')
 
     # @api.depends('x_model_id')

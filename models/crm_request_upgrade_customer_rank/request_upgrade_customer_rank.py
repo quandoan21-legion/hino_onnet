@@ -63,11 +63,17 @@ class CustomerRankUpgrade(models.Model):
         compute='_compute_x_owned_team_car_ids',
         store=True
     )
+    # x_owned_car_line_ids = fields.One2many(
+    #     'owned.team.car.line', 'x_partner_id',
+    #     string='Owned Vehicle List',
+    #     compute='_compute_x_owned_car_line_ids',
+    #     store=True
+    # )
+
     x_owned_car_line_ids = fields.One2many(
-        'owned.team.car.line', 'x_partner_id',
-        string='Owned Vehicle List',
-        compute='_compute_x_owned_car_line_ids',
-        store=True
+        'owned.team.car.line',
+        'customer_rank_upgrade_id',
+        string='Owned Vehicle List'
     )
     x_is_hino_vehicle = fields.One2many(
         'owned.team.car.line', 'x_partner_id',
@@ -132,31 +138,25 @@ class CustomerRankUpgrade(models.Model):
     #             # If no partner is assigned, clear the fields
     #             record.x_owned_car_line_ids = self.env['owned.team.car.line']
     #             record.x_owned_team_car_ids = self.env['owned.team.car.line']
-
-
-    # @api.depends('x_partner_id')
-    # def _compute_x_owned_car_line_ids(self):
-    #     for record in self:
-    #         if record.x_partner_id:
-    #             owned_cars = self.env['owned.team.car.line'].search([('x_partner_id', '=', record.x_partner_id.id)])
-    #             record.x_owned_car_line_ids = [(6, 0, owned_cars.ids)]
-    #             record.x_owned_team_car_ids = [(6, 0, owned_cars.ids)]
-    #         else:
-    #             record.x_owned_car_line_ids = [(5, 0, 0)]
-    #             record.x_owned_team_car_ids = [(5, 0, 0)]
-
-
     @api.depends('x_partner_id')
     def _compute_x_owned_car_line_ids(self):
         for record in self:
             if record.x_partner_id:
-                record.x_owned_car_line_ids = record.x_partner_id.x_owned_car_line_ids
-                record.x_owned_team_car_ids = record.x_partner_id.x_owned_car_line_ids
+                owned_cars = self.env['owned.team.car.line'].search([('x_partner_id', '=', record.x_partner_id.id)])
+                record.x_owned_car_line_ids = [(6, 0, owned_cars.ids)]
+                record.x_owned_team_car_ids = [(6, 0, owned_cars.ids)]
             else:
                 record.x_owned_car_line_ids = [(5, 0, 0)]
                 record.x_owned_team_car_ids = [(5, 0, 0)]
-
-
+    # @api.depends('x_partner_id')
+    # def _compute_x_owned_car_line_ids(self):
+    #     for record in self:
+    #         if record.x_partner_id:
+    #             record.x_owned_car_line_ids = record.x_partner_id.x_owned_car_line_ids
+    #             record.x_owned_team_car_ids = record.x_partner_id.x_owned_car_line_ids
+    #         else:
+    #             record.x_owned_car_line_ids = [(5, 0, 0)]
+    #             record.x_owned_team_car_ids = [(5, 0, 0)]
     # @api.depends('x_partner_id')
     # def _compute_x_owned_car_line_ids(self):
     #     for record in self:
@@ -180,16 +180,51 @@ class CustomerRankUpgrade(models.Model):
     #         else:
     #             record.x_owned_team_car_ids = [(5, 0, 0)]
 
-    @api.onchange('x_partner_id')
-    def _onchange_x_partner_id(self):
-        """Update vehicle quantity fields when the customer changes."""
+    # @api.onchange('x_partner_id')
+    # def _onchange_x_partner_id(self):
+    #     """Update vehicle quantity fields when the customer changes."""
+    #     for record in self:
+    #         if record.x_partner_id:
+    #             record.x_total_quantity = record.x_partner_id.x_number_of_vehicles
+    #             record.x_quantity_of_hino = record.x_partner_id.x_hino_vehicle
+    #         else:
+    #             record.x_total_quantity = 0
+    #             record.x_quantity_of_hino = 0
+
+    @api.depends('x_partner_id')
+    def _compute_x_owned_car_line_ids(self):
         for record in self:
             if record.x_partner_id:
-                record.x_total_quantity = record.x_partner_id.x_number_of_vehicles
-                record.x_quantity_of_hino = record.x_partner_id.x_hino_vehicle
+                owned_cars = self.env['owned.team.car.line'].search([
+                    ('x_partner_id', '=', record.x_partner_id.id)
+                ])
+                record.x_owned_car_line_ids = [(6, 0, owned_cars.ids)]
             else:
-                record.x_total_quantity = 0
-                record.x_quantity_of_hino = 0
+                record.x_owned_car_line_ids = [(5, 0, 0)]
+
+    @api.depends('x_partner_id')
+    def _compute_x_owned_car_line_ids(self):
+        for record in self:
+            if record.x_partner_id:
+                # Fetch all cars related to the selected partner
+                owned_cars = self.env['owned.team.car.line'].search([
+                    ('x_partner_id', '=', record.x_partner_id.id)
+                ])
+                record.x_owned_car_line_ids = [(6, 0, owned_cars.ids)]
+            else:
+                record.x_owned_car_line_ids = [(5, 0, 0)]  # Clear the field if no partner
+
+    @api.depends('x_partner_id')
+    def _compute_x_owned_car_line_ids(self):
+        for record in self:
+            if record.x_partner_id:
+                # Fetch owned cars that belong to the selected partner
+                owned_cars = self.env['owned.team.car.line'].search([
+                    ('x_partner_id', '=', record.x_partner_id.id)  # Correct lookup based on partner
+                ])
+                record.x_owned_car_line_ids = owned_cars  # Assign the correct Many2one field reference
+            else:
+                record.x_owned_car_line_ids = False  # Clear field if no partner selected
 
     @api.depends('x_partner_id.x_number_of_vehicles')
     def _compute_total_quantity(self):
@@ -340,3 +375,32 @@ class CustomerRankUpgrade(models.Model):
         for record in self:
             if record.status == 'approved' and record.x_partner_id:
                 record.x_partner_id.x_currently_rank_id = record.x_rank_upgrade_id
+
+    def action_fetch_owned_vehicles(self):
+        """Fetch owned vehicles from the selected partner and save them."""
+        for record in self:
+            if not record.x_partner_id:
+                continue  # Skip if no partner is selected
+
+            # Fetch all cars related to the selected partner
+            owned_cars = self.env['owned.team.car.line'].search([
+                ('x_partner_id', '=', record.x_partner_id.id)
+            ])
+
+            # Clear old records and insert new ones
+            record.x_owned_car_line_ids = [(5, 0, 0)]  # Remove existing records
+            record.x_owned_car_line_ids = [(4, car.id) for car in owned_cars]
+
+    @api.model
+    def create(self, vals):
+        """ Automatically fetch and save owned vehicles when a new record is created """
+        record = super(CustomerRankUpgrade, self).create(vals)
+        record.action_fetch_owned_vehicles()  # Fetch vehicles immediately
+        return record
+
+    def write(self, vals):
+        """ Ensure owned vehicles are updated when saving """
+        res = super(CustomerRankUpgrade, self).write(vals)
+        if 'x_partner_id' in vals:
+            self.action_fetch_owned_vehicles()  # Update vehicles when partner changes
+        return res

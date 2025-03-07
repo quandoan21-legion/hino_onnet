@@ -11,6 +11,7 @@
 
                     <header>
                         <!-- Buttons -->
+                         <button name="action_fetch_owned_vehicles" type="object" string="Fetch Vehicles" class="btn-primary"/>
                         <button name="action_update_data" type="object" string="Update Data" class="btn-secondary"
                                 invisible="status  in ('pending','approved','rejected','canceled')"/>
                         <button name="action_submit" type="object" string="Submit" class="btn-secondary"
