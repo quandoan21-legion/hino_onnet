@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <menuitem id="menu_sale_request_root" name="Sale Requests" 
+        <menuitem id="menu_sale_request_root" name="Hino's Sale Requests" 
         parent="sale.sale_order_menu" sequence="10"/>
 
-        <menuitem id="menu_sale_request" name="Requests" 
+        <menuitem id="menu_sale_request" name="Hino's Requests" 
         parent="menu_sale_request_root" action="action_sale_request" sequence="20"/>
     </data>
 </odoo>

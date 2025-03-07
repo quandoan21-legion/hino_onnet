@@ -29,7 +29,6 @@ class CRMContractLine(models.Model):
     line_third_party_offer_ids = fields.Many2many(
         'third.party.registration',
         string="Third Party Offer",
-        domain="[('x_customer_id', '=', x_partner_id), ('x_state', '=', 'approved')]"
     )
     model_id = fields.Many2one(
         'product.product',
@@ -105,10 +104,8 @@ class CRMContractLine(models.Model):
 
     @api.model
     def create(self, vals):
-        """Auto-increment for category field"""
         if 'contract_id' in vals:
-            existing_count = self.search_count([
-                ('contract_id','=',vals['contract_id'])
-            ])
-            vals['category'] = existing_count + 1
+            contract = self.env['crm.contract'].browse(vals['contract_id'])
+            existing_count = len(contract.contract_line_ids)
+            vals['line_category'] = existing_count + 1
         return super().create(vals)

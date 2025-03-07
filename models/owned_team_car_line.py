@@ -18,7 +18,7 @@ class CustomLeadLine(models.Model):
         default=False
     )
     x_brand_car = fields.Char(string='Car Firm Name')
-    customer_rank_upgrade_id = fields.Many2one(git
+    customer_rank_upgrade_id = fields.Many2one(
         'customer.rank.upgrade',
         string='Customer Rank Upgrade',
         ondelete='cascade'
