@@ -8,26 +8,23 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-
-                        <field name="x_status" invisible="1" />
-
-                        <button name="action_mark_draft" string="Reset Draft" type="object"
-                            class="oe_highlight" />
-                        <button name="action_mark_failed" string="Customer Doesn't Buy Car"
+                        <field name="x_status" widget="statusbar"
+                            statusbar_visible="draft,in progress,contract signed,failed,cancelled" />
+                        <button name="action_mark_draft" string="Reset Draft" type="object" invisible="x_status == 'draft'"/>
+                        <button name="action_mark_failed" string="Reject Lead"
                             type="object"
                             invisible="x_status != 'in progress'" class="oe_highlight" />
                         <button name="action_create_customer" string="Create Customer" type="object"
                             invisible="x_partner_id" class="oe_highlight" />
-                        <button name="action_mark_canceled" string="Cancel" type="object" invisible="x_status == 'draft'"/>
+                        <button name="action_mark_canceled" string="Cancel" type="object" invisible="x_status == 'draft' or x_status == 'cancelled'"/>
                         <button name="action_create_contract"
                             type="object"
                             string="Create Contract"
+                            invisible="x_status == 'contract signed' or x_status == 'cancelled'" 
                             class="oe_highlight" />
                         <button name="action_view_third_party_registration"
                             string="Propose in Encroaching area/Third party/Body maker"
-                            type="object" invisible="x_request_sale_3rd_barrels_id" />
-                        <field name="x_status" widget="statusbar"
-                            statusbar_visible="draft,contract signed,in progress,completed,failed,cancelled" options="{'clickable': True}" />
+                            type="object" invisible="x_customer_type == 'third_party' or x_status == 'cancelled'"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -71,11 +68,11 @@
                                 <field name="email_from" readonly="x_status not in ('draft')" />
                                 <field name="x_vat" readonly="x_status not in ('draft')" />
                                 <field name="x_identity_number" readonly="x_status not in ('draft')" />
-<!--                                <field name="x_industry_id"-->
-<!--                                    readonly="x_status not in ('draft')" />-->
+                                <field name="x_industry_id"
+                                    readonly="x_status not in ('draft')" />
                                 <field name="x_service_contract" required="1"
                                     readonly="x_status not in ('draft')" />
-                                <field name="x_activity_area"
+                                <field name="x_activity_area" required="1"
                                     readonly="x_status not in ('draft')" />
                                 <field name="x_request_sale_3rd_barrels_id"
                                     readonly="x_status not in ('draft')" />
@@ -102,6 +99,7 @@
                                         <field name="x_partner_name" />
                                         <field name="x_address" />
                                         <field name="x_quantity" />
+                                        <field name="x_model_id"/>
                                         <field name="x_body_type_id" />
                                         <field name="x_expected_implementation_time" />
                                         <field name="x_expected_time_sign_contract" />
@@ -116,8 +114,6 @@
                                         <field name="x_model_name" />
                                         <field name="x_quantity" />
                                         <field name="x_brand_name" />
-                                        <field name="x_is_hino_vehicle" widget="boolean_toggle"/>
-<!--                                        <field name="x_is_hino_vehicle" column_invisible="1"/>-->
                                     </tree>
                                 </field>
                             </page>

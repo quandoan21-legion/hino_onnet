@@ -2,6 +2,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError
 from datetime import timedelta, date
+
 class SaleRequestMethods(models.Model):
     _inherit = 'sale.request'
 
@@ -21,6 +22,16 @@ class SaleRequestMethods(models.Model):
         else:
             self.x_request_dealer_id = False
 
+    @api.depends('x_province_id')
+    def _compute_customer_region(self):
+        for record in self:
+            if record.x_province_id:
+                sale_area_detail = self.env['sales.area.detail.line'].search([('x_code', '=', record.x_province_id.id)],
+                                                                             limit=1)
+                record.x_customer_region = sale_area_detail.x_sale_area_id if sale_area_detail else False
+            else:
+                record.x_customer_region = False
+
     @api.depends('x_dealer_branch_id')
     def _compute_request_dealer_id(self):
         for record in self:
@@ -31,11 +42,7 @@ class SaleRequestMethods(models.Model):
         if self.x_customer_id:
             self.x_customer_name = self.x_customer_id.name
             self.x_customer_address = self.x_customer_id.street
-            self.x_province_id = self.x_customer_id.state_id.id
-        else:
-            self.x_customer_name = ''
-            self.x_customer_address = ''
-            self.x_province_id = False
+            self.x_province_id = self.x_customer_id.state_id
 
     @api.depends('x_customer_id')
     def _compute_old_customer(self):

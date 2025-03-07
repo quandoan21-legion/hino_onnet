@@ -28,27 +28,26 @@ class CustomLead(models.Model):
         default='person'
     )
     x_partner_id = fields.Many2one(
-        'res.partner', string='Customer', tracking=True)
+        'res.partner', string='Customer', tracking=True, store=True)
     x_partner_name = fields.Char(
         string='Customer Name', store=True, tracking=True)
     x_website = fields.Char(string="Website", store=True, tracking=True)
     x_contact_address_complete = fields.Char(
         string="Contact Address", help="Customer's detailed address.", require=True)
     x_customer_type = fields.Selection(
-        [('draft', 'Draft'), ('third_party', 'Third Party'),
+        [('draft', 'Old Customer'), ('third_party', 'Third Party'),
          ('body_maker', 'Body Maker')],
         string='Third part/Body maker', default='draft', tracking=True
     )
     x_vat = fields.Char(
         string='Business Registration ID (Tax code)', tracking=True)
     x_identity_number = fields.Char(string='Identity Number', tracking=True)
-    # x_industry_id = fields.Many2one(
-    #     'res.partner.industry', string='Industry')
+    x_industry_id = fields.Many2one(
+        'res.partner.industry', string='Industry')
     x_request_sale_3rd_barrels_id = fields.Many2one('third.party.registration',
                                                     string='Proposal to sell in Encroaching area/Third party/Body maker',
                                                     readonly=True,
-                                                        domain="[('x_customer_id', '=', x_partner_id), ('x_state', '=', 'approved')]")
-    # domain="[('x_state', '=', 'approved')]")
+                                                    domain="[ ('x_state', '=', 'approved')]")
 
     x_bidding_package = fields.Char(string='Bidding Package', tracking=True)
     x_purchase_type = fields.Selection(
@@ -56,16 +55,13 @@ class CustomLead(models.Model):
          ('bidding', 'Bidding'), ('other', 'Other')],
         string='Purchase type', tracking=True, require=True
     )
-    x_customer_follow_up_ids = fields.One2many(
-        'crm.follow.up', 'lead_id', string='Customer Follow-Up')
     x_project = fields.Char(string='Project', tracking=True)
     x_estimated_time_of_bid_opening = fields.Date(
         string='Estimated time of bid opening', tracking=True)
     x_area = fields.Char(string='Area', tracking=True)
     x_service_contract = fields.Boolean(
         string='Service Contact', tracking=True, require=True)
-    x_activity_area = fields.Many2one('sale.area',
-                                      string='Activity Area', tracking=True)
+    x_activity_area = fields.Char(string='Activity Area', tracking=True, require=True)
     x_dealer_id = fields.Many2one(
         'res.company',
         string='Dealer',
@@ -76,7 +72,6 @@ class CustomLead(models.Model):
     x_dealer_branch_id = fields.Many2one(
         'res.company',
         string='Dealer Branch',
-        default=lambda self: self.env.user.company_id,
         tracking=True,
         required=True,
         domain="[('parent_id', '!=', False)]"
@@ -97,9 +92,8 @@ class CustomLead(models.Model):
 
     x_status = fields.Selection([
         ('draft', 'Draft'),
-        ('contract signed', 'Contract Signed'),
         ('in progress', 'In Progress'),
-        ('completed', 'Completed'),
+        ('contract signed', 'Contract Signed'),
         ('failed', 'Failed'),
         ('cancelled', 'Cancelled'),
     ], string='Status', default='draft', tracking=True)
@@ -109,55 +103,3 @@ class CustomLead(models.Model):
     def _compute_readonly_fields(self):
         for record in self:
             record.x_readonly_fields = record.x_status != 'draft'
-
-    # _sql_constraints = [
-    # ('unique_x_partner_id', 'UNIQUE(x_partner_id)', 'This customer already exists in another lead!')
-    # ]
-    def _sync_car_lines(self):
-        """Sync lead car lines with related partners"""
-        for lead in self:
-            if lead.partner_id:
-                lead.partner_id._sync_owned_car_lines()
-    @api.model
-    def create(self, vals):
-        """Auto-fill fields if the contact (x_partner_id) already exists in another lead"""
-        if vals.get('x_partner_id'):
-            existing_lead = self.search([('x_partner_id', '=', vals['x_partner_id'])], limit=1)
-            if existing_lead:
-                vals.update(self._prepare_auto_fill_vals(existing_lead))
-
-        return super(CustomLead, self).create(vals)
-
-    def write(self, vals):
-        """Auto-fill fields when updating an existing lead if contact exists in another lead"""
-        for lead in self:
-            if 'x_partner_id' in vals and vals['x_partner_id']:
-                existing_lead = self.search([('x_partner_id', '=', vals['x_partner_id'])], limit=1)
-                if existing_lead:
-                    vals.update(self._prepare_auto_fill_vals(existing_lead))
-
-        return super(CustomLead, self).write(vals)
-
-    def _prepare_auto_fill_vals(self, existing_lead):
-        """Prepare dictionary of values to auto-fill from an existing lead"""
-        return {
-            'x_partner_name': existing_lead.x_partner_name,
-            'x_website': existing_lead.x_website,
-            'x_contact_address_complete': existing_lead.x_contact_address_complete,
-            'x_customer_status': existing_lead.x_customer_status,
-            'x_customer_type': existing_lead.x_customer_type,
-            'x_vat': existing_lead.x_vat,
-            'x_identity_number': existing_lead.x_identity_number,
-            'x_partner_rank_id': existing_lead.x_partner_rank_id.id if existing_lead.x_partner_rank_id else False,
-            'x_activity_area': existing_lead.x_activity_area.id if existing_lead.x_activity_area else False,
-            'x_dealer_id': existing_lead.x_dealer_id.id if existing_lead.x_dealer_id else False,
-            'x_dealer_branch_id': existing_lead.x_dealer_branch_id.id if existing_lead.x_dealer_branch_id else False,
-            'x_sale_person_id': existing_lead.x_sale_person_id.id if existing_lead.x_sale_person_id else False,
-            'x_approaching_channel_id': existing_lead.x_approaching_channel_id.id if existing_lead.x_approaching_channel_id else False,
-            'x_state_id': existing_lead.x_state_id.id if existing_lead.x_state_id else False,
-            'x_vehicle_interest_ids': [(6, 0, existing_lead.x_vehicle_interest_ids.ids)],
-            'x_customer_follow_up_ids': [(6, 0, existing_lead.x_customer_follow_up_ids.ids)],
-            'x_owned_team_car_line_ids': [(6, 0, existing_lead.x_owned_team_car_line_ids.ids)],
-            'x_member_unit_ids': [(6, 0, existing_lead.x_member_unit_ids.ids)],
-            'x_contact_person_ids': [(6, 0, existing_lead.x_contact_person_ids.ids)],
-        }

@@ -4,6 +4,7 @@ from datetime import datetime
 class CRMContract(models.Model):
     _name = 'crm.contract'
     _description = "Create, track and manage dealer and customer contracts"
+    _rec_name = 'contract_code'
 
     contract_line_ids = fields.One2many(
         'crm.contract.line',
@@ -84,7 +85,7 @@ class CRMContract(models.Model):
         year_suffix = fiscal_year.name[-2:] if fiscal_year else datetime.today().year % 100
 
         sequence = self.env['ir.sequence'].next_by_code('crm.contract') or "0001"
-        vals["contract_code"] = f"C0{year_suffix}{sequence}"
+        vals["contract_code"] = f"CO{year_suffix}{sequence}"
 
         return super().create(vals)
 
@@ -102,11 +103,15 @@ class CRMContract(models.Model):
         self.write({'status': 'cancelled'})
 
     def sales_info(self):
-        """
-        placeholder for button sales infomation
-        :return:
-        """
-        return None
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Sales Information',
+            'view_mode': 'tree,form',
+            'res_model': 'sale.order',
+            'domain': [('contract_detail_id', 'in', self.contract_line_ids.ids)],
+            'context': {'default_contract_detail_id': self.id},
+        }
 
     @api.depends('dealer_branch_id')
     def _compute_dealer_id(self):

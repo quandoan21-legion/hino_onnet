@@ -20,24 +20,22 @@
     'depends': ['base', 'crm', 'hr', 'contacts','mail', 'account', 'sale', 'account_accountant','sale_management','web'],
 
     'data': [
+        'reports/lead_report_template.xml',
+        'reports/report.xml',
+
+        'data/partner_sequence.xml',
         'data/registration_code_sequence.xml',
         'data/lead_sequence.xml',
+        'data/sale_request_sequence.xml',
+        'data/body_type_sequence.xml',
+        'data/contract_code_sequence.xml',
+        'data/bid_authorization_sequence.xml', 
 
         'security/ir.model.access.csv',
 
         'wizards/third_party_registration_rejection_wizard_view.xml',
         'wizards/lead_report_wizard.xml',
-
-        'reports/lead_report_template.xml',
-        'reports/report.xml',
-
-        'data/partner_sequence.xml',
-        'data/sale_request_sequence.xml',
-        'data/body_type_sequence.xml',
-        'data/lead_sequence.xml',
-        'data/contract_code_sequence.xml',
-        'data/bid_authorization_sequence.xml',
-
+        
         'views/inherit_views/product_template_views.xml',
         'views/inherit_views/res_partner_views.xml',
         'views/inherit_views/employee_inherit_views.xml',
@@ -70,7 +68,6 @@
         'views/tree_views/approach_channel_view.xml',
         'views/tree_views/body_type.xml',
         'views/tree_views/contract_tree_view.xml',
-        'views/inherit_views/product_template_views.xml',
 
         'views/menu/cross_region_suggest_menu_items.xml',
         'views/menu/sale_request_menu_items.xml',
