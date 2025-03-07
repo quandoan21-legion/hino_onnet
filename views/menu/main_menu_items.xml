@@ -2,18 +2,18 @@
 <odoo>
     <!-- New menu under CRM -->
     <menuitem id="custom_crm_menu"
-              name="Lead"
+              name="Hino's Lead"
               parent="crm.crm_menu_root"
               sequence="10"/>
     <menuitem id="crm_contract_menu"
-              name="Contract"
+              name="Hino's Contract"
               parent="crm.crm_menu_root"
               action="crm_contract_action"
               sequence="20"/>
 
     <!-- Attach the action to the menu -->
     <menuitem id="custom_crm_submenu"
-              name="Leads"
+              name="Hino's Leads"
               parent="custom_crm_menu"
               action="custom_crm_action"
               sequence="1"/>
@@ -26,14 +26,14 @@
 
 <!--    Menu Register for 3rd party register-->
     <menuitem id="menu_third_party_registration"
-              name="Register for 3rd unit/Packaging house"
+              name="Hino's Register for 3rd unit/Packaging house"
               parent="contacts.menu_contacts"
               action="action_third_party_registration_tree"
               sequence="10"/>
 
      <!-- New menu under Contacts -->
     <menuitem id="custom_contact_menu"
-              name="View contact"
+              name="Hino's View contact"
               parent="contacts.menu_contacts"
               action="custom_customer_action"
               sequence="10"/>
