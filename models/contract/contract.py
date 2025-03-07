@@ -4,6 +4,7 @@ from datetime import datetime
 class CRMContract(models.Model):
     _name = 'crm.contract'
     _description = "Create, track and manage dealer and customer contracts"
+    _rec_name = 'contract_code'
 
     contract_line_ids = fields.One2many(
         'crm.contract.line',
@@ -102,11 +103,15 @@ class CRMContract(models.Model):
         self.write({'status': 'cancelled'})
 
     def sales_info(self):
-        """
-        placeholder for button sales infomation
-        :return:
-        """
-        return None
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Sales Information',
+            'view_mode': 'tree,form',
+            'res_model': 'sale.order',
+            'domain': [('contract_detail_id', 'in', self.contract_line_ids.ids)],
+            'context': {'default_contract_detail_id': self.id},
+        }
 
     @api.depends('dealer_branch_id')
     def _compute_dealer_id(self):

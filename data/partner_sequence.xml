@@ -1,13 +1,11 @@
 <odoo>
     <data noupdate="1">
-        <!-- Define the sequence for the CUS numbering -->
-        <record id="seq_custom_lead" model="ir.sequence">
+        <record id="seq_custom_partner" model="ir.sequence">
             <field name="name">CUS Number</field>
             <field name="code">res.partner.cus_number</field>
             <field name="padding">4</field>
             <field name="number_increment">1</field>
             <field name="implementation">standard</field>
-
             <field name="prefix">CUS</field>
             <field name="suffix"/>
         </record>
