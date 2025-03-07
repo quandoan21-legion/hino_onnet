@@ -91,6 +91,14 @@ class ResPartner(models.Model):
         store=True
     )
 
+    # @api.depends('id')
+    # def _compute_owned_car_line_ids(self):
+    #     for record in self:
+    #         if record.id:
+    #             record.x_owned_car_line_ids = self.env['owned.team.car.line'].search([('x_partner_id', '=', record.id)])
+    #         else:
+    #             record.x_owned_car_line_ids = self.env['owned.team.car.line']
+
     def _compute_has_hino_vehicle(self):
         for partner in self:
             partner.has_hino_vehicle = bool(
@@ -332,7 +340,7 @@ class ResPartner(models.Model):
             for _ in range(self.x_number_of_vehicles):  # Number of vehicles
                 self.env['owned.team.car.line'].create({
                     'x_partner_id': self.id,
-                    'x_model_name': f"Model {_ + 1}",  # Replace 'name' with a valid field
+                    'x_model_name': f"Model {_ +1}",  # Replace 'name' with a valid field
                     'x_quantity': 1,  # Default to 1, adjust as needed
                     'x_brand_name': "Unknown",  # Provide a default value
                 })

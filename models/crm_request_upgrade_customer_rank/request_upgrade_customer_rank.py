@@ -132,25 +132,31 @@ class CustomerRankUpgrade(models.Model):
     #             # If no partner is assigned, clear the fields
     #             record.x_owned_car_line_ids = self.env['owned.team.car.line']
     #             record.x_owned_team_car_ids = self.env['owned.team.car.line']
-    @api.depends('x_partner_id')
-    def _compute_x_owned_car_line_ids(self):
-        for record in self:
-            if record.x_partner_id:
-                owned_cars = self.env['owned.team.car.line'].search([('x_partner_id', '=', record.x_partner_id.id)])
-                record.x_owned_car_line_ids = [(6, 0, owned_cars.ids)]
-                record.x_owned_team_car_ids = [(6, 0, owned_cars.ids)]
-            else:
-                record.x_owned_car_line_ids = [(5, 0, 0)]
-                record.x_owned_team_car_ids = [(5, 0, 0)]
+
+
     # @api.depends('x_partner_id')
     # def _compute_x_owned_car_line_ids(self):
     #     for record in self:
     #         if record.x_partner_id:
-    #             record.x_owned_car_line_ids = record.x_partner_id.x_owned_car_line_ids
-    #             record.x_owned_team_car_ids = record.x_partner_id.x_owned_car_line_ids
+    #             owned_cars = self.env['owned.team.car.line'].search([('x_partner_id', '=', record.x_partner_id.id)])
+    #             record.x_owned_car_line_ids = [(6, 0, owned_cars.ids)]
+    #             record.x_owned_team_car_ids = [(6, 0, owned_cars.ids)]
     #         else:
     #             record.x_owned_car_line_ids = [(5, 0, 0)]
     #             record.x_owned_team_car_ids = [(5, 0, 0)]
+
+
+    @api.depends('x_partner_id')
+    def _compute_x_owned_car_line_ids(self):
+        for record in self:
+            if record.x_partner_id:
+                record.x_owned_car_line_ids = record.x_partner_id.x_owned_car_line_ids
+                record.x_owned_team_car_ids = record.x_partner_id.x_owned_car_line_ids
+            else:
+                record.x_owned_car_line_ids = [(5, 0, 0)]
+                record.x_owned_team_car_ids = [(5, 0, 0)]
+
+
     # @api.depends('x_partner_id')
     # def _compute_x_owned_car_line_ids(self):
     #     for record in self:
