@@ -289,6 +289,8 @@ class CustomLeadMethods(models.Model):
                     'contract_id': contract.id,
                     'line_end_customer_id': vehicle.x_partner_code.id,
                     'model_id':vehicle.x_model_id.id,
+                    'line_barrel_type_id': vehicle.x_body_type_id.id,
+                    'line_third_party_offer_ids': [(6, 0, vehicle.x_third_party_offer_ids.ids)],
                     'line_address': self.x_contact_address_complete,
                     'line_province_city_id': self.x_state_id.id,
                 })
