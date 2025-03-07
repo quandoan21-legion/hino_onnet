@@ -16,7 +16,7 @@
                             invisible="x_status != 'in progress'" class="oe_highlight" />
                         <button name="action_create_customer" string="Create Customer" type="object"
                             invisible="x_partner_id" class="oe_highlight" />
-                        <button name="action_mark_canceled" string="Cancel" type="object" invisible="x_status == 'draft'"/>
+                        <button name="action_mark_canceled" string="Cancel" type="object" invisible="x_status == 'draft' or x_status == 'cancelled'"/>
                         <button name="action_create_contract"
                             type="object"
                             string="Create Contract"
@@ -24,7 +24,7 @@
                             class="oe_highlight" />
                         <button name="action_view_third_party_registration"
                             string="Propose in Encroaching area/Third party/Body maker"
-                            type="object" invisible="x_request_sale_3rd_barrels_id or x_partner_id"/>
+                            type="object" invisible="x_customer_type == 'third_party' or x_status == 'cancelled'"/>
                     </header>
                     <sheet>
                         <div class="oe_title">

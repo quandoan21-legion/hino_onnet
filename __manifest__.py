@@ -20,6 +20,9 @@
     'depends': ['base', 'crm', 'hr', 'contacts','mail', 'account', 'sale', 'account_accountant','sale_management','web'],
 
     'data': [
+        'reports/lead_report_template.xml',
+        'reports/report.xml',
+
         'data/partner_sequence.xml',
         'data/registration_code_sequence.xml',
         'data/lead_sequence.xml',
@@ -32,9 +35,6 @@
 
         'wizards/third_party_registration_rejection_wizard_view.xml',
         'wizards/lead_report_wizard.xml',
-
-        'reports/lead_report_template.xml',
-        'reports/report.xml',
 
         'views/inherit_views/product_template_views.xml',
         'views/inherit_views/res_partner_views.xml',
