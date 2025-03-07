@@ -103,8 +103,7 @@ class ResPartner(models.Model):
     @api.model
     def create(self, vals):
         if not vals.get('x_customer_code'):
-            vals['x_customer_code'] = self.env['ir.sequence'].next_by_code(
-                'res.partner.cus_number')
+            vals['x_customer_code'] = self.env['ir.sequence'].next_by_code('res.partner.cus_number')
         return super().create(vals)
 
     @api.depends('is_company')
