@@ -5,6 +5,10 @@ from odoo import models, fields, api, exceptions
 from odoo.exceptions import ValidationError, UserError
 from odoo.exceptions import UserError, warnings
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class CustomLeadMethods(models.Model):
     _inherit = 'crm.lead'
@@ -241,7 +245,10 @@ class CustomLeadMethods(models.Model):
         return True
 
     def action_view_third_party_registration(self):
-        return {
+        province_id = self.x_state_id.id
+        logger.info(f"Default x_province_id (Before Returning Context): {province_id}")
+
+        action = {
             'type': 'ir.actions.act_window',
             'name': 'sale.request.tree',
             'view_mode': 'form',
@@ -252,13 +259,16 @@ class CustomLeadMethods(models.Model):
                 'default_x_dealer_branch_id': self.x_dealer_branch_id.id,
                 'default_x_customer_name': self.x_partner_name,
                 'default_x_customer_address': self.x_contact_address_complete,
-                'default_x_province_id': self.x_state_id.id,
+                'default_x_province_id': province_id,
                 'default_x_identification_id': self.x_identity_number,
                 'default_x_business_registration_id': self.x_vat,
                 'default_x_lead_code_id': self.id,
                 'default_x_request_date': fields.Date.context_today(self),
             }
         }
+
+        logger.info(f"Action Context: {action['context']}")
+        return action
 
     @api.constrains('x_state_id', 'x_dealer_branch_id')
     def _check_customer_state(self):
