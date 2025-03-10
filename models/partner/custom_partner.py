@@ -294,64 +294,64 @@ class ResPartner(models.Model):
         }
 
     def action_upgrade_client(self):
-        # self.ensure_one()  # Ensure we are working with a single record
-        #
-        # new_record = self.env['customer.rank.upgrade'].create({
-        #     'x_partner_id': self.id,  # Correctly assign the partner
-        #     'x_currently_rank_id': self.x_currently_rank_id.id if self.x_currently_rank_id else False,
-        #     'x_total_quantity': self.x_number_of_vehicles,
-        #     'x_quantity_of_hino': self.x_hino_vehicle,
-        # })
-        #
-        # # Fetch the owned vehicles correctly using the partner ID
-        # owned_cars = self.env['owned.team.car.line'].search([('x_partner_id', '=', self.id)])
-        #
-        # if owned_cars:
-        #     new_record.write({'x_owned_team_car_ids': [(6, 0, owned_cars.ids)]})
-        #
-        # return {
-        #     'type': 'ir.actions.act_window',
-        #     'name': 'Customer Rank Upgrade',
-        #     'view_mode': 'form',
-        #     'res_model': 'customer.rank.upgrade',
-        #     'res_id': new_record.id,
-        #     'target': 'current',
-        # }
-        self.ensure_one()
+        self.ensure_one()  # Ensure we are working with a single record
 
-        if self._name != 'res.partner':
-            raise ValidationError("This action must be performed on a customer (res.partner), not a rank upgrade.")
-
-        # Create the rank upgrade record
         new_record = self.env['customer.rank.upgrade'].create({
-            'x_partner_id': self.id,
+            'x_partner_id': self.id,  # Correctly assign the partner
             'x_currently_rank_id': self.x_currently_rank_id.id if self.x_currently_rank_id else False,
             'x_total_quantity': self.x_number_of_vehicles,
             'x_quantity_of_hino': self.x_hino_vehicle,
         })
 
-        # Auto-fill `owned.team.car.line` if it doesn't exist
-        existing_cars = self.env['owned.team.car.line'].search([
-            ('x_partner_id', '=', self.id)
-        ])
+        # Fetch the owned vehicles correctly using the partner ID
+        owned_cars = self.env['owned.team.car.line'].search([('x_partner_id', '=', self.id)])
 
-        if not existing_cars:
-            for _ in range(self.x_number_of_vehicles):  # Number of vehicles
-                self.env['owned.team.car.line'].create({
-                    'x_partner_id': self.id,
-                    'x_model_name': f"Model {_ +1}",  # Replace 'name' with a valid field
-                    'x_quantity': 1,  # Default to 1, adjust as needed
-                    'x_brand_name': "Unknown",  # Provide a default value
-                })
+        if owned_cars:
+            new_record.write({'x_owned_team_car_ids': [(6, 0, owned_cars.ids)]})
 
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Customer Rank',
+            'name': 'Customer Rank Upgrade',
             'view_mode': 'form',
             'res_model': 'customer.rank.upgrade',
             'res_id': new_record.id,
             'target': 'current',
         }
+        # self.ensure_one()
+        #
+        # if self._name != 'res.partner':
+        #     raise ValidationError("This action must be performed on a customer (res.partner), not a rank upgrade.")
+        #
+        # # Create the rank upgrade record
+        # new_record = self.env['customer.rank.upgrade'].create({
+        #     'x_partner_id': self.id,
+        #     'x_currently_rank_id': self.x_currently_rank_id.id if self.x_currently_rank_id else False,
+        #     'x_total_quantity': self.x_number_of_vehicles,
+        #     'x_quantity_of_hino': self.x_hino_vehicle,
+        # })
+        #
+        # # Auto-fill `owned.team.car.line` if it doesn't exist
+        # existing_cars = self.env['owned.team.car.line'].search([
+        #     ('x_partner_id', '=', self.id)
+        # ])
+        #
+        # if not existing_cars:
+        #     for _ in range(self.x_number_of_vehicles):  # Number of vehicles
+        #         self.env['owned.team.car.line'].create({
+        #             'x_partner_id': self.id,
+        #             'x_model_name': f"Model {_ +1}",  # Replace 'name' with a valid field
+        #             'x_quantity': 1,  # Default to 1, adjust as needed
+        #             'x_brand_name': "Unknown",  # Provide a default value
+        #         })
+        #
+        # return {
+        #     'type': 'ir.actions.act_window',
+        #     'name': 'Customer Rank',
+        #     'view_mode': 'form',
+        #     'res_model': 'customer.rank.upgrade',
+        #     'res_id': new_record.id,
+        #     'target': 'current',
+        # }
 
 
     @api.onchange('car_line_ids')
