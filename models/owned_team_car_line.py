@@ -27,6 +27,7 @@ class CustomLeadLine(models.Model):
     #     for record in self:
     #         record.x_is_hino_vehicle = record.x_model_id.x_is_hino if record.x_model_id else False
 
+<<<<<<< HEAD
     # def create(self, vals_list):
     #     for vals in vals_list:
     #         lead = self.env['crm.lead'].browse(vals.get('lead_id'))
@@ -61,3 +62,13 @@ class CustomLeadLine(models.Model):
     #     if self.lead_id and self.x_partner_id:
     #         self.x_partner_id._sync_owned_car_lines()
     #         self.lead_id._sync_car_lines()
+=======
+    def create(self, vals_list):
+        for vals in vals_list:
+            lead = self.env['crm.lead'].browse(vals.get('lead_id'))
+            if lead and lead.x_status != "draft":
+                raise ValidationError(
+                    "You cannot create a new Owned car line because this lead form is not in DRAFT status."
+                )
+        return super(CustomLeadLine, self).create(vals_list)
+>>>>>>> 364c512d621b437a83b68a29f02d961a6046a515

@@ -102,6 +102,7 @@ class CustomLead(models.Model):
     @api.depends('x_status')
     def _compute_readonly_fields(self):
         for record in self:
+<<<<<<< HEAD
             record.x_readonly_fields = record.x_status != 'draft'
 
     # _sql_constraints = [
@@ -155,3 +156,6 @@ class CustomLead(models.Model):
             'x_member_unit_ids': [(6, 0, existing_lead.x_member_unit_ids.ids)],
             'x_contact_person_ids': [(6, 0, existing_lead.x_contact_person_ids.ids)],
         }
+=======
+            record.x_readonly_fields = record.x_status != 'draft'
+>>>>>>> 364c512d621b437a83b68a29f02d961a6046a515

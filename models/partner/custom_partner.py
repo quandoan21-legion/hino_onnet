@@ -314,6 +314,7 @@ class ResPartner(models.Model):
             'name': 'Customer Rank Upgrade',
             'view_mode': 'form',
             'res_model': 'customer.rank.upgrade',
+<<<<<<< HEAD
             'res_id': new_record.id,
             'target': 'current',
         }
@@ -372,3 +373,6 @@ class ResPartner(models.Model):
             lead_lines = self.env['owned.team.car.line'].search([('lead_id.partner_id', '=', partner.id)])
             partner.x_owned_car_line_ids = [(6, 0, lead_lines.ids)]
             partner.car_line_ids = [(6, 0, lead_lines.ids)]
+=======
+        }
+>>>>>>> 364c512d621b437a83b68a29f02d961a6046a515

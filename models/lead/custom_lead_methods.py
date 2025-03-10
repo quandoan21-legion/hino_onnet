@@ -5,6 +5,10 @@ from odoo import models, fields, api, exceptions
 from odoo.exceptions import ValidationError, UserError
 from odoo.exceptions import UserError, warnings
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class CustomLeadMethods(models.Model):
     _inherit = 'crm.lead'
@@ -24,10 +28,13 @@ class CustomLeadMethods(models.Model):
 
     @api.onchange('x_dealer_branch_id')
     def _onchange_dealer_branch_id(self):
-        if self.x_dealer_branch_id and self.x_dealer_branch_id.parent_id:
-            self.x_dealer_id = self.x_dealer_branch_id.parent_id
+        if self.x_dealer_branch_id:
+            self.x_dealer_id = self.x_dealer_branch_id.parent_id if self.x_dealer_branch_id.parent_id else False
+
+            self.x_state_id = self.x_dealer_branch_id.state_id if self.x_dealer_branch_id.state_id else False
         else:
             self.x_dealer_id = False
+            self.x_state_id = False
 
     @api.depends('x_dealer_branch_id')
     def _compute_dealer_id(self):
@@ -54,14 +61,8 @@ class CustomLeadMethods(models.Model):
             self.x_website = self.x_partner_id.website
             self.phone = self.x_partner_id.phone
             self.email_from = self.x_partner_id.email
-
-            if self.x_partner_id.x_customer_type in ['third_party', 'body_maker']:
-                self.x_customer_type = self.x_partner_id.x_customer_type
-            else:
-                self.x_customer_type = 'draft'
-
-            vat = self.x_partner_id.vat or ''
-            business_reg_id = self.x_partner_id.x_business_registration_id or ''
+            self.x_customer_type = self.x_partner_id.x_customer_type if self.x_partner_id.x_customer_type in [
+                'third_party', 'body_maker'] else 'draft'
             self.x_vat = self.x_partner_id.x_business_registration_id
             self.x_identity_number = self.x_partner_id.x_identity_number
             # self.x_industry_id = self.x_partner_id.x_industry_id
@@ -72,6 +73,26 @@ class CustomLeadMethods(models.Model):
             self.x_partner_rank_id = self.x_partner_id.x_currently_rank_id
             self.x_customer_status = 'company' if self.x_partner_id.company_type == 'company' else 'person'
             self.x_contact_address_complete = self.x_partner_id.x_contact_address
+            self.x_state_id = self.x_partner_id.x_state_id.id if self.x_partner_id.x_state_id else False
+            self.x_dealer_branch_id = self.x_partner_id.x_dealer_branch_id.id if self.x_partner_id.x_dealer_branch_id else False
+
+            related_leads = self.env['crm.lead'].search([
+                ('x_partner_id', '=', self.x_partner_id.id)
+            ])
+
+            owned_cars = self.env['owned.team.car.line'].search([
+                ('lead_id', 'in', related_leads.ids)
+            ])
+
+            if owned_cars:
+                self.x_owned_team_car_line_ids = [(0, 0, {
+                    'x_brand_name': car.x_brand_name,
+                    'x_model_name': car.x_model_name,
+                    'x_quantity': car.x_quantity,
+                    'x_partner_id': car.x_partner_id.id,
+                }) for car in owned_cars]
+            else:
+                self.x_owned_team_car_line_ids = [(5, 0, 0)]
 
     @api.constrains('x_customer_type', 'x_partner_id')
     def _validate_customer_type(self):
@@ -236,7 +257,10 @@ class CustomLeadMethods(models.Model):
         return True
 
     def action_view_third_party_registration(self):
-        return {
+        province_id = self.x_state_id.id
+        logger.info(f"Default x_province_id (Before Returning Context): {province_id}")
+
+        action = {
             'type': 'ir.actions.act_window',
             'name': 'sale.request.tree',
             'view_mode': 'form',
@@ -247,13 +271,16 @@ class CustomLeadMethods(models.Model):
                 'default_x_dealer_branch_id': self.x_dealer_branch_id.id,
                 'default_x_customer_name': self.x_partner_name,
                 'default_x_customer_address': self.x_contact_address_complete,
-                'default_x_province_id': self.x_state_id.id,
+                'default_x_province_id': province_id,
                 'default_x_identification_id': self.x_identity_number,
                 'default_x_business_registration_id': self.x_vat,
                 'default_x_lead_code_id': self.id,
                 'default_x_request_date': fields.Date.context_today(self),
             }
         }
+
+        logger.info(f"Action Context: {action['context']}")
+        return action
 
     @api.constrains('x_state_id', 'x_dealer_branch_id')
     def _check_customer_state(self):
