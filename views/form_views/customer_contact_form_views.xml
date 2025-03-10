@@ -178,7 +178,7 @@
                                 </field>
                             </page>
                             <page string="Owned Hino Vehicle Fleet">
-                                <field name="x_hino_owned_cars">
+                                <field name="x_hino_owned_car_line_ids">
                                     <tree editable="bottom">
                                         <field name="x_brand_name" />
                                         <field name="x_is_hino_vehicle" column_invisible="1" default="True"/>

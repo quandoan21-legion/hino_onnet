@@ -88,6 +88,18 @@ class ResPartner(models.Model):
         compute="_compute_has_hino_vehicle",
         store=True
     )
+    x_hino_owned_car_line_ids = fields.One2many(
+        'owned.team.car.line', 'x_partner_id',
+        string='Hino Vehicles',
+        compute="_compute_hino_owned_cars",
+        store=True
+    )
+
+    @api.depends('x_owned_car_ids.x_is_hino_vehicle')
+    def _compute_hino_owned_cars(self):
+        for partner in self:
+            hino_vehicles = partner.x_owned_car_ids.filtered(lambda car: car.x_is_hino_vehicle)
+            partner.x_hino_owned_car_line_ids = [(6, 0, hino_vehicles.ids)]
 
     # @api.depends('id')
     # def _compute_owned_car_line_ids(self):
