@@ -36,6 +36,14 @@ class CustomLeadLine(models.Model):
     #             )
     #     return super(CustomLeadLine, self).create(vals_list)  # Use 'create', not 'write'
 
+    def create(self, vals_list):
+        for vals in vals_list:
+            lead = self.env['crm.lead'].browse(vals.get('lead_id'))
+            if lead and lead.x_status != "draft":
+                raise ValidationError(
+                    "You cannot create a new Owned car line because this lead form is not in DRAFT status."
+                )
+        return super(CustomLeadLine, self).create(vals_list)
 
     # @api.model
     # def create(self, vals):

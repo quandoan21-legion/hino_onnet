@@ -42,7 +42,6 @@ class SaleRequestMethods(models.Model):
         if self.x_customer_id:
             self.x_customer_name = self.x_customer_id.name
             self.x_customer_address = self.x_customer_id.street
-            self.x_province_id = self.x_customer_id.state_id
 
     @api.depends('x_customer_id')
     def _compute_old_customer(self):
