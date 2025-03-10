@@ -10,28 +10,26 @@
                     <sheet>
                         <div class="oe_title">
                             <h1>
-                                <field name="x_field_sale_name" placeholder="Name sale area"/>
+                                <field name="x_field_sale_name" placeholder="Name sale area" />
                             </h1>
                         </div>
                         <group>
                             <field name="x_field_sale_code" />
                             <field name="x_is_free_sales_area" />
                             <field name="x_release_time" />
-                            <field name="x_attach_file" widget="image"/>
+                            <field name="x_attach_file" widget="image" />
                         </group>
                         <notebook>
                             <page string="Province">
                                 <field name="x_sales_area_detail_ids" mode="tree,form">
                                     <tree>
-                                        <field name="x_number"/>
-                                        <field name="x_code"/>
-                                        <field name="x_name"/>
+                                        <field name="x_code" />
+                                        <field name="x_name" />
                                     </tree>
                                     <form>
                                         <group>
-                                            <field name="x_number"/>
-                                            <field name="x_code"/>
-                                            <field name="x_name"/>
+                                            <field name="x_code" />
+                                            <field name="x_name" />
                                         </group>
                                     </form>
                                 </field>

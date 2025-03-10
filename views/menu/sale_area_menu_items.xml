@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <menuitem id="hino_sale_area_menu" name="Configure Sales Area" parent="sale.menu_sale_config" action="sale_area_action" sequence="1"/>
-        <menuitem name="Body Type Configuration" id="body_type_menu" parent="sale.menu_sale_config" action="body_type_act_window"/>
+        <menuitem id="hino_sale_area_menu" name="Hino's Configure Sales Area" parent="sale.menu_sale_config" action="sale_area_action" sequence="1"/>
+        <menuitem name="Hino's Body Type Configuration" id="body_type_menu" parent="sale.menu_sale_config" action="body_type_act_window"/>
     </data>
 </odoo>
