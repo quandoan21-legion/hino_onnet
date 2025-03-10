@@ -65,7 +65,7 @@ class CustomLeadMethods(models.Model):
                 'third_party', 'body_maker'] else 'draft'
             self.x_vat = self.x_partner_id.x_business_registration_id
             self.x_identity_number = self.x_partner_id.x_identity_number
-            # self.x_industry_id = self.x_partner_id.x_industry_id
+            self.x_industry_id = self.x_partner_id.x_industry_id
             self.x_service_contract = self.x_partner_id.x_service_contract
             self.x_request_sale_3rd_barrels_id = self.x_partner_id.x_register_sale_3rd_id
             self.x_activity_area = self.x_partner_id.x_activity_area
@@ -180,7 +180,7 @@ class CustomLeadMethods(models.Model):
             'website': vals.get('x_website'),
             'x_business_registration_id': vals.get('x_vat'),
             'x_identity_number': vals.get('x_identity_number'),
-            # 'x_industry_id': vals.get('x_industry_id'),
+            'x_industry_id': vals.get('x_industry_id'),
             'x_register_sale_3rd_id': vals.get('x_request_sale_3rd_barrels_id'),
             'x_contact_address': vals.get('x_contact_address_complete'),
             'company_type': 'company' if vals.get('x_customer_status') == 'company' else 'person',
@@ -229,7 +229,7 @@ class CustomLeadMethods(models.Model):
                     'x_vat': record.x_vat,
                     'x_website': record.x_website,
                     'x_identity_number': record.x_identity_number,
-                    # 'x_industry_id': record.x_industry_id,
+                    'x_industry_id': record.x_industry_id,
                     'x_request_sale_3rd_barrels_id': record.x_request_sale_3rd_barrels_id,
                     'x_contact_address_complete': record.x_contact_address_complete,
                     'x_customer_status': record.x_customer_status,
