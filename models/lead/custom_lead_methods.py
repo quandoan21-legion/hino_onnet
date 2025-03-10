@@ -45,14 +45,8 @@ class CustomLeadMethods(models.Model):
             self.x_website = self.x_partner_id.website
             self.phone = self.x_partner_id.phone
             self.email_from = self.x_partner_id.email
-
-            if self.x_partner_id.x_customer_type in ['third_party', 'body_maker']:
-                self.x_customer_type = self.x_partner_id.x_customer_type
-            else:
-                self.x_customer_type = 'draft'
-
-            vat = self.x_partner_id.vat or ''
-            business_reg_id = self.x_partner_id.x_business_registration_id or ''
+            self.x_customer_type = self.x_partner_id.x_customer_type if self.x_partner_id.x_customer_type in [
+                'third_party', 'body_maker'] else 'draft'
             self.x_vat = self.x_partner_id.x_business_registration_id
             self.x_identity_number = self.x_partner_id.x_identity_number
             self.x_industry_id = self.x_partner_id.x_industry_id.id if self.x_partner_id.x_industry_id else False
@@ -65,6 +59,24 @@ class CustomLeadMethods(models.Model):
             self.x_contact_address_complete = self.x_partner_id.x_contact_address
             self.x_state_id = self.x_partner_id.x_state_id.id if self.x_partner_id.x_state_id else False
             self.x_dealer_branch_id = self.x_partner_id.x_dealer_branch_id.id if self.x_partner_id.x_dealer_branch_id else False
+
+            related_leads = self.env['crm.lead'].search([
+                ('x_partner_id', '=', self.x_partner_id.id)
+            ])
+
+            owned_cars = self.env['owned.team.car.line'].search([
+                ('lead_id', 'in', related_leads.ids)
+            ])
+
+            if owned_cars:
+                self.x_owned_team_car_line_ids = [(0, 0, {
+                    'x_brand_name': car.x_brand_name,
+                    'x_model_name': car.x_model_name,
+                    'x_quantity': car.x_quantity,
+                    'x_partner_id': car.x_partner_id.id,
+                }) for car in owned_cars]
+            else:
+                self.x_owned_team_car_line_ids = [(5, 0, 0)]
 
     @api.constrains('x_customer_type', 'x_partner_id')
     def _validate_customer_type(self):
