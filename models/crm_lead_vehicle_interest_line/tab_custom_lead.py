@@ -20,6 +20,10 @@ class VehicleInterest(models.Model):
     x_note = fields.Text(string='Note')
     sale_request_id = fields.Many2one('sale.request', string='Sale Request')
     sale_detail_ids = fields.Many2one('sale.detail', string='Sale Details')
+    x_third_party_offer_ids = fields.Many2many(
+        'third.party.registration',
+        string="Third Party Offer",
+    )
     parent_sale_detail = fields.Many2one('sale.detail', string='Sale Detail',
                                          domain="[('sale_request_id', '=', sale_request_id)]")
 
