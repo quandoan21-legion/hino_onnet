@@ -13,7 +13,7 @@
                 <field name="email_from" optional="show" />
                 <field name="x_vat" optional="hide"/>
                 <field name="x_identity_number" optional="hide"/>
-                <field name="x_industry_id" optional="hide"/>
+<!--                <field name="x_industry_id" optional="hide"/>-->
                 <field name="x_service_contract" optional="hide"/>
                 <field name="x_activity_area" optional="show"/>
                 <!-- <field name="x_dealer_id" optional="hide"/> -->

@@ -10,6 +10,8 @@
                     <header>
                         <button name="action_upgrade_client" string="Upgrade Client" type="object"
                             class="oe_highlight" />
+
+<!--                        <field name="x_hino_owned_cars" />-->
                     </header>
                     <sheet>
                         <field name="avatar_128" invisible="1" />
@@ -42,7 +44,7 @@
                                 <field name="website" />
                             </group>
                             <group>
-                                <field name="x_industry_id" />
+<!--                                <field name="x_industry_id" />-->
                                 <field name="x_activity_area" />
                                 <field name="x_service_contract" />
                                 <field name="x_number_of_vehicles" />
@@ -166,7 +168,7 @@
                                 </group>
                             </page>
                             <page string="Owned Vehicle Fleet">
-                                <field name="x_owned_car_line_ids" mode="tree,form">
+                                <field name="x_owned_car_line_ids" >
                                     <tree editable="bottom">
                                         <field name="x_brand_name" />
                                         <field name="x_is_hino_vehicle" column_invisible="1" default="False"/>
@@ -176,7 +178,7 @@
                                 </field>
                             </page>
                             <page string="Owned Hino Vehicle Fleet">
-                                <field name="x_owned_car_line_ids">
+                                <field name="x_hino_owned_car_line_ids">
                                     <tree editable="bottom">
                                         <field name="x_brand_name" />
                                         <field name="x_is_hino_vehicle" column_invisible="1" default="True"/>

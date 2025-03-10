@@ -60,6 +60,70 @@ class ResPartner(models.Model):
     x_owned_car_line_ids = fields.One2many(
         'owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines', compute='_compute_owned_car_line_ids')
     x_vehicle_images = fields.Binary(attachment=True)
+    # x_owned_car_line_ids = fields.One2many(
+    #     'owned.team.car.line', 'x_partner_id', string='Owned Team Car Lines'
+    # )
+    car_line_ids = fields.One2many(
+        'owned.team.car.line', 'partner_id',
+        string='Owned Car Lines',
+
+    )
+    x_hino_owned_cars = fields.One2many(
+        'owned.team.car.line', 'x_partner_id',
+        string='Hino Vehicles',
+        compute="_compute_hino_and_non_hino_cars",
+        store=True
+    )
+
+    x_non_hino_owned_cars = fields.One2many(
+        'owned.team.car.line', 'x_partner_id',
+        string='Non-Hino Vehicles',
+        compute="_compute_hino_and_non_hino_cars",
+        store=True
+    )
+    x_owned_car_ids = fields.One2many('owned.team.car.line', 'x_partner_id', string="Owned Cars")
+
+    has_hino_vehicle = fields.Boolean(
+        string="Has Hino Vehicle",
+        compute="_compute_has_hino_vehicle",
+        store=True
+    )
+    x_hino_owned_car_line_ids = fields.One2many(
+        'owned.team.car.line', 'x_partner_id',
+        string='Hino Vehicles',
+        compute="_compute_hino_owned_cars",
+        store=True
+    )
+
+    @api.depends('x_owned_car_ids.x_is_hino_vehicle')
+    def _compute_hino_owned_cars(self):
+        for partner in self:
+            hino_vehicles = partner.x_owned_car_ids.filtered(lambda car: car.x_is_hino_vehicle)
+            partner.x_hino_owned_car_line_ids = [(6, 0, hino_vehicles.ids)]
+
+    # @api.depends('id')
+    # def _compute_owned_car_line_ids(self):
+    #     for record in self:
+    #         if record.id:
+    #             record.x_owned_car_line_ids = self.env['owned.team.car.line'].search([('x_partner_id', '=', record.id)])
+    #         else:
+    #             record.x_owned_car_line_ids = self.env['owned.team.car.line']
+
+    def _compute_has_hino_vehicle(self):
+        for partner in self:
+            partner.has_hino_vehicle = bool(
+                self.env['owned.team.car.line'].search_count([
+                    ('partner_id', '=', partner.id),
+                    ('x_is_hino_vehicle', '=', True)
+                ])
+            )
+    @api.depends('x_owned_car_ids.x_is_hino_vehicle')
+    def _compute_hino_and_non_hino_cars(self):
+        for partner in self:
+            hino_vehicles = partner.x_owned_car_ids.filtered(lambda car: car.x_is_hino_vehicle)
+            non_hino_vehicles = partner.x_owned_car_ids.filtered(lambda car: not car.x_is_hino_vehicle)
+            partner.x_hino_owned_cars = [(6, 0, hino_vehicles.ids)]
+            partner.x_non_hino_owned_cars = [(6, 0, non_hino_vehicles.ids)]
 
     @api.depends('x_number_of_vehicles', 'x_hino_vehicle')
     def _compute_number_of_vehicles(self):
@@ -242,9 +306,81 @@ class ResPartner(models.Model):
         }
 
     def action_upgrade_client(self):
+        self.ensure_one()  # Ensure we are working with a single record
+
+        new_record = self.env['customer.rank.upgrade'].create({
+            'x_partner_id': self.id,  # Correctly assign the partner
+            'x_currently_rank_id': self.x_currently_rank_id.id if self.x_currently_rank_id else False,
+            'x_total_quantity': self.x_number_of_vehicles,
+            'x_quantity_of_hino': self.x_hino_vehicle,
+        })
+
+        # Fetch the owned vehicles correctly using the partner ID
+        owned_cars = self.env['owned.team.car.line'].search([('x_partner_id', '=', self.id)])
+
+        if owned_cars:
+            new_record.write({'x_owned_team_car_ids': [(6, 0, owned_cars.ids)]})
+
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Customer Rank',
+            'name': 'Customer Rank Upgrade',
             'view_mode': 'form',
             'res_model': 'customer.rank.upgrade',
+            'res_id': new_record.id,
+            'target': 'current',
         }
+        # self.ensure_one()
+        #
+        # if self._name != 'res.partner':
+        #     raise ValidationError("This action must be performed on a customer (res.partner), not a rank upgrade.")
+        #
+        # # Create the rank upgrade record
+        # new_record = self.env['customer.rank.upgrade'].create({
+        #     'x_partner_id': self.id,
+        #     'x_currently_rank_id': self.x_currently_rank_id.id if self.x_currently_rank_id else False,
+        #     'x_total_quantity': self.x_number_of_vehicles,
+        #     'x_quantity_of_hino': self.x_hino_vehicle,
+        # })
+        #
+        # # Auto-fill `owned.team.car.line` if it doesn't exist
+        # existing_cars = self.env['owned.team.car.line'].search([
+        #     ('x_partner_id', '=', self.id)
+        # ])
+        #
+        # if not existing_cars:
+        #     for _ in range(self.x_number_of_vehicles):  # Number of vehicles
+        #         self.env['owned.team.car.line'].create({
+        #             'x_partner_id': self.id,
+        #             'x_model_name': f"Model {_ +1}",  # Replace 'name' with a valid field
+        #             'x_quantity': 1,  # Default to 1, adjust as needed
+        #             'x_brand_name': "Unknown",  # Provide a default value
+        #         })
+        #
+        # return {
+        #     'type': 'ir.actions.act_window',
+        #     'name': 'Customer Rank',
+        #     'view_mode': 'form',
+        #     'res_model': 'customer.rank.upgrade',
+        #     'res_id': new_record.id,
+        #     'target': 'current',
+        # }
+
+
+    @api.onchange('car_line_ids')
+    def _onchange_car_line_ids(self):
+        """Synchronize x_owned_car_line_ids with car_line_ids when modified"""
+        for partner in self:
+            partner.x_owned_car_line_ids = partner.car_line_ids
+
+    @api.onchange('x_owned_car_line_ids')
+    def _onchange_x_owned_car_line_ids(self):
+        """Ensure car_line_ids matches x_owned_car_line_ids when modified"""
+        for partner in self:
+            partner.car_line_ids = partner.x_owned_car_line_ids
+
+    def _sync_owned_car_lines(self):
+        """Ensure partner car lines match with related leads"""
+        for partner in self:
+            lead_lines = self.env['owned.team.car.line'].search([('lead_id.partner_id', '=', partner.id)])
+            partner.x_owned_car_line_ids = [(6, 0, lead_lines.ids)]
+            partner.car_line_ids = [(6, 0, lead_lines.ids)]
