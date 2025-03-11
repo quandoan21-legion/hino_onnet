@@ -224,7 +224,7 @@ class CustomLeadMethods(models.Model):
                     'x_vat': record.x_vat,
                     'x_website': record.x_website,
                     'x_identity_number': record.x_identity_number,
-                    'x_industry_id': record.x_industry_id,
+                    'x_industry_id': record.x_industry_id.id,
                     'x_request_sale_3rd_barrels_id': record.x_request_sale_3rd_barrels_id,
                     'x_contact_address_complete': record.x_contact_address_complete,
                     'x_customer_status': record.x_customer_status,
