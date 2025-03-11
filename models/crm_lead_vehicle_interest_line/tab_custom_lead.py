@@ -66,12 +66,7 @@ class VehicleInterest(models.Model):
         else:
             _logger.warning("lead_id is not set, skipping update.")
 
-    @api.onchange('lead_id')
-    def _onchange_lead_id(self):
+    @api.onchange('lead_id.x_request_sale_3rd_barrels_id')
+    def _onchange_x_request_sale_3rd_barrels_id(self):
         if self.lead_id and self.lead_id.x_request_sale_3rd_barrels_id:
             self.x_partner_code = self.lead_id.x_request_sale_3rd_barrels_id.x_customer_id.id
-
-    # @api.onchange('lead_id.x_request_sale_3rd_barrels_id')
-    # def _onchange_x_request_sale_3rd_barrels_id(self):
-    #     if self.lead_id and self.lead_id.x_request_sale_3rd_barrels_id:
-    #         self.x_partner_code = self.lead_id.x_request_sale_3rd_barrels_id.x_customer_id.id
