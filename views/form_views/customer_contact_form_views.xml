@@ -44,7 +44,7 @@
                                 <field name="website" />
                             </group>
                             <group>
-<!--                                <field name="x_industry_id" />-->
+                                <field name="x_industry_id" />
                                 <field name="x_activity_area" />
                                 <field name="x_service_contract" />
                                 <field name="x_number_of_vehicles" />

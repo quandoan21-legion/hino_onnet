@@ -5,11 +5,6 @@ from odoo import models, fields, api, exceptions
 from odoo.exceptions import ValidationError, UserError
 from odoo.exceptions import UserError, warnings
 
-import logging
-
-logger = logging.getLogger(__name__)
-
-
 class CustomLeadMethods(models.Model):
     _inherit = 'crm.lead'
 
@@ -229,7 +224,7 @@ class CustomLeadMethods(models.Model):
                     'x_vat': record.x_vat,
                     'x_website': record.x_website,
                     'x_identity_number': record.x_identity_number,
-                    'x_industry_id': record.x_industry_id,
+                    'x_industry_id': record.x_industry_id.id,
                     'x_request_sale_3rd_barrels_id': record.x_request_sale_3rd_barrels_id,
                     'x_contact_address_complete': record.x_contact_address_complete,
                     'x_customer_status': record.x_customer_status,
@@ -257,9 +252,6 @@ class CustomLeadMethods(models.Model):
         return True
 
     def action_view_third_party_registration(self):
-        province_id = self.x_state_id.id
-        logger.info(f"Default x_province_id (Before Returning Context): {province_id}")
-
         action = {
             'type': 'ir.actions.act_window',
             'name': 'sale.request.tree',
@@ -278,9 +270,6 @@ class CustomLeadMethods(models.Model):
                 'default_x_request_date': fields.Date.context_today(self),
             }
         }
-
-        logger.info(f"Action Context: {action['context']}")
-        return action
 
     @api.constrains('x_state_id', 'x_dealer_branch_id')
     def _check_customer_state(self):
