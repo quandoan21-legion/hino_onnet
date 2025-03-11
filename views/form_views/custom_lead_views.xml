@@ -20,7 +20,7 @@
                         <button name="action_create_contract"
                             type="object"
                             string="Create Contract"
-                            invisible="x_status == 'contract signed' or x_status == 'cancelled'" 
+                            invisible="x_status == 'contract signed' or x_status == 'cancelled'"
                             class="oe_highlight" />
                         <button name="action_view_third_party_registration"
                             string="Propose in Encroaching area/Third party/Body maker"
@@ -68,11 +68,11 @@
                                 <field name="email_from" readonly="x_status not in ('draft')" />
                                 <field name="x_vat" readonly="x_status not in ('draft')" />
                                 <field name="x_identity_number" readonly="x_status not in ('draft')" />
-                                <field name="x_industry_id"
+                               <field name="x_industry_id"
                                     readonly="x_status not in ('draft')" />
                                 <field name="x_service_contract" required="1"
                                     readonly="x_status not in ('draft')" />
-                                <field name="x_activity_area" required="1"
+                                <field name="x_activity_area"
                                     readonly="x_status not in ('draft')" />
                                 <field name="x_request_sale_3rd_barrels_id"
                                     readonly="x_status not in ('draft')" />
@@ -114,6 +114,8 @@
                                         <field name="x_model_name" />
                                         <field name="x_quantity" />
                                         <field name="x_brand_name" />
+                                        <field name="x_is_hino_vehicle" widget="boolean_toggle"/>
+<!--                                        <field name="x_is_hino_vehicle" column_invisible="1"/>-->
                                     </tree>
                                 </field>
                             </page>

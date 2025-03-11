@@ -20,3 +20,5 @@ from .product import custom_product
 from .contract import contract, contract_line, contract_sale
 from . import bid_authorization, bid_authorization_approve_history
 from .sale_request import sale_detail
+from .CarLineReport import XOwnedCarLineReport
+from .CarLineReport import OwnedTeamCarLine

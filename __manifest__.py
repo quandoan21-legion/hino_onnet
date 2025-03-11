@@ -29,7 +29,7 @@
         'data/sale_request_sequence.xml',
         'data/body_type_sequence.xml',
         'data/contract_code_sequence.xml',
-        'data/bid_authorization_sequence.xml', 
+        'data/bid_authorization_sequence.xml',
 
         'security/ir.model.access.csv',
 
@@ -76,6 +76,7 @@
         'views/menu/sale_area_menu_items.xml',
         'views/menu/customer_rank_menu_items.xml',
         'views/menu/main_menu_items.xml',
+        'views/action/CheckCarContact.xml',
 
         'views/bid_authorization_views.xml',
     ],
